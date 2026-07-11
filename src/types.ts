@@ -67,6 +67,9 @@ export interface Product {
   originalPrice: number | null;
   currency: string;
   pricePerPiece: number;
+  units: number | null;
+  /** Fleek CDN URL. The bytes stay on their CDN — we only ever reference them. */
+  imageUrl: string | null;
   /** Canonical joinfleek.com product page. */
   url: string;
 }

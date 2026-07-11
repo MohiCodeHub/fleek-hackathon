@@ -82,3 +82,57 @@ export async function generateJSON<T>(opts: {
     throw new Error(`Model returned invalid JSON args: ${call.function.arguments.slice(0, 200)}`);
   }
 }
+
+// ---------------------------------------------------------------------------
+// Vision + embeddings — the image-search path (see src/image-search.ts).
+// ---------------------------------------------------------------------------
+
+/**
+ * A user message carrying an image alongside optional text.
+ * `image` is either an https URL or a `data:image/...;base64,...` URI —
+ * WhatsApp images arrive as one or the other depending on the Wassist payload.
+ */
+export function imageMessage(image: string, text?: string): Msg {
+  const content: OpenAI.Chat.Completions.ChatCompletionContentPart[] = [
+    { type: 'image_url', image_url: { url: image, detail: 'low' } },
+  ];
+  if (text) content.unshift({ type: 'text', text });
+  return { role: 'user', content };
+}
+
+/**
+ * Embedding dimensions. 512 is ample for a catalog of this size and keeps the
+ * committed index small; `text-embedding-3-small` supports truncation natively.
+ */
+export const EMBED_DIMS = 512;
+const EMBED_MODEL = 'text-embedding-3-small';
+
+/** Embed texts into unit-length vectors (so cosine similarity is a dot product). */
+export async function embed(texts: string[]): Promise<Float32Array[]> {
+  if (texts.length === 0) return [];
+  const res = await client().embeddings.create({
+    model: EMBED_MODEL,
+    input: texts,
+    dimensions: EMBED_DIMS,
+  });
+  // The API returns unit-normalised vectors, but normalise defensively —
+  // `dot` below assumes it.
+  return res.data.map((d) => normalise(Float32Array.from(d.embedding)));
+}
+
+function normalise(v: Float32Array): Float32Array {
+  let sum = 0;
+  for (const x of v) sum += x * x;
+  const mag = Math.sqrt(sum);
+  if (mag === 0) return v;
+  for (let i = 0; i < v.length; i++) v[i] = (v[i] as number) / mag;
+  return v;
+}
+
+/** Cosine similarity of two unit vectors. */
+export function dot(a: Float32Array, b: Float32Array): number {
+  let s = 0;
+  const n = Math.min(a.length, b.length);
+  for (let i = 0; i < n; i++) s += (a[i] as number) * (b[i] as number);
+  return s;
+}

@@ -319,6 +319,8 @@ function rowToProduct(r: typeof products.$inferSelect): Product {
     originalPrice: r.originalPrice,
     currency: r.currency,
     pricePerPiece: r.pricePerPiece,
+    units: r.units,
+    imageUrl: r.imageUrl,
     url: r.url,
   };
 }
@@ -334,6 +336,8 @@ export async function insertProduct(p: Product): Promise<void> {
       originalPrice: p.originalPrice,
       currency: p.currency,
       pricePerPiece: p.pricePerPiece,
+      units: p.units,
+      imageUrl: p.imageUrl,
       url: p.url,
     })
     .onConflictDoUpdate({
@@ -344,6 +348,8 @@ export async function insertProduct(p: Product): Promise<void> {
         originalPrice: p.originalPrice,
         currency: p.currency,
         pricePerPiece: p.pricePerPiece,
+        units: p.units,
+        imageUrl: p.imageUrl,
         url: p.url,
       },
     });

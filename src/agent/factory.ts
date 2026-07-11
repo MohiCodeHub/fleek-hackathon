@@ -28,6 +28,7 @@ import { makeExtractMandateTool } from './tools/extractMandate.js';
 import { findMatchesTool } from './tools/findMatches.js';
 import { makeOfferTool } from './tools/makeOffer.js';
 import { negotiateTool } from './tools/negotiate.js';
+import { makeSearchByImageTool } from './tools/searchByImage.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const skillsDir = join(here, '..', '..', 'skills');
@@ -46,6 +47,11 @@ export interface BuildAgentOptions {
   buyerPhone?: string;
   /** Prior conversation history to restore (AgentMessage[]). */
   history?: AgentSession['messages'];
+  /**
+   * Abhi only — a photo the buyer attached to this message (https URL or data:
+   * URI). When present, Abhi gains `search_by_image` over that photo.
+   */
+  inboundImage?: string | null;
   /** Called for each tool execution (for the memory brain / observability). */
   onToolResult?: (exec: ToolExec) => void;
   /**
@@ -142,9 +148,20 @@ function sanketSystemPrompt(runtime: NegotiationRuntime): string {
 // Tools per persona.
 // ---------------------------------------------------------------------------
 
-function abhiTools(buyerPhone: string, onboarded: boolean): ToolDefinition[] {
+function abhiTools(
+  buyerPhone: string,
+  onboarded: boolean,
+  inboundImage?: string | null,
+): ToolDefinition[] {
   if (!onboarded) return [makeCompleteOnboardingTool(buyerPhone)];
-  return [makeExtractMandateTool(buyerPhone), findMatchesTool, negotiateTool];
+  const tools: ToolDefinition[] = [
+    makeExtractMandateTool(buyerPhone),
+    findMatchesTool,
+    negotiateTool,
+  ];
+  // Only offered when the buyer actually attached a photo to this message.
+  if (inboundImage) tools.push(makeSearchByImageTool(inboundImage));
+  return tools;
 }
 
 function sanketTools(runtime: NegotiationRuntime): ToolDefinition[] {
@@ -190,7 +207,7 @@ export async function buildAgent(opts: BuildAgentOptions): Promise<AgentSession>
   if (persona === 'abhi') {
     const buyer = opts.buyerPhone ? await getBuyer(opts.buyerPhone) : null;
     systemPrompt = abhiSystemPrompt(buyer);
-    tools = abhiTools(opts.buyerPhone ?? '', !!buyer?.onboardedAt);
+    tools = abhiTools(opts.buyerPhone ?? '', !!buyer?.onboardedAt, opts.inboundImage);
   } else {
     if (!opts.sanketRuntime) {
       throw new Error('buildAgent: sanketRuntime is required for persona "sanket"');

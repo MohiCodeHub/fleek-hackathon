@@ -17,6 +17,8 @@ const fixtureProducts: Product[] = [
     originalPrice: null,
     currency: 'GBP',
     pricePerPiece: 9,
+    units: 15,
+    imageUrl: 'https://cdn.example.test/mens-1.webp',
     url: 'https://www.joinfleek.com/products/vintage-mix-branded-t-shirts',
   },
   {
@@ -27,6 +29,8 @@ const fixtureProducts: Product[] = [
     originalPrice: null,
     currency: 'GBP',
     pricePerPiece: 8.66,
+    units: 15,
+    imageUrl: null,
     url: 'https://www.joinfleek.com/products/polo-t-shirts',
   },
   {
@@ -37,6 +41,8 @@ const fixtureProducts: Product[] = [
     originalPrice: 193.8,
     currency: 'GBP',
     pricePerPiece: 9.15,
+    units: 12,
+    imageUrl: 'https://cdn.example.test/womens-1.webp',
     url: 'https://www.joinfleek.com/products/upcycled-denim-halter-top',
   },
 ];
