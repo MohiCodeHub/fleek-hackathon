@@ -250,6 +250,34 @@ describe('createApp', () => {
     });
   });
 
+  it('POST /webhook accepts image-only BYOA payloads', async () => {
+    vi.spyOn(wassist, 'checkSignature').mockReturnValue({ ok: true });
+    const app = createApp();
+    const payload = {
+      message: '',
+      phone_number: '+14155550102',
+      reply_callback: 'https://wassist.app/api/callback/img',
+      image: 'https://media.wassist.app/bale.png',
+    };
+    const res = await app.request('/webhook', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ content: 'No CUSTOMER message reply' });
+    await vi.waitFor(() => {
+      expect(processInbound).toHaveBeenCalledWith(
+        expect.objectContaining({
+          from: '+14155550102',
+          body: '',
+          image: 'https://media.wassist.app/bale.png',
+        }),
+      );
+    });
+  });
+
   it('POST /webhook ignores non-Wassist reply_callback hosts without processing', async () => {
     vi.spyOn(wassist, 'checkSignature').mockReturnValue({ ok: true });
     const app = createApp();
