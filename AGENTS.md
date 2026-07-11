@@ -42,7 +42,8 @@ Key paths:
 | `src/agent/abhi.ts` | Buyer agent + tools |
 | `src/agent/harness.ts` | Shared tool-use loop |
 | `src/negotiation.ts` | Sanket autonomous negotiation loop |
-| `src/wassist.ts` | Parse BYOA payload, signatures, `replyViaCallback` |
+| `src/wassist.ts` | Parse BYOA payload, signatures, rich `replyViaCallback` |
+| `src/media.ts` | Fetch inbound image URLs → Pi `ImageContent` (base64) |
 | `src/db/` | Drizzle client, schema, accessors |
 | `personas/*.md` | System prompts (`abhi`, `sanket`, `supplier-responder`) |
 
@@ -147,5 +148,7 @@ Railway env must include at least: `DATABASE_URL`, `OPENAI_API_KEY`, `WASSIST_AP
 
 - `WASSIST_BASE_URL` ≠ public webhook URL
 - BYOA inbound has no `X-Wassist-Signature`. If `WASSIST_WEBHOOK_SECRET` is set, every BYOA POST gets `401 invalid signature` — unset it
+- BYOA payloads may include `image` (URL or null). Abhi receives vision via Pi `session.prompt(..., { images })`; image-only messages (empty `message`) are valid
+- Replies go through `reply_callback` as JSON (`{ content }` or rich fields: `image` / `video` / `audio` / `document` / `contact` / `location`) — not the Conversations Send Message API
 - Renaming agents/personas requires updating `PersonaName`, file names under `personas/`, and negotiation speaker unions
 - Unit tests for Hono do not need Postgres; agent `demo`/`chat`/`seed` do
