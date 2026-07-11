@@ -147,6 +147,28 @@ describe('parseInbound (official BYOA)', () => {
     ).toBeNull();
   });
 
+  it('treats unsubstituted %IMAGE_URL% as null', () => {
+    expect(
+      parseInbound({
+        message: 'need 300 tees',
+        image: '%IMAGE_URL%',
+        phone_number: '+1',
+        reply_callback: 'https://wassist.app/api/callback/1',
+      })?.image,
+    ).toBeNull();
+  });
+
+  it('rejects non-http image values', () => {
+    expect(
+      parseInbound({
+        message: 'hi',
+        image: 'ftp://media.wassist.app/x.png',
+        phone_number: '+1',
+        reply_callback: 'https://wassist.app/api/callback/1',
+      })?.image,
+    ).toBeNull();
+  });
+
   it('returns null when required fields are missing', () => {
     expect(parseInbound({ message: 'x' })).toBeNull();
     expect(parseInbound({ phone_number: '+1' })).toBeNull();

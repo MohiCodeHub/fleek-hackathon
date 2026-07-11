@@ -61,4 +61,11 @@ describe('fetchImageContent', () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network down')));
     expect(await fetchImageContent('https://media.wassist.app/x.png')).toBeNull();
   });
+
+  it('skips unsubstituted %IMAGE_URL% without calling fetch', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    expect(await fetchImageContent('%IMAGE_URL%')).toBeNull();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
 });
