@@ -15,9 +15,9 @@ export function makeFindMatchesTool(buyerPhone: string) {
     name: 'find_matches',
     label: 'Find Matches',
     description:
-      'Score and rank supplier inventory (messy bulk bales) against a mandate, and return matching Fleek catalog lots with product page links. Call after extract_mandate returns a complete mandate. Use the exact baleId from each supplier bale when calling negotiate — never invent ids and never pass catalog productId values.',
+      'Score and rank supplier inventory (messy bulk bales) against a mandate, and return matching Fleek catalog lots with joinfleek.com product page URLs. Call after extract_mandate returns a complete mandate. When catalog lots are returned, you MUST share 1–3 of those URLs with the buyer in your reply (browse-only). Use the exact baleId from each supplier bale when calling negotiate — never invent ids and never pass catalog productId values.',
     promptSnippet:
-      'Ranks supplier bales (with exact baleId) against a mandate; catalog lots are browse-only.',
+      'Ranks supplier bales (with exact baleId); when catalog lots appear, share 1–3 joinfleek.com URLs in your reply (browse-only).',
     parameters: Type.Object({
       mandateId: Type.String({ description: 'The mandate id from extract_mandate.' }),
     }),
@@ -115,11 +115,11 @@ export function makeFindMatchesTool(buyerPhone: string) {
       ];
       if (catalogText) {
         sections.push(
-          `Fleek catalog lots (browse-only — share product links with the buyer; NOT valid negotiate baleIds):\n\n${catalogText}`,
+          `Fleek catalog lots (browse-only — MUST share 1–3 of these joinfleek.com URLs in your reply under "Browse on Fleek"; NOT valid negotiate baleIds):\n\n${catalogText}`,
         );
       } else if (catalogError) {
         sections.push(
-          'Fleek catalog lots unavailable (database error). Supplier bale matches above are still valid.',
+          'Fleek catalog lots unavailable (database error). Do not invent product URLs. Supplier bale matches above are still valid.',
         );
       }
 

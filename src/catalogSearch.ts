@@ -17,6 +17,55 @@ const STOP = new Set([
   'bundle',
 ]);
 
+/**
+ * Synonym groups so mandate tokens like "tees" match catalog names like "t-shirts".
+ * Keys and values are lowercase; expansion is bidirectional via the group list.
+ */
+const SYNONYM_GROUPS: string[][] = [
+  ['tee', 'tees', 'tshirt', 'tshirts', 't-shirt', 't-shirts'],
+  ['graphic', 'graphics', 'printed', 'print'],
+  ['sportswear', 'sport', 'sports', 'athletic'],
+  ['superhero', 'superheroes', 'marvel', 'comics'],
+];
+
+const SYNONYM_MAP = buildSynonymMap(SYNONYM_GROUPS);
+
+function buildSynonymMap(groups: string[][]): Map<string, string[]> {
+  const map = new Map<string, string[]>();
+  for (const group of groups) {
+    for (const term of group) {
+      map.set(term, group);
+    }
+  }
+  return map;
+}
+
+/**
+ * Normalize text for matching: lowercase and collapse hyphenated tee forms so
+ * "t-shirts" / "t shirts" align with expanded "t-shirt" tokens.
+ */
+export function normalizeCatalogText(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/t[\s-]?shirts?/g, ' tshirt ')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/** Expand mandate tokens with synonym-group peers (deduped). */
+export function expandTokens(tokens: string[]): string[] {
+  const out = new Set<string>();
+  for (const t of tokens) {
+    out.add(t);
+    const group = SYNONYM_MAP.get(t);
+    if (group) {
+      for (const peer of group) out.add(peer);
+    }
+  }
+  return [...out];
+}
+
 /** Tokenize mandate style/category into searchable keywords. */
 export function mandateTokens(mandate: Mandate): string[] {
   const raw = `${mandate.category} ${mandate.style}`.toLowerCase();
@@ -30,12 +79,15 @@ export function mandateTokens(mandate: Mandate): string[] {
   ];
 }
 
-function scoreProduct(product: Product, tokens: string[]): number {
+/** Score a product against mandate tokens with synonym expansion (pure; for tests). */
+export function scoreProduct(product: Product, tokens: string[]): number {
   if (tokens.length === 0) return 0;
-  const hay = `${product.name} ${product.collection}`.toLowerCase();
+  const hay = ` ${normalizeCatalogText(`${product.name} ${product.collection}`)} `;
   let hits = 0;
   for (const t of tokens) {
-    if (hay.includes(t)) hits += 1;
+    const candidates = expandTokens([t]).map((c) => normalizeCatalogText(c));
+    const matched = candidates.some((needle) => needle.length >= 3 && hay.includes(` ${needle} `));
+    if (matched) hits += 1;
   }
   if (hits === 0) return 0;
   // Prefer more token coverage; slight boost for cheaper lots.
