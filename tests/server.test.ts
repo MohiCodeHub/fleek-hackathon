@@ -227,7 +227,7 @@ describe('createApp', () => {
     expect(await res.text()).toBe('bad json');
   });
 
-  it('POST /webhook returns interim BYOA JSON and schedules processing', async () => {
+  it('POST /webhook suppresses interim WhatsApp and schedules processing', async () => {
     vi.spyOn(wassist, 'checkSignature').mockReturnValue({ ok: true });
     const app = createApp();
     const payload = {
@@ -243,10 +243,7 @@ describe('createApp', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({
-      type: 'message',
-      content: "Got it — Abhi's on it. Hang tight.",
-    });
+    expect(await res.json()).toEqual({ content: 'No CUSTOMER message reply' });
     expect(db.markDelivery).toHaveBeenCalled();
     await vi.waitFor(() => {
       expect(processInbound).toHaveBeenCalled();

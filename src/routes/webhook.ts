@@ -6,14 +6,13 @@ import {
   deliveryKey,
   parseInbound,
   signatureFailureMessage,
-  webhookMessageReply,
 } from '../wassist.js';
 
 export const webhookRoutes = new Hono();
 
 /**
  * Wassist BYOA webhook.
- * Respond quickly with an interim WhatsApp message, then finish Abhi in the
+ * Acknowledge without an interim WhatsApp message, then finish Abhi in the
  * background and POST the final answer to `reply_callback`.
  */
 webhookRoutes.post('/webhook', async (c) => {
@@ -48,6 +47,6 @@ webhookRoutes.post('/webhook', async (c) => {
 
   void processInbound(inbound).catch((e) => console.error('processInbound error:', e));
 
-  // Fast interim while Abhi/LLM runs (docs: aim to answer webhook within ~5s).
-  return c.json(webhookMessageReply("Got it — Abhi's on it. Hang tight."));
+  // Suppress interim WhatsApp message; Abhi replies once via reply_callback.
+  return c.json({ content: 'No CUSTOMER message reply' }, 200);
 });
