@@ -1,6 +1,8 @@
 import { closeDb } from '../db/client.js';
-import { insertBale, resetDb, upsertBuyer, upsertSupplier } from '../db/index.js';
-import type { Bale, Buyer, Supplier } from '../types.js';
+import { insertBale, insertProduct, resetDb, upsertBuyer, upsertSupplier } from '../db/index.js';
+import type { Bale, Buyer, Product, Supplier } from '../types.js';
+import mensProductsJson from './data/mens-unisex.json';
+import womensProductsJson from './data/womens.json';
 
 /**
  * Seed fuzzy, messy bulk-bale inventory — the shape of real wholesale
@@ -166,13 +168,41 @@ const bales: Bale[] = [
   },
 ];
 
+/** Demo web-catalog products for /collections and /api/products (raw JSON fixtures). */
+interface ProductFixture {
+  id: number;
+  name: string;
+  price: number;
+  original_price?: number;
+  currency: string;
+  price_per_piece: number;
+  collection: string;
+}
+
+const productFixtures = [
+  ...(mensProductsJson as ProductFixture[]),
+  ...(womensProductsJson as ProductFixture[]),
+];
+
+const catalogProducts: Product[] = productFixtures.map((p) => ({
+  id: p.id,
+  collection: p.collection as Product['collection'],
+  name: p.name,
+  price: p.price,
+  originalPrice: p.original_price ?? null,
+  currency: p.currency,
+  pricePerPiece: p.price_per_piece,
+}));
+
 async function seed(): Promise<void> {
   await resetDb();
   for (const b of buyers) await upsertBuyer(b);
   for (const s of suppliers) await upsertSupplier(s);
   for (const b of bales) await insertBale(b);
+  for (const p of catalogProducts) await insertProduct(p);
   console.log(
-    `Seeded ${buyers.length} buyer(s), ${suppliers.length} suppliers, ${bales.length} bales.`,
+    `Seeded ${buyers.length} buyer(s), ${suppliers.length} suppliers, ${bales.length} bales, ` +
+      `${catalogProducts.length} catalog products.`,
   );
   await closeDb();
 }

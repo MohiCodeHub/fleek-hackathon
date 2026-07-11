@@ -24,6 +24,8 @@ export const config = {
      */
     publicWebhookUrl: process.env.PUBLIC_WEBHOOK_URL ?? '',
   },
+  /** WhatsApp number for the buyer-facing Abhi thread (digits only, for wa.me links). */
+  whatsappNumber: (process.env.WHATSAPP_NUMBER ?? '447424845871').replace(/[^0-9]/g, ''),
   port: Number(process.env.PORT ?? 8787),
   databaseUrl: process.env.DATABASE_URL ?? '',
 } as const;

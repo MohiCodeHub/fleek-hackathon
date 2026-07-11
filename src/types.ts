@@ -55,6 +55,25 @@ export interface Bale {
   askPrice: number;
 }
 
+/** Demo web-catalog product (the /collections funnel), not agent bale inventory. */
+export interface Product {
+  id: number;
+  collection: 'mens-unisex' | 'womens';
+  name: string;
+  price: number;
+  originalPrice: number | null;
+  currency: string;
+  pricePerPiece: number;
+}
+
+/** One page of demo catalog products. */
+export interface ProductPage {
+  total: number;
+  offset: number;
+  limit: number;
+  data: Product[];
+}
+
 /** Structured demand extracted from a buyer's natural-language message. */
 export interface Mandate {
   id: string;

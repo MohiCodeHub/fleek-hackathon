@@ -15,7 +15,7 @@ Stack: **Node ≥22**, **TypeScript (ESM)**, **Hono** + `@hono/node-server`, **D
 
 Package manager: **npm**. Root package name: `abhi-and-sanket`.
 
-There is a separate `website/` Vite React app; treat it as out of scope unless the task explicitly targets it. Biome/CI cover root `src/` and `tests/` only.
+The web surface (landing + demo catalog) is served by the same Hono app via Hono JSX under `src/web/` — there is no separate frontend build. The old standalone `website/` Vite React app has been removed. Biome/CI cover root `src/` and `tests/` only.
 
 ## Architecture (backend)
 
@@ -34,7 +34,10 @@ Key paths:
 | `src/server.ts` | Listen on `0.0.0.0:$PORT` |
 | `src/app.ts` | Hono app factory (used by tests via `app.request()`) |
 | `src/routes/webhook.ts` | BYOA webhook: interim reply + background `processInbound` |
-| `src/routes/health.ts` | `GET /health`, `GET /` |
+| `src/routes/health.ts` | `GET /health` |
+| `src/routes/web.ts` | `GET /` landing, `/collections/*`, `/web.css` (Hono JSX) |
+| `src/routes/products.ts` | `GET /api/products…` demo product JSON |
+| `src/web/` | JSX pages, `wa.me` helper, collection metadata, `DESIGN.md` tokens |
 | `src/handler.ts` | Buyer WhatsApp → Abhi; supplier numbers → stub (Sanket is off-stage) |
 | `src/agent/abhi.ts` | Buyer agent + tools |
 | `src/agent/harness.ts` | Shared tool-use loop |
@@ -54,7 +57,7 @@ Do not confuse env vars:
 npm install
 cp .env.example .env   # OPENAI_API_KEY, DATABASE_URL required for agent runs
 npm run db:push        # apply Drizzle schema to Postgres
-npm run seed           # fuzzy bulk-bale inventory + demo buyer
+npm run seed           # fuzzy bulk-bale inventory + demo buyer + web catalog products
 ```
 
 Required env (see `.env.example`):
@@ -62,6 +65,7 @@ Required env (see `.env.example`):
 - `OPENAI_API_KEY`, `DATABASE_URL`
 - For WhatsApp: `WASSIST_API_KEY`, `PUBLIC_WEBHOOK_URL`; optional `WASSIST_WEBHOOK_SECRET`
 - Optional model overrides: `MODEL_REASONING`, `MODEL_FAST`
+- Optional `WHATSAPP_NUMBER` for the landing-page `wa.me` CTA (default sandbox `447424845871`)
 
 Never commit `.env`. Config loads with `dotenv` override (`src/config.ts`).
 

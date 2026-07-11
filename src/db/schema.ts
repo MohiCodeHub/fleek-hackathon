@@ -83,6 +83,21 @@ export const processedDeliveries = pgTable('processed_deliveries', {
   seenAt: text('seen_at').notNull(),
 });
 
+/** Demo web-catalog products (the /collections funnel), not agent bale inventory. */
+export const products = pgTable(
+  'products',
+  {
+    id: integer('id').notNull(),
+    collection: text('collection').notNull(),
+    name: text('name').notNull(),
+    price: real('price').notNull(),
+    originalPrice: real('original_price'),
+    currency: text('currency').notNull(),
+    pricePerPiece: real('price_per_piece').notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.collection, t.id] })],
+);
+
 export const threads = pgTable('threads', {
   phone: text('phone').primaryKey(),
   role: text('role').notNull(),

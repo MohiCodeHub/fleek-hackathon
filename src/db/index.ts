@@ -1,5 +1,15 @@
-import { eq } from 'drizzle-orm';
-import type { Bale, Buyer, Deal, Mandate, Match, Negotiation, Supplier } from '../types.js';
+import { and, asc, count, desc, eq } from 'drizzle-orm';
+import type {
+  Bale,
+  Buyer,
+  Deal,
+  Mandate,
+  Match,
+  Negotiation,
+  Product,
+  ProductPage,
+  Supplier,
+} from '../types.js';
 import { db } from './client.js';
 import {
   buyers,
@@ -9,6 +19,7 @@ import {
   matches,
   negotiations,
   processedDeliveries,
+  products,
   suppliers,
   threads,
 } from './schema.js';
@@ -284,6 +295,99 @@ export async function saveDeal(deal: Deal): Promise<void> {
 }
 
 // ---------------------------------------------------------------------------
+// Demo catalog products
+// ---------------------------------------------------------------------------
+
+function rowToProduct(r: typeof products.$inferSelect): Product {
+  return {
+    id: r.id,
+    collection: r.collection as Product['collection'],
+    name: r.name,
+    price: r.price,
+    originalPrice: r.originalPrice,
+    currency: r.currency,
+    pricePerPiece: r.pricePerPiece,
+  };
+}
+
+export async function insertProduct(p: Product): Promise<void> {
+  await db()
+    .insert(products)
+    .values({
+      id: p.id,
+      collection: p.collection,
+      name: p.name,
+      price: p.price,
+      originalPrice: p.originalPrice,
+      currency: p.currency,
+      pricePerPiece: p.pricePerPiece,
+    })
+    .onConflictDoUpdate({
+      target: [products.collection, products.id],
+      set: {
+        name: p.name,
+        price: p.price,
+        originalPrice: p.originalPrice,
+        currency: p.currency,
+        pricePerPiece: p.pricePerPiece,
+      },
+    });
+}
+
+/** List demo products with the old website API semantics (sort, then slice). */
+export async function listProducts(opts: {
+  collection?: string;
+  sort?: string;
+  limit?: number;
+  offset?: number;
+}): Promise<ProductPage> {
+  const where = opts.collection ? eq(products.collection, opts.collection) : undefined;
+
+  const totalRows = await db().select({ total: count() }).from(products).where(where);
+  const total = totalRows[0]?.total ?? 0;
+
+  const order =
+    opts.sort === 'price-asc'
+      ? [asc(products.price)]
+      : opts.sort === 'price-desc'
+        ? [desc(products.price)]
+        : opts.sort === 'name'
+          ? [asc(products.name)]
+          : [asc(products.collection), asc(products.id)];
+
+  const offset = opts.offset ?? 0;
+  const limit = opts.limit ?? total;
+  const rows = await db()
+    .select()
+    .from(products)
+    .where(where)
+    .orderBy(...order)
+    .limit(limit)
+    .offset(offset);
+
+  return { total, offset, limit, data: rows.map(rowToProduct) };
+}
+
+export async function getProduct(collection: string, id: number): Promise<Product | null> {
+  const rows = await db()
+    .select()
+    .from(products)
+    .where(and(eq(products.collection, collection), eq(products.id, id)))
+    .limit(1);
+  const row = rows[0];
+  return row ? rowToProduct(row) : null;
+}
+
+/** Product counts per collection slug (for the catalog index page). */
+export async function productCounts(): Promise<Record<string, number>> {
+  const rows = await db()
+    .select({ collection: products.collection, total: count() })
+    .from(products)
+    .groupBy(products.collection);
+  return Object.fromEntries(rows.map((r) => [r.collection, r.total]));
+}
+
+// ---------------------------------------------------------------------------
 // Webhook idempotency
 // ---------------------------------------------------------------------------
 
@@ -298,6 +402,7 @@ export async function markDelivery(deliveryId: string, nowIso: string): Promise<
 }
 
 export async function resetDb(): Promise<void> {
+  await db().delete(products);
   await db().delete(deals);
   await db().delete(negotiations);
   await db().delete(matches);
