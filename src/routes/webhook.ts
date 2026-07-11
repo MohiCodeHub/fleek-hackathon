@@ -8,6 +8,7 @@ import {
   isWassistReplyCallback,
   parseInbound,
   signatureFailureMessage,
+  webhookSilentAck,
 } from '../wassist.js';
 
 export const webhookRoutes = new Hono();
@@ -38,7 +39,7 @@ webhookRoutes.post('/webhook', async (c) => {
 
   const inbound = parseInbound(payload);
   if (!inbound) {
-    return c.json({ content: 'No CUSTOMER message reply' }, 200);
+    return c.json(webhookSilentAck(), 200);
   }
 
   let callbackHost = '';
@@ -53,14 +54,14 @@ webhookRoutes.post('/webhook', async (c) => {
       host: callbackHost,
       preview: inbound.replyCallback.slice(0, 120),
     });
-    return c.json({ content: 'No CUSTOMER message reply' }, 200);
+    return c.json(webhookSilentAck(), 200);
   }
 
   // Idempotency: prefer Wassist delivery header; else hash phone+body+callback.
   const id = c.req.header('X-Wassist-Delivery')?.trim() || deliveryKey(inbound);
   if (!(await markDelivery(id, new Date().toISOString()))) {
     log.info('webhook.duplicate', { deliveryId: id.slice(0, 16) });
-    return c.json({ content: 'No CUSTOMER message reply' }, 200);
+    return c.json(webhookSilentAck(), 200);
   }
 
   let imageHost = '';
@@ -88,6 +89,6 @@ webhookRoutes.post('/webhook', async (c) => {
     }),
   );
 
-  // Suppress interim WhatsApp message; Abhi replies once via reply_callback.
-  return c.json({ content: 'No CUSTOMER message reply' }, 200);
+  // No interim WhatsApp copy; Abhi replies once via reply_callback.
+  return c.json(webhookSilentAck(), 200);
 });

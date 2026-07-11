@@ -248,7 +248,7 @@ describe('createApp', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ content: 'No CUSTOMER message reply' });
+    expect(await res.json()).toEqual({});
     expect(db.markDelivery).toHaveBeenCalled();
     await vi.waitFor(() => {
       expect(processInbound).toHaveBeenCalled();
@@ -271,7 +271,7 @@ describe('createApp', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ content: 'No CUSTOMER message reply' });
+    expect(await res.json()).toEqual({});
     await vi.waitFor(() => {
       expect(processInbound).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -298,7 +298,7 @@ describe('createApp', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ content: 'No CUSTOMER message reply' });
+    expect(await res.json()).toEqual({});
     expect(processInbound).not.toHaveBeenCalled();
     expect(db.markDelivery).not.toHaveBeenCalled();
   });

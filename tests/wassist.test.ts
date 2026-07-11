@@ -10,6 +10,7 @@ import {
   toReplyPayload,
   verifySignature,
   webhookMessageReply,
+  webhookSilentAck,
 } from '../src/wassist.js';
 
 const SECRET = 'whsec_test_secret';
@@ -217,6 +218,13 @@ describe('deliveryKey', () => {
 describe('webhookMessageReply', () => {
   it('builds the interim WhatsApp JSON shape', () => {
     expect(webhookMessageReply('hello')).toEqual({ type: 'message', content: 'hello' });
+  });
+});
+
+describe('webhookSilentAck', () => {
+  it('returns an empty object with no customer-facing content', () => {
+    expect(webhookSilentAck()).toEqual({});
+    expect(webhookSilentAck()).not.toHaveProperty('content');
   });
 });
 

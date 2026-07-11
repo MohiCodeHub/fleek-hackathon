@@ -215,6 +215,15 @@ export function webhookMessageReply(content: string): { type: 'message'; content
 }
 
 /**
+ * Webhook ack with no WhatsApp delivery.
+ * Do not put text in `content` — Wassist forwards `content` to the customer.
+ * Final Abhi replies go through `reply_callback` only.
+ */
+export function webhookSilentAck(): Record<string, never> {
+  return {};
+}
+
+/**
  * Keep only real http(s) image URLs.
  * Wassist tool templates often send unsubstituted tokens like `%IMAGE_URL%`
  * on text-only messages — treat those as no image.
