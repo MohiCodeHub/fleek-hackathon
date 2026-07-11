@@ -1,0 +1,19 @@
+{
+  "name": "seller-chat",
+  "version": "0.1.0",
+  "description": "Minimal seller-facing messaging platform — a WhatsApp stand-in the Fleek agent relays negotiation messages to.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "tsx src/server.ts",
+    "dev": "tsx watch src/server.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "hono": "^4.6.20",
+    "tsx": "^4.19.2"
+  }
+}
