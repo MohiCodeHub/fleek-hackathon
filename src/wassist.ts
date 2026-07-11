@@ -50,6 +50,30 @@ export async function replyViaCallback(replyCallbackUrl: string, content: string
 }
 
 /**
+ * True only for real Wassist reply_callback URLs.
+ * Rejects probes like https://example.com/cb so we never burn an Abhi turn
+ * or POST replies to an unrelated host.
+ */
+export function isWassistReplyCallback(url: string): boolean {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return false;
+  }
+  if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return false;
+
+  let allowedHost: string;
+  try {
+    allowedHost = new URL(config.wassist.baseUrl).hostname.toLowerCase();
+  } catch {
+    allowedHost = 'wassist.app';
+  }
+  const host = parsed.hostname.toLowerCase();
+  return host === allowedHost || host === 'wassist.app' || host.endsWith('.wassist.app');
+}
+
+/**
  * Optional signature check for signed platform webhooks.
  * BYOA deliveries are unsigned — leave WASSIST_WEBHOOK_SECRET empty for BYOA.
  * When set, expects X-Wassist-Signature: t=<unix>,v1=<hex-hmac-sha256>

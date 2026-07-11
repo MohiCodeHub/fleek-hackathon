@@ -249,4 +249,24 @@ describe('createApp', () => {
       expect(processInbound).toHaveBeenCalled();
     });
   });
+
+  it('POST /webhook ignores non-Wassist reply_callback hosts without processing', async () => {
+    vi.spyOn(wassist, 'checkSignature').mockReturnValue({ ok: true });
+    const app = createApp();
+    const res = await app.request('/webhook', {
+      method: 'POST',
+      body: JSON.stringify({
+        message: 'probe',
+        phone_number: '+10000000000',
+        reply_callback: 'https://example.com/cb',
+        image: null,
+      }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ content: 'No CUSTOMER message reply' });
+    expect(processInbound).not.toHaveBeenCalled();
+    expect(db.markDelivery).not.toHaveBeenCalled();
+  });
 });

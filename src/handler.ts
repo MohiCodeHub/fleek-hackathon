@@ -2,7 +2,7 @@ import type { AgentSession } from '@earendil-works/pi-coding-agent';
 import { buildAgent, lastAssistantText, type ToolExec } from './agent/factory.js';
 import { getBuyer, getSupplierByPhone, getThread, saveThread, upsertBuyer } from './db/index.js';
 import { learnFromInteraction } from './memory.js';
-import { type InboundMessage, replyViaCallback } from './wassist.js';
+import { type InboundMessage, isWassistReplyCallback, replyViaCallback } from './wassist.js';
 
 /**
  * Process one inbound WhatsApp message on the buyer-facing thread.
@@ -81,6 +81,12 @@ async function deliver(replyCallback: string, reply: string): Promise<void> {
   if (!reply) return;
   if (!replyCallback.startsWith('http')) {
     console.log(`\n[no reply_callback URL — would send]\n${reply}\n`);
+    return;
+  }
+  if (!isWassistReplyCallback(replyCallback)) {
+    console.warn(
+      `skipping deliver: non-Wassist reply_callback host: ${replyCallback.slice(0, 120)}`,
+    );
     return;
   }
   await replyViaCallback(replyCallback, reply);

@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   checkSignature,
   deliveryKey,
+  isWassistReplyCallback,
   parseInbound,
   replyViaCallback,
   signatureFailureMessage,
@@ -70,6 +71,26 @@ describe('checkSignature / verifySignature', () => {
 
   it('explains missing-header failures for BYOA operators', () => {
     expect(signatureFailureMessage('missing_header')).toContain('unset WASSIST_WEBHOOK_SECRET');
+  });
+});
+
+describe('isWassistReplyCallback', () => {
+  it('allows wassist.app callback URLs', () => {
+    expect(isWassistReplyCallback('https://wassist.app/api/callback/xyz')).toBe(true);
+  });
+
+  it('allows subdomains of wassist.app', () => {
+    expect(isWassistReplyCallback('https://api.wassist.app/callback/1')).toBe(true);
+  });
+
+  it('rejects example.com and other hosts', () => {
+    expect(isWassistReplyCallback('https://example.com/cb')).toBe(false);
+    expect(isWassistReplyCallback('https://evil.example/wassist.app')).toBe(false);
+  });
+
+  it('rejects malformed URLs', () => {
+    expect(isWassistReplyCallback('not-a-url')).toBe(false);
+    expect(isWassistReplyCallback('')).toBe(false);
   });
 });
 

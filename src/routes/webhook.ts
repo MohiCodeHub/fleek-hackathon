@@ -1,7 +1,13 @@
 import { Hono } from 'hono';
 import { markDelivery } from '../db/index.js';
 import { processInbound } from '../handler.js';
-import { checkSignature, deliveryKey, parseInbound, signatureFailureMessage } from '../wassist.js';
+import {
+  checkSignature,
+  deliveryKey,
+  isWassistReplyCallback,
+  parseInbound,
+  signatureFailureMessage,
+} from '../wassist.js';
 
 export const webhookRoutes = new Hono();
 
@@ -31,6 +37,13 @@ webhookRoutes.post('/webhook', async (c) => {
 
   const inbound = parseInbound(payload);
   if (!inbound) {
+    return c.json({ content: 'No CUSTOMER message reply' }, 200);
+  }
+
+  if (!isWassistReplyCallback(inbound.replyCallback)) {
+    console.warn(
+      `webhook rejected non-Wassist reply_callback host: ${inbound.replyCallback.slice(0, 120)}`,
+    );
     return c.json({ content: 'No CUSTOMER message reply' }, 200);
   }
 
