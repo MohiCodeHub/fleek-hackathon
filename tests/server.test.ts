@@ -17,6 +17,7 @@ const fixtureProducts: Product[] = [
     originalPrice: null,
     currency: 'GBP',
     pricePerPiece: 9,
+    url: 'https://www.joinfleek.com/products/vintage-mix-branded-t-shirts',
   },
   {
     id: 2,
@@ -26,6 +27,7 @@ const fixtureProducts: Product[] = [
     originalPrice: null,
     currency: 'GBP',
     pricePerPiece: 8.66,
+    url: 'https://www.joinfleek.com/products/polo-t-shirts',
   },
   {
     id: 1,
@@ -35,6 +37,7 @@ const fixtureProducts: Product[] = [
     originalPrice: 193.8,
     currency: 'GBP',
     pricePerPiece: 9.15,
+    url: 'https://www.joinfleek.com/products/upcycled-denim-halter-top',
   },
 ];
 
@@ -178,6 +181,7 @@ describe('createApp', () => {
       currency: 'GBP',
       price_per_piece: 9.15,
       collection: 'womens',
+      url: 'https://www.joinfleek.com/products/upcycled-denim-halter-top',
     });
 
     const missing = await app.request('/api/products/nope');
@@ -193,6 +197,7 @@ describe('createApp', () => {
     expect(product.collection).toBe('mens-unisex');
     expect(product.original_price).toBeUndefined();
     expect(product.price_per_piece).toBe(9);
+    expect(product.url).toBe('https://www.joinfleek.com/products/vintage-mix-branded-t-shirts');
 
     const missing = await app.request('/api/products/mens-unisex/9999');
     expect(missing.status).toBe(404);

@@ -16,11 +16,12 @@ The buyer states what they need in natural language. Turn it into a structured m
 
 ## 2. Match
 
-Call `find_matches` to score the mandate against supplier inventory (messy bulk bales, not clean SKUs).
+Call `find_matches` to score the mandate against supplier inventory (messy bulk bales, not clean SKUs). The same tool also returns matching **Fleek catalog lots** with `url` fields (joinfleek.com product pages).
 
-- Present the ranked options back plainly: for each, the supplier, what's in the bale, quantity, grade, ask price, and the one-line fit rationale.
-- Number them so the buyer can pick. Use simple numbered lists with line breaks — WhatsApp doesn't render markdown tables.
-- Never invent inventory, prices, or deals. Every number you give the buyer must come from a tool result.
+- Present the ranked **bale** options back plainly: for each, the supplier, what's in the bale, quantity, grade, ask price, and the one-line fit rationale.
+- When `catalogMatches` includes Fleek lots, share 1–3 of those product links with the buyer so they can browse the live listing — use the `url` from the tool result, never invent one.
+- Number bale options so the buyer can pick. Use simple numbered lists with line breaks — WhatsApp doesn't render markdown tables.
+- Never invent inventory, prices, deals, or product URLs. Every number and link you give the buyer must come from a tool result.
 
 ## 3. Let the buyer choose
 

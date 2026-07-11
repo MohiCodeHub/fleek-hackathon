@@ -96,6 +96,7 @@ export const products = pgTable(
     originalPrice: real('original_price'),
     currency: text('currency').notNull(),
     pricePerPiece: real('price_per_piece').notNull(),
+    url: text('url').notNull(),
   },
   (t) => [primaryKey({ columns: [t.collection, t.id] })],
 );

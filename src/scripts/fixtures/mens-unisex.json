@@ -5,7 +5,8 @@
     "price": 135,
     "currency": "GBP",
     "price_per_piece": 9.0,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/cr10095-vintage-mix-branded-t-shirts"
   },
   {
     "id": 2,
@@ -13,7 +14,8 @@
     "price": 235,
     "currency": "GBP",
     "price_per_piece": 11.77,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/the-north-face-and-columbia-fleeces-20-pcs"
   },
   {
     "id": 3,
@@ -21,7 +23,8 @@
     "price": 135,
     "currency": "GBP",
     "price_per_piece": 9.0,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/cr10094-vintage-polo-t-shirts"
   },
   {
     "id": 4,
@@ -29,7 +32,8 @@
     "price": 130,
     "currency": "GBP",
     "price_per_piece": 8.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/cr10093-vintage-polo-t-shirts"
   },
   {
     "id": 5,
@@ -37,7 +41,8 @@
     "price": 90,
     "currency": "GBP",
     "price_per_piece": 8.96,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/lacoste-collar-tshirts-4"
   },
   {
     "id": 6,
@@ -45,7 +50,8 @@
     "price": 130,
     "currency": "GBP",
     "price_per_piece": 8.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/cr10092-vintage-polo-t-shirts"
   },
   {
     "id": 7,
@@ -53,7 +59,8 @@
     "price": 175,
     "currency": "GBP",
     "price_per_piece": 11.69,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/cr10082-vintage-carhartt-hoodies"
   },
   {
     "id": 8,
@@ -61,7 +68,8 @@
     "price": 230,
     "currency": "GBP",
     "price_per_piece": 19.15,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/upcycled-contrast-cotton-jackets-1"
   },
   {
     "id": 9,
@@ -69,7 +77,8 @@
     "price": 130,
     "currency": "GBP",
     "price_per_piece": 8.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/cr10090-vintage-polo-t-shirts"
   },
   {
     "id": 10,
@@ -77,7 +86,8 @@
     "price": 284,
     "currency": "GBP",
     "price_per_piece": 23.7,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/levis-shirt-18"
   },
   {
     "id": 11,
@@ -85,7 +95,8 @@
     "price": 214,
     "currency": "GBP",
     "price_per_piece": 6.69,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/32-pcs-exact-upcycled-printed-collar-shirt"
   },
   {
     "id": 12,
@@ -93,7 +104,8 @@
     "price": 209,
     "currency": "GBP",
     "price_per_piece": 17.4,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/upcycled-patchwork-denim-jeans"
   },
   {
     "id": 13,
@@ -101,7 +113,8 @@
     "price": 130,
     "currency": "GBP",
     "price_per_piece": 8.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/cr10091-vintage-tommy-hilfiger-t-shirts"
   },
   {
     "id": 14,
@@ -109,7 +122,8 @@
     "price": 142,
     "currency": "GBP",
     "price_per_piece": 12.88,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/patagonia-fleece-jacket-brand-patagonia-368"
   },
   {
     "id": 15,
@@ -117,7 +131,8 @@
     "price": 130,
     "currency": "GBP",
     "price_per_piece": 8.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/cr10089-vintage-polo-t-shirts"
   },
   {
     "id": 16,
@@ -125,7 +140,8 @@
     "price": 79,
     "currency": "GBP",
     "price_per_piece": 5.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/single-stitch-t-shirtsbrands-crystal-cotton-exchange-anvil-etc-367"
   },
   {
     "id": 17,
@@ -133,7 +149,8 @@
     "price": 188,
     "currency": "GBP",
     "price_per_piece": 4.17,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/%F0%9F%92%A5-rv4117-nike-round-neck-tshirts"
   },
   {
     "id": 18,
@@ -141,7 +158,8 @@
     "price": 100,
     "currency": "GBP",
     "price_per_piece": 6.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/cr10087-vintage-single-stitch-t-shirts"
   },
   {
     "id": 19,
@@ -149,7 +167,8 @@
     "price": 75,
     "currency": "GBP",
     "price_per_piece": 5.36,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/adidas-sport-t-shirts-brand-adidas-363"
   },
   {
     "id": 20,
@@ -157,7 +176,8 @@
     "price": 100,
     "currency": "GBP",
     "price_per_piece": 6.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/cr10086-vintage-single-stitch-t-shirts"
   },
   {
     "id": 21,
@@ -165,7 +185,8 @@
     "price": 129,
     "currency": "GBP",
     "price_per_piece": 10.79,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/rv4127-workwear-jackets"
   },
   {
     "id": 22,
@@ -173,7 +194,8 @@
     "price": 194,
     "currency": "GBP",
     "price_per_piece": 8.81,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/rv4126-nike-shoes"
   },
   {
     "id": 23,
@@ -181,7 +203,8 @@
     "price": 115,
     "currency": "GBP",
     "price_per_piece": 7.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/cr10085-vintage-carhartt-t-shirts"
   },
   {
     "id": 24,
@@ -189,7 +212,8 @@
     "price": 173,
     "currency": "GBP",
     "price_per_piece": 6.67,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/%F0%9F%92%A5-rv4125-adidas-track-pants"
   },
   {
     "id": 25,
@@ -197,7 +221,8 @@
     "price": 100,
     "currency": "GBP",
     "price_per_piece": 6.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/cr10084-vintage-single-stitch-t-shirts"
   },
   {
     "id": 26,
@@ -205,7 +230,8 @@
     "price": 174,
     "currency": "GBP",
     "price_per_piece": 7.23,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/%F0%9F%92%A5-rv4124-adidas-mix-winter"
   },
   {
     "id": 27,
@@ -213,7 +239,8 @@
     "price": 115,
     "currency": "GBP",
     "price_per_piece": 7.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/cr10083-vintage-carhartt-t-shirts"
   },
   {
     "id": 28,
@@ -221,7 +248,8 @@
     "price": 130,
     "currency": "GBP",
     "price_per_piece": 8.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/cr10088-vintage-polo-t-shirts"
   },
   {
     "id": 29,
@@ -229,7 +257,8 @@
     "price": 54,
     "currency": "GBP",
     "price_per_piece": 5.36,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/mix-branded-t-shirts-brands-nike-nfl-adidas-366"
   },
   {
     "id": 30,
@@ -237,7 +266,8 @@
     "price": 121,
     "currency": "GBP",
     "price_per_piece": 6.38,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/single-stitch-t-shirts-brands-russell-almost-famous-etc-365"
   },
   {
     "id": 31,
@@ -245,7 +275,8 @@
     "price": 1274,
     "currency": "GBP",
     "price_per_piece": 254.79,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/brand-bags-7"
   },
   {
     "id": 32,
@@ -253,7 +284,8 @@
     "price": 57,
     "currency": "GBP",
     "price_per_piece": 5.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/graphics-print-t-shirts"
   },
   {
     "id": 33,
@@ -261,7 +293,8 @@
     "price": 91,
     "currency": "GBP",
     "price_per_piece": 9.07,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/branded-track-pants-103"
   },
   {
     "id": 34,
@@ -269,7 +302,8 @@
     "price": 101,
     "currency": "GBP",
     "price_per_piece": 10.07,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/adidas-track-pant-113"
   },
   {
     "id": 35,
@@ -277,7 +311,8 @@
     "price": 75,
     "currency": "GBP",
     "price_per_piece": 7.5,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/adidas-shorts-252"
   },
   {
     "id": 36,
@@ -285,7 +320,8 @@
     "price": 101,
     "currency": "GBP",
     "price_per_piece": 10.09,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/the-north-face-sweatshirts-hoodies-3"
   },
   {
     "id": 37,
@@ -293,7 +329,8 @@
     "price": 57,
     "currency": "GBP",
     "price_per_piece": 5.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/band-t-shirts-128"
   },
   {
     "id": 38,
@@ -301,7 +338,8 @@
     "price": 65,
     "currency": "GBP",
     "price_per_piece": 6.53,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/branded-swimming-shorts-9"
   },
   {
     "id": 39,
@@ -309,7 +347,8 @@
     "price": 136,
     "currency": "GBP",
     "price_per_piece": 13.58,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/lacoste-sweaters-220"
   },
   {
     "id": 40,
@@ -317,7 +356,8 @@
     "price": 75,
     "currency": "GBP",
     "price_per_piece": 7.5,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/nike-shorts-367"
   },
   {
     "id": 41,
@@ -325,7 +365,8 @@
     "price": 204,
     "currency": "GBP",
     "price_per_piece": 20.38,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/patagonia-fleece-jackets-850"
   },
   {
     "id": 42,
@@ -333,7 +374,8 @@
     "price": 125,
     "currency": "GBP",
     "price_per_piece": 12.46,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/polo-3-button-shirts-4"
   },
   {
     "id": 43,
@@ -341,7 +383,8 @@
     "price": 113,
     "currency": "GBP",
     "price_per_piece": 11.33,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/nike-adidas-track-jacket-7"
   },
   {
     "id": 44,
@@ -349,7 +392,8 @@
     "price": 118,
     "currency": "GBP",
     "price_per_piece": 4.53,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/%F0%9F%92%A5-rv4131-hawaiian-men-shirts"
   },
   {
     "id": 45,
@@ -357,7 +401,8 @@
     "price": 96,
     "currency": "GBP",
     "price_per_piece": 5.36,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/adidas-t-shirts-brand-adidas-362"
   },
   {
     "id": 46,
@@ -365,7 +410,8 @@
     "price": 149,
     "currency": "GBP",
     "price_per_piece": 13.55,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/rv4130-college-wool-varsity-jackets"
   },
   {
     "id": 47,
@@ -373,7 +419,8 @@
     "price": 121,
     "currency": "GBP",
     "price_per_piece": 6.05,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/%F0%9F%92%A5-rv4129-levis-men-shirts"
   },
   {
     "id": 48,
@@ -381,7 +428,8 @@
     "price": 95,
     "currency": "GBP",
     "price_per_piece": 9.46,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/burberry-t-shirt-7"
   },
   {
     "id": 49,
@@ -389,7 +437,8 @@
     "price": 108,
     "currency": "GBP",
     "price_per_piece": 15.42,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/carhartt-jacket-mix-brand"
   },
   {
     "id": 50,
@@ -397,7 +446,8 @@
     "price": 290,
     "currency": "GBP",
     "price_per_piece": 57.93,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/6666-arctyrex-short-pant-jacket"
   },
   {
     "id": 51,
@@ -405,7 +455,8 @@
     "price": 82,
     "currency": "GBP",
     "price_per_piece": 16.3,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/6665-tommy-hilfiger-sweaters"
   },
   {
     "id": 52,
@@ -413,7 +464,8 @@
     "price": 75,
     "currency": "GBP",
     "price_per_piece": 15.09,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/mexican-baja-1"
   },
   {
     "id": 53,
@@ -421,7 +473,8 @@
     "price": 538,
     "currency": "GBP",
     "price_per_piece": 33.61,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/true-religion-rock-revival-jeans-22"
   },
   {
     "id": 54,
@@ -429,7 +482,8 @@
     "price": 358,
     "currency": "GBP",
     "price_per_piece": 4.12,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/%F0%9F%92%A5-rv4121-adidas-round-neck-tshirts"
   },
   {
     "id": 55,
@@ -437,7 +491,8 @@
     "price": 46,
     "currency": "GBP",
     "price_per_piece": 6.5,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/starter-nba-nfl-russell-shorts-1"
   },
   {
     "id": 56,
@@ -445,7 +500,8 @@
     "price": 141,
     "currency": "GBP",
     "price_per_piece": 5.62,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/rv4118-ralph-lauren-cotton-shorts"
   },
   {
     "id": 57,
@@ -453,7 +509,8 @@
     "price": 194,
     "currency": "GBP",
     "price_per_piece": 7.74,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/lululemon-mixed-items-70"
   },
   {
     "id": 58,
@@ -461,7 +518,8 @@
     "price": 101,
     "currency": "GBP",
     "price_per_piece": 4.38,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/rv4120-ralph-lauren-t-shirts"
   },
   {
     "id": 59,
@@ -469,7 +527,8 @@
     "price": 195,
     "currency": "GBP",
     "price_per_piece": 5.74,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/rv4119-ralph-lauren-polo-tshirts"
   },
   {
     "id": 60,
@@ -477,7 +536,8 @@
     "price": 70,
     "currency": "GBP",
     "price_per_piece": 4.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/y2k-ladies-print-t-shirt-id-99"
   },
   {
     "id": 61,
@@ -485,7 +545,8 @@
     "price": 661,
     "currency": "GBP",
     "price_per_piece": 31.48,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/rock-revival-and-true-religion-jeans"
   },
   {
     "id": 62,
@@ -493,7 +554,8 @@
     "price": 171,
     "currency": "GBP",
     "price_per_piece": 5.91,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/lululemon-mix-id-79"
   },
   {
     "id": 63,
@@ -501,7 +563,8 @@
     "price": 504,
     "currency": "GBP",
     "price_per_piece": 33.61,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/true-religion-rock-revival-jeans-22"
   },
   {
     "id": 64,
@@ -509,7 +572,8 @@
     "price": 192,
     "currency": "GBP",
     "price_per_piece": 6.2,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/lululemon-mix-id-78"
   },
   {
     "id": 65,
@@ -517,7 +581,8 @@
     "price": 257,
     "currency": "GBP",
     "price_per_piece": 17.1,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/cr10080-vintage-men-s-leather-jackets"
   },
   {
     "id": 66,
@@ -525,7 +590,8 @@
     "price": 95,
     "currency": "GBP",
     "price_per_piece": 9.46,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/ralph-lauren-button-down-shirts-26"
   },
   {
     "id": 67,
@@ -533,7 +599,8 @@
     "price": 95,
     "currency": "GBP",
     "price_per_piece": 9.46,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/ralph-lauren-chemises-2"
   },
   {
     "id": 68,
@@ -541,7 +608,8 @@
     "price": 93,
     "currency": "GBP",
     "price_per_piece": 9.26,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/carhartt-shorts-274"
   },
   {
     "id": 69,
@@ -549,7 +617,8 @@
     "price": 156,
     "currency": "GBP",
     "price_per_piece": 10.41,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/vintage-levi-s-pants-11-07"
   },
   {
     "id": 70,
@@ -557,7 +626,8 @@
     "price": 178,
     "currency": "GBP",
     "price_per_piece": 16.15,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/y2k-rust-suede-jackets-ev0625"
   },
   {
     "id": 71,
@@ -565,7 +635,8 @@
     "price": 56,
     "currency": "GBP",
     "price_per_piece": 4.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/nike-sports-t-shirts-11-9"
   },
   {
     "id": 72,
@@ -573,7 +644,8 @@
     "price": 1524,
     "currency": "GBP",
     "price_per_piece": 304.79,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/bags-29"
   },
   {
     "id": 73,
@@ -581,7 +653,8 @@
     "price": 130,
     "currency": "GBP",
     "price_per_piece": 8.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/ralph-lauren-t-shirts-11-07"
   },
   {
     "id": 74,
@@ -589,7 +662,8 @@
     "price": 68,
     "currency": "GBP",
     "price_per_piece": 5.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/under-armour-sports-t-shirts-11-8"
   },
   {
     "id": 75,
@@ -597,7 +671,8 @@
     "price": 167,
     "currency": "GBP",
     "price_per_piece": 9.26,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/hollister-jeans-72"
   },
   {
     "id": 76,
@@ -605,7 +680,8 @@
     "price": 818,
     "currency": "GBP",
     "price_per_piece": 4.09,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/rv4104-music-tshirts"
   },
   {
     "id": 77,
@@ -613,7 +689,8 @@
     "price": 56,
     "currency": "GBP",
     "price_per_piece": 4.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/nike-sports-t-shirts-11-9"
   },
   {
     "id": 78,
@@ -621,7 +698,8 @@
     "price": 818,
     "currency": "GBP",
     "price_per_piece": 4.09,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/rv4100-band-tees"
   },
   {
     "id": 79,
@@ -629,7 +707,8 @@
     "price": 70,
     "currency": "GBP",
     "price_per_piece": 4.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/nike-sports-t-shirts-11-9"
   },
   {
     "id": 80,
@@ -637,7 +716,8 @@
     "price": 66,
     "currency": "GBP",
     "price_per_piece": 13.29,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/6650-patagonia-harley-and-unbranbed-shorts"
   },
   {
     "id": 81,
@@ -645,7 +725,8 @@
     "price": 74,
     "currency": "GBP",
     "price_per_piece": 5.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/under-armour-sports-t-shirts-11-8"
   },
   {
     "id": 82,
@@ -653,7 +734,8 @@
     "price": 342,
     "currency": "GBP",
     "price_per_piece": 48.84,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/evisu-jean"
   },
   {
     "id": 83,
@@ -661,7 +743,8 @@
     "price": 132,
     "currency": "GBP",
     "price_per_piece": 18.91,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/y2k-unique-bomber-jacket-rw-2213"
   },
   {
     "id": 84,
@@ -669,7 +752,8 @@
     "price": 128,
     "currency": "GBP",
     "price_per_piece": 25.53,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/the-north-face-sweatshirts-hoodies-3"
   },
   {
     "id": 85,
@@ -677,7 +761,8 @@
     "price": 516,
     "currency": "GBP",
     "price_per_piece": 64.49,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/levis-jeans-1239"
   },
   {
     "id": 86,
@@ -685,7 +770,8 @@
     "price": 61,
     "currency": "GBP",
     "price_per_piece": 4.66,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/single-stitch-t-shirts-id-62"
   },
   {
     "id": 87,
@@ -693,7 +779,8 @@
     "price": 885,
     "currency": "GBP",
     "price_per_piece": 9.62,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/vintage-y2k-graphic-t-shirt-affliction-tapout-elite-and-mixed-graphic-t-shirts"
   },
   {
     "id": 88,
@@ -701,7 +788,8 @@
     "price": 6252,
     "currency": "GBP",
     "price_per_piece": 20.84,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/miss-me-jean-9"
   },
   {
     "id": 89,
@@ -709,7 +797,8 @@
     "price": 351,
     "currency": "GBP",
     "price_per_piece": 10.33,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/cargo-shorts-mixed-brands-polo-dickies-wrangle-levis-and-mixed"
   },
   {
     "id": 90,
@@ -717,7 +806,8 @@
     "price": 59,
     "currency": "GBP",
     "price_per_piece": 11.88,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/upcycled-carhartt-patchwork-tote-bag-8"
   },
   {
     "id": 91,
@@ -725,7 +815,8 @@
     "price": 73,
     "currency": "GBP",
     "price_per_piece": 14.65,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/vintage-nike-authentic-puffers"
   },
   {
     "id": 92,
@@ -733,7 +824,8 @@
     "price": 136,
     "currency": "GBP",
     "price_per_piece": 13.65,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/patagonia-mix-brand-puffers-jackets-authentic"
   },
   {
     "id": 93,
@@ -741,7 +833,8 @@
     "price": 72,
     "currency": "GBP",
     "price_per_piece": 14.46,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/premium-fred-perry-polo-shirts-4"
   },
   {
     "id": 94,
@@ -749,7 +842,8 @@
     "price": 64,
     "currency": "GBP",
     "price_per_piece": 8.03,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/surfwear-shorts-34"
   },
   {
     "id": 95,
@@ -757,7 +851,8 @@
     "price": 59,
     "currency": "GBP",
     "price_per_piece": 4.92,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/mixed-branded-caps-vh22"
   },
   {
     "id": 96,
@@ -765,7 +860,8 @@
     "price": 1236,
     "currency": "GBP",
     "price_per_piece": 28.75,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/the-north-face-nuptse-puffer-jacket-black-warm-quilted-down-winter-coat-men-s"
   },
   {
     "id": 97,
@@ -773,7 +869,8 @@
     "price": 797,
     "currency": "GBP",
     "price_per_piece": 20.44,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/hip-hop-pant-4"
   },
   {
     "id": 98,
@@ -781,7 +878,8 @@
     "price": 806,
     "currency": "GBP",
     "price_per_piece": 32.25,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/the-north-face-jacket-premium-outdoor-winter-coat"
   },
   {
     "id": 99,
@@ -789,7 +887,8 @@
     "price": 1301,
     "currency": "GBP",
     "price_per_piece": 30.25,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/the-north-face-puffer-jacket-549"
   },
   {
     "id": 100,
@@ -797,6 +896,7 @@
     "price": 75,
     "currency": "GBP",
     "price_per_piece": 7.46,
-    "collection": "mens-unisex"
+    "collection": "mens-unisex",
+    "url": "https://www.joinfleek.com/products/ralph-lauren-t-shirts-1109"
   }
 ]
