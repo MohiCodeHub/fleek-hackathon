@@ -1,5 +1,5 @@
-import { createInterface } from 'node:readline/promises';
 import { stdin, stdout } from 'node:process';
+import { createInterface } from 'node:readline/promises';
 import { runJack } from '../agent/jack.js';
 import { getBuyer } from '../db/index.js';
 import type { Msg } from '../llm.js';

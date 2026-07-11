@@ -1,8 +1,8 @@
-import { config } from './config.js';
 import { runJack } from './agent/jack.js';
-import { sendMessage, type InboundMessage } from './wassist.js';
-import { getBuyer, getSupplierByPhone, upsertBuyer, getThread, saveThread } from './db/index.js';
+import { config } from './config.js';
+import { getBuyer, getSupplierByPhone, getThread, saveThread, upsertBuyer } from './db/index.js';
 import type { Msg } from './llm.js';
+import { type InboundMessage, sendMessage } from './wassist.js';
 
 /**
  * Resolve persona by counterparty and process one inbound WhatsApp message.
@@ -16,7 +16,11 @@ export async function processInbound(inbound: InboundMessage): Promise<string> {
   const isSupplier = !!supplier;
   if (!isSupplier && !(await getBuyer(from))) {
     // First contact — onboard as a buyer.
-    await upsertBuyer({ phone: from, name: 'WhatsApp buyer', profile: { brandsPursued: [], notes: [] } });
+    await upsertBuyer({
+      phone: from,
+      name: 'WhatsApp buyer',
+      profile: { brandsPursued: [], notes: [] },
+    });
   }
 
   const role: 'buyer' | 'supplier' = isSupplier ? 'supplier' : 'buyer';

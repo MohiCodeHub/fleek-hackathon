@@ -1,7 +1,7 @@
-import { generateText, type Msg } from './llm.js';
 import { config } from './config.js';
+import { generateText, type Msg } from './llm.js';
 import { loadPersona } from './personas.js';
-import type { Supplier, Bale, NegotiationTurn } from './types.js';
+import type { Bale, NegotiationTurn, Supplier } from './types.js';
 
 /**
  * The simulated supplier counterparty for the demo. Jill negotiates against

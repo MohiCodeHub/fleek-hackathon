@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { contractOf, insideContract, escalationNote } from '../src/contract.js';
+import { describe, expect, it } from 'vitest';
+import { contractOf, escalationNote, insideContract } from '../src/contract.js';
+import type { DealTerms, Mandate } from '../src/types.js';
 import { gradeRank } from '../src/types.js';
-import type { Mandate, DealTerms } from '../src/types.js';
 
 const mandate: Mandate = {
   id: 'mnd_test',

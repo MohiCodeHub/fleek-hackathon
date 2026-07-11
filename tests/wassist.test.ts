@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
 import { createHmac } from 'node:crypto';
-import { verifySignature, parseInbound } from '../src/wassist.js';
+import { describe, expect, it } from 'vitest';
+import { parseInbound, verifySignature } from '../src/wassist.js';
 
 const SECRET = 'whsec_test_secret';
 
@@ -16,7 +16,7 @@ describe('verifySignature', () => {
     expect(verifySignature(body, sign(body), SECRET)).toBe(true);
   });
   it('rejects a tampered body', () => {
-    expect(verifySignature(body + ' ', sign(body), SECRET)).toBe(false);
+    expect(verifySignature(`${body} `, sign(body), SECRET)).toBe(false);
   });
   it('rejects a wrong secret', () => {
     expect(verifySignature(body, sign(body), 'whsec_other')).toBe(false);

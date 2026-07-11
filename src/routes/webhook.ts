@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
-import { verifySignature, parseInbound } from '../wassist.js';
 import { markDelivery } from '../db/index.js';
 import { processInbound } from '../handler.js';
+import { parseInbound, verifySignature } from '../wassist.js';
 
 export const webhookRoutes = new Hono();
 

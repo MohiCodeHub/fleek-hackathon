@@ -1,18 +1,18 @@
+import { contractOf, escalationNote, insideContract } from './contract.js';
+import { getBale, getMandate, getSupplier, saveDeal, saveNegotiation } from './db/index.js';
+import { id } from './ids.js';
 import { generateJSON, type JSONSchema } from './llm.js';
 import { loadPersona } from './personas.js';
 import { supplierReply } from './supplier-sim.js';
-import { saveNegotiation, saveDeal, getBale, getSupplier, getMandate } from './db/index.js';
-import { id } from './ids.js';
-import { contractOf, insideContract, escalationNote } from './contract.js';
 import type {
-  Mandate,
   Bale,
-  Supplier,
+  DealTerms,
+  Grade,
+  Mandate,
+  MandateContract,
   Negotiation,
   NegotiationTurn,
-  DealTerms,
-  MandateContract,
-  Grade,
+  Supplier,
 } from './types.js';
 
 const MAX_ROUNDS = 7;
@@ -42,7 +42,8 @@ const DECISION_SCHEMA: JSONSchema = {
     },
     terms: {
       type: 'object',
-      description: 'The concrete terms this action refers to (your proposed terms, or the terms being accepted/escalated).',
+      description:
+        'The concrete terms this action refers to (your proposed terms, or the terms being accepted/escalated).',
       properties: {
         pricePerUnit: { type: 'number' },
         grade: { type: 'string', enum: ['A', 'B', 'C', 'D'] },
@@ -125,7 +126,8 @@ export async function negotiateBale(
     };
 
     // Round 0 must be an opening offer — there's nothing to accept yet.
-    const action: JillAction = round === 0 && decision.action !== 'offer' ? 'offer' : decision.action;
+    const action: JillAction =
+      round === 0 && decision.action !== 'offer' ? 'offer' : decision.action;
 
     if (action === 'accept') {
       neg.transcript.push({ speaker: 'jill', message: decision.message, offer: terms });
@@ -191,12 +193,24 @@ export async function negotiateSelections(
   for (const baleId of baleIds) {
     const bale = await getBale(baleId);
     if (!bale) {
-      outcomes.push({ supplier: '?', baleId, state: 'ESCALATED', terms: null, outcome: 'Unknown bale.' });
+      outcomes.push({
+        supplier: '?',
+        baleId,
+        state: 'ESCALATED',
+        terms: null,
+        outcome: 'Unknown bale.',
+      });
       continue;
     }
     const supplier = await getSupplier(bale.supplierId);
     if (!supplier) {
-      outcomes.push({ supplier: '?', baleId, state: 'ESCALATED', terms: null, outcome: 'Unknown supplier.' });
+      outcomes.push({
+        supplier: '?',
+        baleId,
+        state: 'ESCALATED',
+        terms: null,
+        outcome: 'Unknown supplier.',
+      });
       continue;
     }
     const neg = await negotiateBale(mandate, bale, supplier);

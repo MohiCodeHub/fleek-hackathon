@@ -1,6 +1,6 @@
 import { runJack } from '../agent/jack.js';
-import { getBuyer } from '../db/index.js';
 import { closeDb } from '../db/client.js';
+import { getBuyer } from '../db/index.js';
 import type { Msg } from '../llm.js';
 
 /**
