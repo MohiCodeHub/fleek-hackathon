@@ -1,7 +1,7 @@
 import { createInterface } from 'node:readline/promises';
 import { stdin, stdout } from 'node:process';
 import { runJack } from '../agent/jack.js';
-import { getBuyer } from '../db.js';
+import { getBuyer } from '../db/index.js';
 import type { Msg } from '../llm.js';
 
 /**
@@ -11,7 +11,7 @@ import type { Msg } from '../llm.js';
 const BUYER_PHONE = process.env.BUYER_PHONE ?? '+14155550101';
 
 async function main(): Promise<void> {
-  const buyer = getBuyer(BUYER_PHONE);
+  const buyer = await getBuyer(BUYER_PHONE);
   if (!buyer) {
     console.error(`No buyer ${BUYER_PHONE}. Run: npm run seed`);
     process.exit(1);

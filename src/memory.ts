@@ -1,4 +1,4 @@
-import { getBuyer, upsertBuyer, getBale } from './db.js';
+import { getBuyer, upsertBuyer, getBale } from './db/index.js';
 
 /**
  * The memory brain (deterministic v1). After each Jack interaction, distil
@@ -20,8 +20,8 @@ function pushUnique(arr: string[], value: string, cap = 12): void {
   }
 }
 
-export function learnFromInteraction(buyerPhone: string, executed: Executed[]): void {
-  const buyer = getBuyer(buyerPhone);
+export async function learnFromInteraction(buyerPhone: string, executed: Executed[]): Promise<void> {
+  const buyer = await getBuyer(buyerPhone);
   if (!buyer) return;
   let changed = false;
 
@@ -41,7 +41,7 @@ export function learnFromInteraction(buyerPhone: string, executed: Executed[]): 
     if (call.name === 'negotiate' && Array.isArray(out.outcomes)) {
       for (const o of out.outcomes as Array<Record<string, any>>) {
         if (o.state === 'CLOSED') {
-          const bale = o.baleId ? getBale(String(o.baleId)) : null;
+          const bale = o.baleId ? await getBale(String(o.baleId)) : null;
           if (bale) for (const brand of bale.brands) pushUnique(buyer.profile.brandsPursued, brand);
           const terms = o.terms;
           if (terms) {
@@ -57,5 +57,5 @@ export function learnFromInteraction(buyerPhone: string, executed: Executed[]): 
     }
   }
 
-  if (changed) upsertBuyer(buyer);
+  if (changed) await upsertBuyer(buyer);
 }

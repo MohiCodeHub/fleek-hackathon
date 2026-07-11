@@ -1,5 +1,5 @@
 import { generateJSON, type JSONSchema } from './llm.js';
-import { allBales, allSuppliers, saveMatches, getSupplier } from './db.js';
+import { allBales, allSuppliers, saveMatches, getSupplier } from './db/index.js';
 import type { Mandate, Match, Bale } from './types.js';
 
 /** A match enriched with its bale + supplier, for presentation & negotiation. */
@@ -51,12 +51,11 @@ Score each candidate 0-100 on overall fit, weighing:
 
 Return the plausible options ranked best-first, each with a crisp fit rationale that a buyer would find useful. Do not invent bales; only use the provided candidates.`;
 
-function candidateBlock(bales: Bale[]): string {
-  const bySupplier = (id: string) => getSupplier(id)?.name ?? id;
+function candidateBlock(bales: Bale[], supplierName: (id: string) => string): string {
   return bales
     .map(
       (b) =>
-        `- ${b.id} | supplier: ${bySupplier(b.supplierId)} | ${b.category}/${b.era} | brands: ${b.brands.join(', ')} | grade ${b.grade} | qty ~${b.quantity} | ask $${b.askPrice}/unit\n  "${b.description}"`,
+        `- ${b.id} | supplier: ${supplierName(b.supplierId)} | ${b.category}/${b.era} | brands: ${b.brands.join(', ')} | grade ${b.grade} | qty ~${b.quantity} | ask $${b.askPrice}/unit\n  "${b.description}"`,
     )
     .join('\n');
 }
@@ -68,8 +67,9 @@ export interface Matcher {
 /** LLM semantic matcher (v1). Swappable if Fleek reveals real inventory structure. */
 export const llmMatcher: Matcher = {
   async rank(mandate: Mandate): Promise<RankedMatch[]> {
-    const bales = allBales();
-    const suppliers = new Map(allSuppliers().map((s) => [s.id, s]));
+    const bales = await allBales();
+    const suppliers = new Map((await allSuppliers()).map((s) => [s.id, s]));
+    const bySupplier = (id: string) => suppliers.get(id)?.name ?? id;
 
     const prompt = `MANDATE
 category: ${mandate.category}
@@ -79,7 +79,7 @@ grade floor: ${mandate.gradeFloor}
 price ceiling: $${mandate.priceCeiling}/unit
 
 CANDIDATE BALES
-${candidateBlock(bales)}`;
+${candidateBlock(bales, bySupplier)}`;
 
     const { matches } = await generateJSON<{ matches: RawMatch[] }>({
       system: SYSTEM,
@@ -109,14 +109,16 @@ ${candidateBlock(bales)}`;
       });
     }
 
-    saveMatches(ranked.map(({ mandateId, baleId, supplierId, score, rationale, rank }) => ({
-      mandateId,
-      baleId,
-      supplierId,
-      score,
-      rationale,
-      rank,
-    })));
+    await saveMatches(
+      ranked.map(({ mandateId, baleId, supplierId, score, rationale, rank }) => ({
+        mandateId,
+        baleId,
+        supplierId,
+        score,
+        rationale,
+        rank,
+      })),
+    );
 
     return ranked;
   },

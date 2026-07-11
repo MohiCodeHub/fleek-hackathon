@@ -1,7 +1,7 @@
 import { generateJSON, type JSONSchema } from './llm.js';
 import { loadPersona } from './personas.js';
 import { supplierReply } from './supplier-sim.js';
-import { saveNegotiation, saveDeal, getBale, getSupplier, getMandate } from './db.js';
+import { saveNegotiation, saveDeal, getBale, getSupplier, getMandate } from './db/index.js';
 import { id } from './ids.js';
 import { contractOf, insideContract, escalationNote } from './contract.js';
 import type {
@@ -133,15 +133,15 @@ export async function negotiateBale(
         neg.state = 'CLOSED';
         neg.currentOffer = terms;
         neg.outcome = `Closed at $${terms.pricePerUnit}/unit, grade ${terms.grade}, ${terms.quantity} units.`;
-        saveNegotiation(neg);
-        saveDeal({ id: id('deal'), negotiationId: neg.id, terms, status: 'closed' });
+        await saveNegotiation(neg);
+        await saveDeal({ id: id('deal'), negotiationId: neg.id, terms, status: 'closed' });
         return neg;
       }
       // Guardrail: Jill tried to accept terms outside the contract — escalate instead.
       neg.state = 'ESCALATED';
       neg.currentOffer = terms;
       neg.outcome = escalationNote(terms, contract);
-      saveNegotiation(neg);
+      await saveNegotiation(neg);
       return neg;
     }
 
@@ -150,7 +150,7 @@ export async function negotiateBale(
       neg.currentOffer = terms;
       neg.transcript.push({ speaker: 'jill', message: decision.message, offer: terms });
       neg.outcome = escalationNote(terms, contract);
-      saveNegotiation(neg);
+      await saveNegotiation(neg);
       return neg;
     }
 
@@ -167,7 +167,7 @@ export async function negotiateBale(
   neg.outcome = `No agreement inside the contract after ${MAX_ROUNDS} rounds. ${
     neg.currentOffer ? escalationNote(neg.currentOffer, contract) : ''
   }`.trim();
-  saveNegotiation(neg);
+  await saveNegotiation(neg);
   return neg;
 }
 
@@ -184,17 +184,17 @@ export async function negotiateSelections(
   mandateId: string,
   baleIds: string[],
 ): Promise<NegotiationOutcome[]> {
-  const mandate = getMandate(mandateId);
+  const mandate = await getMandate(mandateId);
   if (!mandate) throw new Error('Unknown mandateId');
 
   const outcomes: NegotiationOutcome[] = [];
   for (const baleId of baleIds) {
-    const bale = getBale(baleId);
+    const bale = await getBale(baleId);
     if (!bale) {
       outcomes.push({ supplier: '?', baleId, state: 'ESCALATED', terms: null, outcome: 'Unknown bale.' });
       continue;
     }
-    const supplier = getSupplier(bale.supplierId);
+    const supplier = await getSupplier(bale.supplierId);
     if (!supplier) {
       outcomes.push({ supplier: '?', baleId, state: 'ESCALATED', terms: null, outcome: 'Unknown supplier.' });
       continue;

@@ -24,7 +24,7 @@ WhatsApp ─▶ Wassist ─▶ POST /webhook ─▶ verify sig + dedupe ─▶ A
         (structured LLM)          (LLM semantic ranking)      (Jill ↔ supplier loop, in-process)
                                               │
                           reply pushed via Wassist send API ─▶ WhatsApp
-     SQLite memory brain: buyers · suppliers · inventory_bales · mandates · matches · negotiations · deals
+     Postgres memory brain: buyers · suppliers · inventory_bales · mandates · matches · negotiations · deals
 ```
 
 Key files: `src/agent/harness.ts` (generic tool-use loop), `src/agent/jack.ts` (Jack + tools),

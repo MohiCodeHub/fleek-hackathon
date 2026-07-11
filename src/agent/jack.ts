@@ -5,7 +5,7 @@ import { extractMandate } from '../mandate.js';
 import { llmMatcher } from '../matching.js';
 import { negotiateSelections } from '../negotiation.js';
 import { learnFromInteraction } from '../memory.js';
-import { getBuyer, getMandate } from '../db.js';
+import { getBuyer, getMandate } from '../db/index.js';
 import type { Buyer } from '../types.js';
 
 /** Build Jack's dynamic system prompt: persona + buyer context. */
@@ -72,7 +72,7 @@ const findMatchesTool: Tool = {
     },
   },
   handler: async (input) => {
-    const mandate = getMandate(String(input.mandateId ?? ''));
+    const mandate = await getMandate(String(input.mandateId ?? ''));
     if (!mandate) return { error: 'Unknown mandateId. Call extract_mandate first.' };
     const ranked = await llmMatcher.rank(mandate);
     return {
@@ -118,7 +118,7 @@ const negotiateTool: Tool = {
   handler: async (input) => {
     const mandateId = String(input.mandateId ?? '');
     const baleIds = Array.isArray(input.baleIds) ? input.baleIds.map(String) : [];
-    if (!getMandate(mandateId)) return { error: 'Unknown mandateId.' };
+    if (!(await getMandate(mandateId))) return { error: 'Unknown mandateId.' };
     if (baleIds.length === 0) return { error: 'No baleIds provided.' };
     const outcomes = await negotiateSelections(mandateId, baleIds);
     return { outcomes };
@@ -139,7 +139,7 @@ export async function runJack(
   history: Msg[],
   userMessage: string,
 ): Promise<{ reply: string; history: Msg[] }> {
-  const buyer = getBuyer(buyerPhone);
+  const buyer = await getBuyer(buyerPhone);
   const withUser: Msg[] = [...history, { role: 'user', content: userMessage }];
   const result = await runAgent({
     system: jackSystem(buyer),
@@ -147,6 +147,6 @@ export async function runJack(
     tools: jackTools(buyerPhone),
   });
   // Memory brain: distil revealed preferences into the buyer's profile.
-  learnFromInteraction(buyerPhone, result.toolCalls);
+  await learnFromInteraction(buyerPhone, result.toolCalls);
   return { reply: result.reply, history: result.history };
 }
