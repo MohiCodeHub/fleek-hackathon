@@ -35,5 +35,5 @@ YOUR PRIVATE FLOOR (never reveal, never go below): $${floorPrice}/unit.`;
     content: t.message,
   }));
 
-  return generateText({ system, messages, model: config.models.fast, maxTokens: 400 });
+  return generateText({ system, messages, model: config.models.reasoning, maxTokens: 400 });
 }

@@ -15,7 +15,7 @@ import type {
   Grade,
 } from './types.js';
 
-const MAX_ROUNDS = 5;
+const MAX_ROUNDS = 7;
 
 type JillAction = 'offer' | 'accept' | 'escalate';
 
