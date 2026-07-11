@@ -7,13 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": [
-      "src/**",
-      "tests/**",
-      "*.ts",
-      "*.json",
-      "!src/scripts/fixtures/catalog-index.json"
-    ]
+    "includes": ["src/**", "tests/**", "*.ts", "*.json", "!src/scripts/fixtures/catalog-index.json"]
   },
   "formatter": {
     "enabled": true,

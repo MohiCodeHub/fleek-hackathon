@@ -25,9 +25,9 @@ import { acceptDealTool } from './tools/acceptDeal.js';
 import { makeCompleteOnboardingTool } from './tools/completeOnboarding.js';
 import { escalateTool } from './tools/escalate.js';
 import { makeExtractMandateTool } from './tools/extractMandate.js';
-import { findMatchesTool } from './tools/findMatches.js';
+import { makeFindMatchesTool } from './tools/findMatches.js';
 import { makeOfferTool } from './tools/makeOffer.js';
-import { negotiateTool } from './tools/negotiate.js';
+import { makeNegotiateTool } from './tools/negotiate.js';
 import { makeSearchByImageTool } from './tools/searchByImage.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -122,8 +122,9 @@ function abhiSystemPrompt(buyer: Buyer | null): string {
   if (!buyer?.onboardedAt) {
     return (
       persona +
-      '\n\n---\nBUYER CONTEXT\nNew, unonboarded buyer. You have exactly one tool right now: complete_onboarding. ' +
-      "Do not discuss sourcing yet. Greet them, briefly say who you are, and ask for their name and their store/company name — one short message, both in one ask. Once they've given you both, call complete_onboarding. If they open with a sourcing request before you have their details, acknowledge it briefly but still get their name and company first."
+      '\n\n---\nBUYER CONTEXT\nNew, unonboarded buyer. First call complete_onboarding once you have their name and store/company name. ' +
+      'You also have sourcing tools (extract_mandate, find_matches, negotiate) — after onboarding succeeds in this same turn, continue with their demand if they already stated one. ' +
+      'Greet them, briefly say who you are, and ask for their name and their store/company name if missing — one short message. If they open with a sourcing request before you have their details, acknowledge it briefly but still get their name and company first, then proceed.'
     );
   }
   const ctx = buyer
@@ -153,15 +154,17 @@ function abhiTools(
   onboarded: boolean,
   inboundImage?: string | null,
 ): ToolDefinition[] {
-  if (!onboarded) return [makeCompleteOnboardingTool(buyerPhone)];
-  const tools: ToolDefinition[] = [
+  const sourcing: ToolDefinition[] = [
     makeExtractMandateTool(buyerPhone),
-    findMatchesTool,
-    negotiateTool,
+    makeFindMatchesTool(buyerPhone),
+    makeNegotiateTool(buyerPhone),
   ];
   // Only offered when the buyer actually attached a photo to this message.
-  if (inboundImage) tools.push(makeSearchByImageTool(inboundImage));
-  return tools;
+  if (inboundImage) sourcing.push(makeSearchByImageTool(inboundImage));
+  // Same-turn onboarding → sourcing: always expose sourcing tools; unonboarded
+  // buyers also get complete_onboarding and must call it first (see system prompt).
+  if (!onboarded) return [makeCompleteOnboardingTool(buyerPhone), ...sourcing];
+  return sourcing;
 }
 
 function sanketTools(runtime: NegotiationRuntime): ToolDefinition[] {

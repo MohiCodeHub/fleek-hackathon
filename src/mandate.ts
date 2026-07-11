@@ -1,7 +1,8 @@
 import { insertMandate } from './db/index.js';
 import { id } from './ids.js';
 import { generateJSON, type JSONSchema } from './llm.js';
-import type { Grade, Mandate } from './types.js';
+import { log } from './log.js';
+import { type Grade, isGrade, type Mandate } from './types.js';
 
 /** Critical fields a mandate needs before matching is worthwhile. */
 export type MissingField = 'quantity' | 'priceCeiling' | 'category';
@@ -57,6 +58,59 @@ export interface ExtractResult {
   missing: MissingField[];
 }
 
+const MISSING_FIELDS = new Set<MissingField>(['quantity', 'priceCeiling', 'category']);
+
+/** Reconcile model-reported missing[] with actual values (code is source of truth). */
+export function reconcileMissing(ex: {
+  category: string;
+  quantity: number;
+  priceCeiling: number;
+  missing?: unknown;
+}): MissingField[] {
+  const missing = new Set<MissingField>();
+  const reported = Array.isArray(ex.missing) ? ex.missing : [];
+  for (const m of reported) {
+    if (typeof m === 'string' && MISSING_FIELDS.has(m as MissingField)) {
+      missing.add(m as MissingField);
+    }
+  }
+  if (!ex.category?.trim()) missing.add('category');
+  else missing.delete('category');
+  if (!(typeof ex.quantity === 'number' && Number.isFinite(ex.quantity) && ex.quantity > 0)) {
+    missing.add('quantity');
+  } else {
+    missing.delete('quantity');
+  }
+  if (
+    !(
+      typeof ex.priceCeiling === 'number' &&
+      Number.isFinite(ex.priceCeiling) &&
+      ex.priceCeiling > 0
+    )
+  ) {
+    missing.add('priceCeiling');
+  } else {
+    missing.delete('priceCeiling');
+  }
+  return [...missing];
+}
+
+/** Null if mandate is ready to match/negotiate; otherwise a refusal message. */
+export function mandateReadyMessage(mandate: Mandate): string | null {
+  const missing = reconcileMissing({
+    category: mandate.category,
+    quantity: mandate.quantity,
+    priceCeiling: mandate.priceCeiling,
+  });
+  if (!isGrade(mandate.gradeFloor)) {
+    return 'Mandate has an invalid grade floor. Re-run extract_mandate.';
+  }
+  if (missing.length > 0) {
+    return `Mandate is incomplete (missing: ${missing.join(', ')}). Ask the buyer for those fields and call extract_mandate again before matching or negotiating.`;
+  }
+  return null;
+}
+
 /** Extract a structured mandate from the buyer's demand and persist it. */
 export async function extractMandate(buyerPhone: string, demand: string): Promise<ExtractResult> {
   const ex = await generateJSON<Extraction>({
@@ -67,17 +121,40 @@ export async function extractMandate(buyerPhone: string, demand: string): Promis
     toolDescription: 'Emit the structured sourcing mandate.',
   });
 
+  const gradeFloor: Grade = isGrade(ex.gradeFloor) ? ex.gradeFloor : 'C';
+  const quantity =
+    typeof ex.quantity === 'number' && Number.isFinite(ex.quantity) ? Math.max(0, ex.quantity) : 0;
+  const priceCeiling =
+    typeof ex.priceCeiling === 'number' && Number.isFinite(ex.priceCeiling)
+      ? Math.max(0, ex.priceCeiling)
+      : 0;
+  const category = typeof ex.category === 'string' ? ex.category.trim() : '';
+  const style = typeof ex.style === 'string' ? ex.style.trim() : '';
+  const missing = reconcileMissing({
+    category,
+    quantity,
+    priceCeiling,
+    missing: ex.missing,
+  });
+
   const mandate: Mandate = {
     id: id('mnd'),
     buyerPhone,
-    category: ex.category,
-    style: ex.style,
-    quantity: ex.quantity,
-    gradeFloor: ex.gradeFloor,
-    priceCeiling: ex.priceCeiling,
+    category: category || 'unspecified',
+    style: style || 'unspecified',
+    quantity,
+    gradeFloor,
+    priceCeiling,
     rawText: demand,
     status: 'open',
   };
   await insertMandate(mandate);
-  return { mandate, missing: ex.missing ?? [] };
+  log.info('mandate.extract', {
+    mandateId: mandate.id,
+    missing,
+    quantity: mandate.quantity,
+    priceCeiling: mandate.priceCeiling,
+    gradeFloor: mandate.gradeFloor,
+  });
+  return { mandate, missing };
 }

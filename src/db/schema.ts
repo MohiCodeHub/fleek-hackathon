@@ -1,4 +1,12 @@
-import { integer, jsonb, pgTable, primaryKey, real, text } from 'drizzle-orm/pg-core';
+import {
+  integer,
+  jsonb,
+  numeric,
+  pgTable,
+  primaryKey,
+  text,
+  uniqueIndex,
+} from 'drizzle-orm/pg-core';
 import type {
   BuyerProfile,
   DealTerms,
@@ -8,6 +16,9 @@ import type {
   SupplierProfile,
 } from '../types.js';
 
+/** Money stored as numeric; mapped to JS number in accessors. */
+const money = (name: string) => numeric(name, { precision: 12, scale: 4, mode: 'number' });
+
 export const buyers = pgTable('buyers', {
   phone: text('phone').primaryKey(),
   name: text('name').notNull(),
@@ -16,12 +27,16 @@ export const buyers = pgTable('buyers', {
   profileJson: jsonb('profile_json').$type<BuyerProfile>().notNull(),
 });
 
-export const suppliers = pgTable('suppliers', {
-  id: text('id').primaryKey(),
-  phone: text('phone'),
-  name: text('name').notNull(),
-  profileJson: jsonb('profile_json').$type<SupplierProfile>().notNull(),
-});
+export const suppliers = pgTable(
+  'suppliers',
+  {
+    id: text('id').primaryKey(),
+    phone: text('phone'),
+    name: text('name').notNull(),
+    profileJson: jsonb('profile_json').$type<SupplierProfile>().notNull(),
+  },
+  (t) => [uniqueIndex('suppliers_phone_uidx').on(t.phone)],
+);
 
 export const inventoryBales = pgTable('inventory_bales', {
   id: text('id').primaryKey(),
@@ -34,7 +49,7 @@ export const inventoryBales = pgTable('inventory_bales', {
   brandsJson: jsonb('brands_json').$type<string[]>().notNull(),
   grade: text('grade').$type<Grade>().notNull(),
   quantity: integer('quantity').notNull(),
-  askPrice: real('ask_price').notNull(),
+  askPrice: money('ask_price').notNull(),
 });
 
 export const mandates = pgTable('mandates', {
@@ -44,7 +59,7 @@ export const mandates = pgTable('mandates', {
   style: text('style').notNull(),
   quantity: integer('quantity').notNull(),
   gradeFloor: text('grade_floor').$type<Grade>().notNull(),
-  priceCeiling: real('price_ceiling').notNull(),
+  priceCeiling: money('price_ceiling').notNull(),
   rawText: text('raw_text').notNull(),
   status: text('status').notNull().default('open'),
 });
@@ -55,7 +70,7 @@ export const matches = pgTable(
     mandateId: text('mandate_id').notNull(),
     baleId: text('bale_id').notNull(),
     supplierId: text('supplier_id').notNull(),
-    score: real('score').notNull(),
+    score: integer('score').notNull(),
     rationale: text('rationale').notNull(),
     rank: integer('rank').notNull(),
   },
@@ -92,10 +107,10 @@ export const products = pgTable(
     id: integer('id').notNull(),
     collection: text('collection').notNull(),
     name: text('name').notNull(),
-    price: real('price').notNull(),
-    originalPrice: real('original_price'),
+    price: money('price').notNull(),
+    originalPrice: money('original_price'),
     currency: text('currency').notNull(),
-    pricePerPiece: real('price_per_piece').notNull(),
+    pricePerPiece: money('price_per_piece').notNull(),
     units: integer('units'),
     imageUrl: text('image_url'),
     url: text('url').notNull(),

@@ -251,11 +251,15 @@ describe('replyViaCallback', () => {
 
     await replyViaCallback('https://wassist.app/api/callback/xyz', 'deal closed');
 
-    expect(fetchMock).toHaveBeenCalledWith('https://wassist.app/api/callback/xyz', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content: 'deal closed' }),
-    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://wassist.app/api/callback/xyz',
+      expect.objectContaining({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: 'deal closed' }),
+        signal: expect.any(AbortSignal),
+      }),
+    );
   });
 
   it('POSTs image / video / audio / document rich payloads', async () => {

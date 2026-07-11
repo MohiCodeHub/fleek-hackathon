@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
-/** Short prefixed id, e.g. mnd_a1b2c3d4. */
+/** Prefixed id, e.g. mnd_<full-uuid>. */
 export function id(prefix: string): string {
-  return `${prefix}_${randomUUID().slice(0, 8)}`;
+  return `${prefix}_${randomUUID()}`;
 }

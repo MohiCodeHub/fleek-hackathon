@@ -1,6 +1,7 @@
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
 import { config } from './config.js';
 import { log } from './log.js';
+import { normalizePhone } from './phone.js';
 
 /**
  * Thin Wassist BYOA client.
@@ -8,6 +9,8 @@ import { log } from './log.js';
  * webhook JSON body (fast path) and/or `reply_callback` (async / follow-ups).
  * @see https://docs.wassist.app/concepts/bring-your-own-agent
  */
+
+const FETCH_TIMEOUT_MS = 20_000;
 
 function base(): string {
   return config.wassist.baseUrl.replace(/\/$/, '');
@@ -26,6 +29,7 @@ export async function registerByoa(webhookUrl: string): Promise<unknown> {
     method: 'POST',
     headers: headers(),
     body: JSON.stringify({ webhookUrl }),
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
   });
   const text = await res.text();
   if (!res.ok) {
@@ -74,6 +78,7 @@ export async function replyViaCallback(
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body,
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
   });
   const ms = Date.now() - start;
   if (!res.ok) {
@@ -207,6 +212,8 @@ export interface InboundMessage {
   body: string;
   replyCallback: string;
   image: string | null;
+  /** Idempotency key claimed at webhook ingress (released on failure). */
+  deliveryId?: string;
 }
 
 /** Fast webhook JSON response shape (Wassist delivers this to WhatsApp). */
@@ -254,7 +261,7 @@ export function parseInbound(payload: unknown): InboundMessage | null {
   if (typeof phone === 'string' && typeof replyCallback === 'string' && phone && replyCallback) {
     const body = typeof p.message === 'string' ? p.message : '';
     return {
-      from: phone,
+      from: normalizePhone(phone),
       body,
       replyCallback,
       image: normalizeInboundImage(p.image),

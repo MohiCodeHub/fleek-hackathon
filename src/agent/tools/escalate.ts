@@ -1,8 +1,9 @@
 import { StringEnum } from '@earendil-works/pi-ai';
 import { type AgentToolResult, defineTool } from '@earendil-works/pi-coding-agent';
 import { Type } from 'typebox';
-import { escalationNote } from '../../contract.js';
-import { saveNegotiation } from '../../db/index.js';
+import { escalationNote, insideContract } from '../../contract.js';
+import { saveNegotiation, setMandateStatus } from '../../db/index.js';
+import { log } from '../../log.js';
 import type { NegotiationRuntime } from '../../negotiation.js';
 import type { DealTerms, Grade } from '../../types.js';
 
@@ -16,7 +17,7 @@ export function escalateTool(state: NegotiationRuntime) {
     name: 'escalate',
     label: 'Escalate',
     description:
-      "Stop negotiating and hand back to the buyer (via Abhi) with the supplier's best available terms. Use only when the supplier's genuine best-and-final is still outside the contract (price above ceiling, grade below floor, or quantity short) after real back-and-forth.",
+      "Stop negotiating and hand back to the buyer (via Abhi) with the supplier's best available terms. Use only when the supplier's genuine best-and-final is still outside the contract (price above ceiling, grade below floor, or quantity short) after real back-and-forth. If terms are inside the contract, call accept_deal instead.",
     promptSnippet:
       'Escalates to the buyer with best available terms when the contract cannot be met.',
     parameters: Type.Object({
@@ -44,12 +45,27 @@ export function escalateTool(state: NegotiationRuntime) {
         grade: params.grade,
         quantity: params.quantity,
       };
+
+      if (insideContract(terms, state.contract)) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: 'Refused — those terms are inside the contract. Call accept_deal instead of escalate.',
+            },
+          ],
+          details: { refused: true, reason: 'inside_contract', terms },
+        };
+      }
+
       state.neg.state = 'ESCALATED';
       state.neg.currentOffer = terms;
       state.neg.transcript.push({ speaker: 'sanket', message: params.message, offer: terms });
       state.neg.outcome = `${params.message} ${escalationNote(terms, state.contract)}`.trim();
       state.done = true;
       await saveNegotiation(state.neg);
+      await setMandateStatus(state.neg.mandateId, 'negotiating');
+      log.info('sanket.done', { baleId: state.bale.id, state: 'ESCALATED', terms });
 
       return {
         content: [

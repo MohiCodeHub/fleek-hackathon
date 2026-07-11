@@ -39,8 +39,8 @@ Key paths:
 | `src/routes/products.ts` | `GET /api/products…` catalog product JSON |
 | `src/web/` | JSX pages, `wa.me` helper, collection metadata, `DESIGN.md` tokens |
 | `src/handler.ts` | Buyer WhatsApp → Abhi; supplier numbers → stub (Sanket is off-stage) |
-| `src/agent/abhi.ts` | Buyer agent + tools |
-| `src/agent/harness.ts` | Shared tool-use loop |
+| `src/agent/factory.ts` | Abhi/Sanket session factory + tools wiring |
+| `src/agent/tools/` | Abhi/Sanket tool implementations |
 | `src/negotiation.ts` | Sanket autonomous negotiation loop |
 | `src/wassist.ts` | Parse BYOA payload, signatures, rich `replyViaCallback` |
 | `src/media.ts` | Fetch inbound image URLs → Pi `ImageContent` (base64) |
@@ -56,14 +56,14 @@ Do not confuse env vars:
 
 ```bash
 npm install
-cp .env.example .env   # OPENAI_API_KEY, DATABASE_URL required for agent runs
+cp .env.example .env   # LLM_API_KEY (or OPENAI_API_KEY), DATABASE_URL required for agent runs
 npm run db:push        # apply Drizzle schema to Postgres
 npm run seed           # fuzzy bulk-bale inventory + demo buyer + web catalog products
 ```
 
 Required env (see `.env.example`):
 
-- `OPENAI_API_KEY`, `DATABASE_URL`
+- `LLM_API_KEY` (or `OPENAI_API_KEY`), `DATABASE_URL`
 - For WhatsApp: `WASSIST_API_KEY`, `PUBLIC_WEBHOOK_URL`
 - Leave `WASSIST_WEBHOOK_SECRET` **empty for BYOA** (BYOA deliveries are unsigned). Only set it to the dashboard signing secret if you switch to signed platform webhooks (different payload shape)
 - Abhi replies via `reply_callback` only (webhook ack returns `{}` with no customer-facing `content`) — not the Conversations Send Message API
@@ -126,7 +126,7 @@ Before opening or updating a PR, run the same four checks locally. Fix Biome for
 
 No separate build artifact for production — Railway runs `npm start` (`tsx src/server.ts`) per `railway.toml`. Health check: `GET /health`.
 
-Railway env must include at least: `DATABASE_URL`, `OPENAI_API_KEY`, `WASSIST_API_KEY`, `WASSIST_BASE_URL`, `PUBLIC_WEBHOOK_URL` (service’s own `/webhook`). After deploy, re-register BYOA if the public URL changed.
+Railway env must include at least: `DATABASE_URL`, `LLM_API_KEY` (or `OPENAI_API_KEY`), `WASSIST_API_KEY`, `WASSIST_BASE_URL`, `PUBLIC_WEBHOOK_URL` (service’s own `/webhook`). After deploy, re-register BYOA if the public URL changed.
 
 ## Pull request guidelines
 

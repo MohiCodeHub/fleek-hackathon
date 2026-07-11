@@ -1,7 +1,15 @@
 import type { ImageContent } from '@earendil-works/pi-ai';
 import type { AgentSession } from '@earendil-works/pi-coding-agent';
 import { buildAgent, lastAssistantText, type ToolExec } from './agent/factory.js';
-import { getBuyer, getSupplierByPhone, getThread, saveThread, upsertBuyer } from './db/index.js';
+import {
+  getBuyer,
+  getSupplierByPhone,
+  getThread,
+  releaseDelivery,
+  saveThread,
+  upsertBuyer,
+} from './db/index.js';
+import { trimHistory } from './history.js';
 import { log, maskPhone } from './log.js';
 import { fetchImageContent } from './media.js';
 import { learnFromInteraction } from './memory.js';
@@ -12,66 +20,23 @@ import {
   replyViaCallback,
 } from './wassist.js';
 
-/**
- * Process one inbound WhatsApp message on the buyer-facing thread.
- * Humans talk only to Abhi; Sanket runs behind the scenes during negotiation.
- */
-export async function processInbound(inbound: InboundMessage): Promise<string> {
-  const { from, body, replyCallback, image } = inbound;
-  const start = Date.now();
+const EMPTY_REPLY_FALLBACK = "Still on it — give me a moment and I'll come back with options.";
+const ERROR_REPLY = "Something glitched on my side. Mind sending that again? I'll pick it up.";
 
-  const supplier = await getSupplierByPhone(from);
-  const isSupplier = !!supplier;
-  if (!isSupplier && !(await getBuyer(from))) {
-    await upsertBuyer({
-      phone: from,
-      name: '',
-      company: null,
-      onboardedAt: null,
-      profile: { brandsPursued: [], notes: [] },
-    });
-  }
+/** Serialize processInbound per phone so concurrent WA messages don't race history. */
+const phoneQueues = new Map<string, Promise<unknown>>();
 
-  const role: 'buyer' | 'supplier' = isSupplier ? 'supplier' : 'buyer';
-  log.info('inbound.start', {
-    phone: maskPhone(from),
-    role,
-    bodyLen: body.length,
-    hasImage: Boolean(image),
-  });
-
-  const thread = (await getThread(from)) ?? {
-    phone: from,
-    role,
-    conversationId: null,
-    history: [],
-  };
-  const history = (thread.history ?? []) as AgentSession['messages'];
-
-  let reply: string;
-  if (role === 'buyer') {
-    const result = await runAbhiTurn(from, history, body, image);
-    reply = result.reply;
-    await saveThread({
-      phone: from,
-      role,
-      conversationId: thread.conversationId,
-      history: result.history,
-    });
-  } else {
-    reply =
-      "Thanks — this line is handled by Fleek's sourcing agent. A live negotiation will reach you here when a buyer's mandate matches your stock.";
-    await saveThread({ phone: from, role, conversationId: thread.conversationId, history });
-  }
-
-  await deliver(replyCallback, reply);
-  log.info('inbound.done', {
-    phone: maskPhone(from),
-    role,
-    ms: Date.now() - start,
-    replyLen: reply.length,
-  });
-  return reply;
+function enqueueForPhone<T>(phone: string, work: () => Promise<T>): Promise<T> {
+  const prev = phoneQueues.get(phone) ?? Promise.resolve();
+  const next = prev.then(work, work);
+  phoneQueues.set(
+    phone,
+    next.then(
+      () => undefined,
+      () => undefined,
+    ),
+  );
+  return next;
 }
 
 function toolOk(output: unknown): boolean {
@@ -79,6 +44,117 @@ function toolOk(output: unknown): boolean {
   if (typeof output === 'object' && output !== null && 'error' in output) return false;
   if (typeof output === 'string' && /error/i.test(output.slice(0, 40))) return false;
   return true;
+}
+
+function compactToolFields(name: string, output: unknown): Record<string, unknown> {
+  if (!output || typeof output !== 'object') return {};
+  const o = output as Record<string, unknown>;
+  const fields: Record<string, unknown> = {};
+  if ('mandateId' in o) fields.mandateId = o.mandateId;
+  if ('error' in o) fields.error = o.error;
+  if (name === 'find_matches' && Array.isArray(o.matches)) {
+    fields.baleIds = (o.matches as Array<{ baleId?: string }>).map((m) => m.baleId).filter(Boolean);
+    fields.matchCount = (o.matches as unknown[]).length;
+  }
+  if (name === 'negotiate') {
+    if (Array.isArray(o.outcomes)) {
+      fields.outcomes = (o.outcomes as Array<{ state?: string; baleId?: string }>).map((x) => ({
+        baleId: x.baleId,
+        state: x.state,
+      }));
+    }
+  }
+  if (name === 'extract_mandate' && 'missing' in o) fields.missing = o.missing;
+  return fields;
+}
+
+/**
+ * Process one inbound WhatsApp message on the buyer-facing thread.
+ * Humans talk only to Abhi; Sanket runs behind the scenes during negotiation.
+ */
+export async function processInbound(inbound: InboundMessage): Promise<string> {
+  return enqueueForPhone(inbound.from, () => processInboundLocked(inbound));
+}
+
+async function processInboundLocked(inbound: InboundMessage): Promise<string> {
+  const { from, body, replyCallback, image, deliveryId } = inbound;
+  const start = Date.now();
+
+  try {
+    const supplier = await getSupplierByPhone(from);
+    const isSupplier = !!supplier;
+    if (!isSupplier && !(await getBuyer(from))) {
+      await upsertBuyer({
+        phone: from,
+        name: '',
+        company: null,
+        onboardedAt: null,
+        profile: { brandsPursued: [], notes: [] },
+      });
+    }
+
+    const role: 'buyer' | 'supplier' = isSupplier ? 'supplier' : 'buyer';
+    log.info('inbound.start', {
+      phone: maskPhone(from),
+      role,
+      bodyLen: body.length,
+      hasImage: Boolean(image),
+    });
+
+    const thread = (await getThread(from)) ?? {
+      phone: from,
+      role,
+      conversationId: null,
+      history: [],
+    };
+    const history = (thread.history ?? []) as AgentSession['messages'];
+
+    let reply: string;
+    if (role === 'buyer') {
+      const result = await runAbhiTurn(from, history, body, image);
+      reply = result.reply || EMPTY_REPLY_FALLBACK;
+      await saveThread({
+        phone: from,
+        role,
+        conversationId: thread.conversationId,
+        history: trimHistory(result.history),
+      });
+    } else {
+      reply =
+        "Thanks — this line is handled by Fleek's sourcing agent. A live negotiation will reach you here when a buyer's mandate matches your stock.";
+      await saveThread({
+        phone: from,
+        role,
+        conversationId: thread.conversationId,
+        history: trimHistory(history as unknown[]),
+      });
+    }
+
+    await deliver(replyCallback, reply);
+    log.info('inbound.done', {
+      phone: maskPhone(from),
+      role,
+      ms: Date.now() - start,
+      replyLen: reply.length,
+    });
+    return reply;
+  } catch (e) {
+    log.error('abhi.turn_error', {
+      phone: maskPhone(from),
+      err: e instanceof Error ? e.message : String(e),
+    });
+    try {
+      await deliver(replyCallback, ERROR_REPLY);
+    } catch (deliverErr) {
+      log.error('deliver.error_fallback_failed', {
+        err: deliverErr instanceof Error ? deliverErr.message : String(deliverErr),
+      });
+    }
+    if (deliveryId) {
+      await releaseDelivery(deliveryId).catch(() => undefined);
+    }
+    throw e;
+  }
 }
 
 /** Build the user prompt text + optional vision attachments for Abhi. */
@@ -125,14 +201,17 @@ async function runAbhiTurn(
     inboundImage: imageUrl,
     onToolResult: (exec) => {
       toolExecs.push(exec);
-      log.info('abhi.tool', { tool: exec.name, ok: toolOk(exec.output) });
+      log.info('abhi.tool', {
+        tool: exec.name,
+        ok: toolOk(exec.output),
+        ...compactToolFields(exec.name, exec.output),
+      });
     },
   });
   try {
     const { text, images } = await prepareBuyerPrompt(userMessage, imageUrl);
     await session.prompt(text, images.length > 0 ? { images } : undefined);
     const reply = lastAssistantText(session);
-    // Memory brain: distil revealed preferences into the buyer's profile.
     await learnFromInteraction(buyerPhone, toolExecs);
     return { reply, history: session.messages };
   } finally {

@@ -1,6 +1,7 @@
 import { serve } from '@hono/node-server';
 import { createApp } from './app.js';
 import { config } from './config.js';
+import { log } from './log.js';
 
 const app = createApp();
 const port = config.port;
@@ -11,14 +12,17 @@ serve({
   hostname: '0.0.0.0',
 });
 
-console.log(
-  `Abhi & Sanket listening on http://0.0.0.0:${port} (GET / landing, POST /webhook, GET /health)`,
-);
+log.info('server.listen', {
+  port,
+  routes: 'GET / landing, POST /webhook, GET /health',
+});
 if (!config.wassist.webhookSecret) {
-  console.warn('WASSIST_WEBHOOK_SECRET not set — signature verification skipped.');
+  log.warn('server.config', {
+    detail: 'WASSIST_WEBHOOK_SECRET not set — signature verification skipped.',
+  });
 }
 if (!config.wassist.publicWebhookUrl) {
-  console.warn(
-    'PUBLIC_WEBHOOK_URL not set — run npm run register after deploying/exposing /webhook.',
-  );
+  log.warn('server.config', {
+    detail: 'PUBLIC_WEBHOOK_URL not set — run npm run register after deploying/exposing /webhook.',
+  });
 }

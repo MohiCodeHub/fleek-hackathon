@@ -4,6 +4,7 @@ import { log } from './log.js';
 
 /** Skip / shrink images larger than this before sending to the model. */
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const FETCH_TIMEOUT_MS = 20_000;
 
 function hostOf(url: string): string {
   try {
@@ -19,6 +20,19 @@ function mimeFromContentType(header: string | null): string {
   return 'image/jpeg';
 }
 
+/** True for IPv4 private / link-local / loopback ranges. */
+function isPrivateIpv4(host: string): boolean {
+  const m = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/.exec(host);
+  if (!m) return false;
+  const a = Number(m[1]);
+  const b = Number(m[2]);
+  if (a === 10 || a === 127 || a === 0) return true;
+  if (a === 169 && b === 254) return true;
+  if (a === 172 && b >= 16 && b <= 31) return true;
+  if (a === 192 && b === 168) return true;
+  return false;
+}
+
 function isHttpUrl(url: string): boolean {
   try {
     const u = new URL(url);
@@ -29,8 +43,33 @@ function isHttpUrl(url: string): boolean {
 }
 
 /**
- * Download a Wassist-hosted (or other) image URL into a Pi `ImageContent`
- * (base64 + mime). Returns null on fetch/size failure so the turn can continue.
+ * Allow only HTTPS image URLs on Wassist (and common CDN) hosts.
+ * Rejects private IPs and arbitrary hosts (SSRF guard).
+ */
+export function isAllowedImageUrl(url: string): boolean {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return false;
+  }
+  if (parsed.protocol !== 'https:') return false;
+  const host = parsed.hostname.toLowerCase();
+  if (host === 'localhost' || host.endsWith('.localhost')) return false;
+  if (host === '::1' || host.startsWith('[') || isPrivateIpv4(host)) return false;
+
+  return (
+    host === 'wassist.app' ||
+    host.endsWith('.wassist.app') ||
+    host.endsWith('.amazonaws.com') ||
+    host.endsWith('.cloudfront.net') ||
+    host.endsWith('.googleusercontent.com')
+  );
+}
+
+/**
+ * Download a Wassist-hosted (or allowlisted CDN) image URL into a Pi `ImageContent`
+ * (base64 + mime). Returns null on fetch/size/SSRF failure so the turn can continue.
  */
 export async function fetchImageContent(url: string): Promise<ImageContent | null> {
   if (!isHttpUrl(url)) {
@@ -39,8 +78,12 @@ export async function fetchImageContent(url: string): Promise<ImageContent | nul
   }
 
   const host = hostOf(url);
+  if (!isAllowedImageUrl(url)) {
+    log.warn('media.ssrf_blocked', { host });
+    return null;
+  }
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
     if (!res.ok) {
       log.warn('media.fetch_fail', { host, status: res.status });
       return null;

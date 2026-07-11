@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { markDelivery } from '../db/index.js';
+import { claimDelivery, releaseDelivery } from '../db/index.js';
 import { processInbound } from '../handler.js';
 import { log, maskPhone, preview } from '../log.js';
 import {
@@ -57,9 +57,18 @@ webhookRoutes.post('/webhook', async (c) => {
     return c.json(webhookSilentAck(), 200);
   }
 
-  // Idempotency: prefer Wassist delivery header; else hash phone+body+callback.
+  // Claim delivery id up front (lock). Released on failure so Wassist can retry.
   const id = c.req.header('X-Wassist-Delivery')?.trim() || deliveryKey(inbound);
-  if (!(await markDelivery(id, new Date().toISOString()))) {
+  let claimed: boolean;
+  try {
+    claimed = await claimDelivery(id, new Date().toISOString());
+  } catch (e) {
+    log.error('webhook.claim_failed', {
+      err: e instanceof Error ? e.message : String(e),
+    });
+    return c.text('temporarily unavailable', 503);
+  }
+  if (!claimed) {
     log.info('webhook.duplicate', { deliveryId: id.slice(0, 16) });
     return c.json(webhookSilentAck(), 200);
   }
@@ -77,17 +86,19 @@ webhookRoutes.post('/webhook', async (c) => {
     deliveryId: id.slice(0, 16),
     phone: maskPhone(inbound.from),
     bodyLen: inbound.body.length,
-    bodyPreview: preview(inbound.body),
     hasImage: Boolean(inbound.image),
     ...(imageHost ? { imageHost } : {}),
     callbackHost,
   });
+  log.debug('webhook.body_preview', { preview: preview(inbound.body) });
 
-  void processInbound(inbound).catch((e) =>
+  inbound.deliveryId = id;
+  void processInbound(inbound).catch(async (e) => {
     log.error('processInbound.error', {
       err: e instanceof Error ? e.message : String(e),
-    }),
-  );
+    });
+    await releaseDelivery(id).catch(() => undefined);
+  });
 
   // No interim WhatsApp copy; Abhi replies once via reply_callback.
   return c.json(webhookSilentAck(), 200);

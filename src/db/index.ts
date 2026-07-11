@@ -170,6 +170,15 @@ export async function insertBale(b: Bale): Promise<void> {
     });
 }
 
+function asMoney(v: unknown): number {
+  if (typeof v === 'number' && Number.isFinite(v)) return v;
+  if (typeof v === 'string' && v.trim() !== '') {
+    const n = Number(v);
+    if (Number.isFinite(n)) return n;
+  }
+  return 0;
+}
+
 function rowToBale(r: typeof inventoryBales.$inferSelect): Bale {
   return {
     id: r.id,
@@ -180,7 +189,7 @@ function rowToBale(r: typeof inventoryBales.$inferSelect): Bale {
     brands: r.brandsJson,
     grade: r.grade,
     quantity: r.quantity,
-    askPrice: r.askPrice,
+    askPrice: asMoney(r.askPrice),
   };
 }
 
@@ -228,7 +237,7 @@ export async function getMandate(id: string): Promise<Mandate | null> {
     style: row.style,
     quantity: row.quantity,
     gradeFloor: row.gradeFloor,
-    priceCeiling: row.priceCeiling,
+    priceCeiling: asMoney(row.priceCeiling),
     rawText: row.rawText,
     status: row.status as Mandate['status'],
   };
@@ -315,10 +324,10 @@ function rowToProduct(r: typeof products.$inferSelect): Product {
     id: r.id,
     collection: r.collection as Product['collection'],
     name: r.name,
-    price: r.price,
-    originalPrice: r.originalPrice,
+    price: asMoney(r.price),
+    originalPrice: r.originalPrice == null ? null : asMoney(r.originalPrice),
     currency: r.currency,
-    pricePerPiece: r.pricePerPiece,
+    pricePerPiece: asMoney(r.pricePerPiece),
     units: r.units,
     imageUrl: r.imageUrl,
     url: r.url,
@@ -412,14 +421,22 @@ export async function productCounts(): Promise<Record<string, number>> {
 // Webhook idempotency
 // ---------------------------------------------------------------------------
 
-/** Returns true if this delivery is new (and records it); false if already seen. */
-export async function markDelivery(deliveryId: string, nowIso: string): Promise<boolean> {
+/** Claim a delivery id (lock). Returns true if new; false if already claimed. */
+export async function claimDelivery(deliveryId: string, nowIso: string): Promise<boolean> {
   const inserted = await db()
     .insert(processedDeliveries)
     .values({ deliveryId, seenAt: nowIso })
     .onConflictDoNothing({ target: processedDeliveries.deliveryId })
     .returning({ deliveryId: processedDeliveries.deliveryId });
   return inserted.length > 0;
+}
+
+/** @deprecated Use claimDelivery — kept for tests that still import the old name. */
+export const markDelivery = claimDelivery;
+
+/** Release a claimed delivery so Wassist can retry after a failed process/deliver. */
+export async function releaseDelivery(deliveryId: string): Promise<void> {
+  await db().delete(processedDeliveries).where(eq(processedDeliveries.deliveryId, deliveryId));
 }
 
 export async function resetDb(): Promise<void> {
@@ -431,5 +448,6 @@ export async function resetDb(): Promise<void> {
   await db().delete(inventoryBales);
   await db().delete(suppliers);
   await db().delete(buyers);
+  await db().delete(threads);
   await db().delete(processedDeliveries);
 }

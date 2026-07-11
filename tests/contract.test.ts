@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { contractOf, escalationNote, insideContract } from '../src/contract.js';
+import { contractOf, escalationNote, insideContract, termsMatchSupplier } from '../src/contract.js';
+import { reconcileMissing } from '../src/mandate.js';
 import type { DealTerms, Mandate } from '../src/types.js';
-import { gradeRank } from '../src/types.js';
+import { gradeRank, isGrade } from '../src/types.js';
 
 const mandate: Mandate = {
   id: 'mnd_test',
@@ -18,9 +19,15 @@ const c = contractOf(mandate);
 
 describe('grade ordering', () => {
   it('ranks A > B > C > D', () => {
-    expect(gradeRank('A')).toBeGreaterThan(gradeRank('B'));
-    expect(gradeRank('B')).toBeGreaterThan(gradeRank('C'));
-    expect(gradeRank('C')).toBeGreaterThan(gradeRank('D'));
+    expect(gradeRank('A')).toBe(3);
+    expect(gradeRank('B')).toBe(2);
+    expect(gradeRank('C')).toBe(1);
+    expect(gradeRank('D')).toBe(0);
+  });
+  it('returns null for unknown grades (fail closed)', () => {
+    expect(gradeRank('AA')).toBeNull();
+    expect(gradeRank('a')).toBeNull();
+    expect(isGrade('AA')).toBe(false);
   });
 });
 
@@ -52,6 +59,43 @@ describe('insideContract', () => {
   });
   it('rejects quantity below the floor', () => {
     expect(insideContract(t({ quantity: 299 }), c)).toBe(false);
+  });
+  it('rejects non-finite price', () => {
+    expect(insideContract(t({ pricePerUnit: Number.POSITIVE_INFINITY }), c)).toBe(false);
+  });
+  it('rejects non-positive quantity', () => {
+    expect(insideContract(t({ quantity: 0 }), c)).toBe(false);
+  });
+});
+
+describe('termsMatchSupplier', () => {
+  it('matches equal terms within price tolerance', () => {
+    const a: DealTerms = { pricePerUnit: 4.5, grade: 'B', quantity: 300 };
+    const b: DealTerms = { pricePerUnit: 4.51, grade: 'B', quantity: 300 };
+    expect(termsMatchSupplier(a, b)).toBe(true);
+  });
+  it('rejects grade or qty mismatch', () => {
+    const s: DealTerms = { pricePerUnit: 4.5, grade: 'B', quantity: 300 };
+    expect(termsMatchSupplier({ ...s, grade: 'A' }, s)).toBe(false);
+    expect(termsMatchSupplier({ ...s, quantity: 280 }, s)).toBe(false);
+  });
+});
+
+describe('reconcileMissing', () => {
+  it('flags zero quantity and ceiling even if model omitted them', () => {
+    expect(
+      reconcileMissing({ category: 'tees', quantity: 0, priceCeiling: 0, missing: [] }),
+    ).toEqual(expect.arrayContaining(['quantity', 'priceCeiling']));
+  });
+  it('clears missing when values are present', () => {
+    expect(
+      reconcileMissing({
+        category: 'tees',
+        quantity: 100,
+        priceCeiling: 5,
+        missing: ['quantity', 'priceCeiling'],
+      }),
+    ).toEqual([]);
   });
 });
 

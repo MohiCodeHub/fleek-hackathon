@@ -16,7 +16,7 @@ function mandate(partial: Partial<Mandate> & Pick<Mandate, 'category' | 'style'>
 }
 
 describe('mandateTokens', () => {
-  it('extracts useful keywords and drops stopwords', () => {
+  it('extracts useful keywords including vintage/mixed and drops function words', () => {
     const tokens = mandateTokens(
       mandate({ category: 'tees', style: 'vintage Nike and adidas graphic tees' }),
     );
@@ -24,7 +24,14 @@ describe('mandateTokens', () => {
     expect(tokens).toContain('nike');
     expect(tokens).toContain('adidas');
     expect(tokens).toContain('graphic');
+    expect(tokens).toContain('vintage');
     expect(tokens).not.toContain('and');
-    expect(tokens).not.toContain('vintage');
+  });
+
+  it('keeps mixed as a searchable token', () => {
+    const tokens = mandateTokens(mandate({ category: 'mixed vintage', style: '90s sportswear' }));
+    expect(tokens).toContain('mixed');
+    expect(tokens).toContain('vintage');
+    expect(tokens).toContain('sportswear');
   });
 });

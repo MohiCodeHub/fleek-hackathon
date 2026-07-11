@@ -1,5 +1,18 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { fetchImageContent } from '../src/media.js';
+import { fetchImageContent, isAllowedImageUrl } from '../src/media.js';
+
+describe('isAllowedImageUrl', () => {
+  it('allows https wassist hosts', () => {
+    expect(isAllowedImageUrl('https://media.wassist.app/x.jpg')).toBe(true);
+    expect(isAllowedImageUrl('https://wassist.app/x.jpg')).toBe(true);
+  });
+  it('rejects http, private IPs, and unknown hosts', () => {
+    expect(isAllowedImageUrl('http://media.wassist.app/x.jpg')).toBe(false);
+    expect(isAllowedImageUrl('https://127.0.0.1/x.jpg')).toBe(false);
+    expect(isAllowedImageUrl('https://192.168.1.1/x.jpg')).toBe(false);
+    expect(isAllowedImageUrl('https://evil.example/x.jpg')).toBe(false);
+  });
+});
 
 describe('fetchImageContent', () => {
   afterEach(() => {
@@ -60,6 +73,13 @@ describe('fetchImageContent', () => {
   it('returns null when fetch throws', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network down')));
     expect(await fetchImageContent('https://media.wassist.app/x.png')).toBeNull();
+  });
+
+  it('does not fetch blocked SSRF hosts', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    expect(await fetchImageContent('https://169.254.169.254/latest/meta-data')).toBeNull();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('skips unsubstituted %IMAGE_URL% without calling fetch', async () => {

@@ -5,7 +5,13 @@ export type Grade = 'A' | 'B' | 'C' | 'D';
 /** Grade quality ordering — higher index = better quality. */
 export const GRADE_ORDER: Grade[] = ['D', 'C', 'B', 'A'];
 
-export function gradeRank(g: Grade): number {
+export function isGrade(value: unknown): value is Grade {
+  return value === 'A' || value === 'B' || value === 'C' || value === 'D';
+}
+
+/** Rank for a known grade. Returns null for unknown/invalid input (fail closed). */
+export function gradeRank(g: Grade | string): number | null {
+  if (!isGrade(g)) return null;
   return GRADE_ORDER.indexOf(g);
 }
 
