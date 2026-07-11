@@ -128,6 +128,8 @@ No separate build artifact for production — Railway runs `npm start` (`tsx src
 
 Railway env must include at least: `DATABASE_URL`, `LLM_API_KEY` (or `OPENAI_API_KEY`), `WASSIST_API_KEY`, `WASSIST_BASE_URL`, `PUBLIC_WEBHOOK_URL` (service’s own `/webhook`). After deploy, re-register BYOA if the public URL changed.
 
+After any change to `src/db/schema.ts`, run `DATABASE_URL=<Railway public URL> npm run db:push` against production before relying on new columns — deploys do not auto-migrate. Reseed with `npm run seed` when catalog/inventory fixtures change.
+
 ## Pull request guidelines
 
 - One concern → one branch → one PR (do not stack unrelated work)
