@@ -199,7 +199,10 @@ describe('createApp', () => {
   });
 
   it('POST /webhook returns 401 when signature is invalid', async () => {
-    vi.spyOn(wassist, 'verifySignature').mockReturnValue(false);
+    vi.spyOn(wassist, 'checkSignature').mockReturnValue({
+      ok: false,
+      reason: 'missing_header',
+    });
     const app = createApp();
     const res = await app.request('/webhook', {
       method: 'POST',
@@ -207,11 +210,13 @@ describe('createApp', () => {
       headers: { 'Content-Type': 'application/json' },
     });
     expect(res.status).toBe(401);
-    expect(await res.text()).toBe('invalid signature');
+    const text = await res.text();
+    expect(text).toContain('invalid signature');
+    expect(text).toContain('unset WASSIST_WEBHOOK_SECRET');
   });
 
   it('POST /webhook returns 400 for bad JSON when signature passes', async () => {
-    vi.spyOn(wassist, 'verifySignature').mockReturnValue(true);
+    vi.spyOn(wassist, 'checkSignature').mockReturnValue({ ok: true });
     const app = createApp();
     const res = await app.request('/webhook', {
       method: 'POST',
@@ -222,8 +227,8 @@ describe('createApp', () => {
     expect(await res.text()).toBe('bad json');
   });
 
-  it('POST /webhook returns interim BYOA JSON and schedules processing', async () => {
-    vi.spyOn(wassist, 'verifySignature').mockReturnValue(true);
+  it('POST /webhook suppresses interim WhatsApp and schedules processing', async () => {
+    vi.spyOn(wassist, 'checkSignature').mockReturnValue({ ok: true });
     const app = createApp();
     const payload = {
       message: 'need 300 tees',
@@ -238,10 +243,7 @@ describe('createApp', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({
-      type: 'message',
-      content: "Got it — Abhi's on it. Hang tight.",
-    });
+    expect(await res.json()).toEqual({ content: 'No CUSTOMER message reply' });
     expect(db.markDelivery).toHaveBeenCalled();
     await vi.waitFor(() => {
       expect(processInbound).toHaveBeenCalled();

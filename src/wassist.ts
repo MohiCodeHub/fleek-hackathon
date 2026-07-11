@@ -50,17 +50,26 @@ export async function replyViaCallback(replyCallbackUrl: string, content: string
 }
 
 /**
- * Optional signature check. Public BYOA docs do not require this; if
- * WASSIST_WEBHOOK_SECRET is unset, verification is skipped.
- * Header format when used: X-Wassist-Signature: t=<timestamp>,v1=<hex-hmac-sha256>
+ * Optional signature check for signed platform webhooks.
+ * BYOA deliveries are unsigned — leave WASSIST_WEBHOOK_SECRET empty for BYOA.
+ * When set, expects X-Wassist-Signature: t=<unix>,v1=<hex-hmac-sha256>
+ * over `${t}.${rawBody}` (same scheme as https://docs.wassist.app/concepts/webhooks).
  */
-export function verifySignature(
+export type SignatureFailure = 'missing_header' | 'malformed_header' | 'mismatch' | 'stale';
+
+export type SignatureResult = { ok: true } | { ok: false; reason: SignatureFailure };
+
+/** Reject signed events older than this (Wassist docs: 5 minutes). */
+const SIGNATURE_MAX_AGE_SEC = 300;
+
+export function checkSignature(
   rawBody: string,
   signatureHeader: string | undefined,
   secret: string = config.wassist.webhookSecret,
-): boolean {
-  if (!secret) return true;
-  if (!signatureHeader) return false;
+  nowSec: number = Math.floor(Date.now() / 1000),
+): SignatureResult {
+  if (!secret) return { ok: true };
+  if (!signatureHeader) return { ok: false, reason: 'missing_header' };
 
   const parts = Object.fromEntries(
     signatureHeader.split(',').map((kv) => {
@@ -70,12 +79,52 @@ export function verifySignature(
   );
   const t = parts.t;
   const v1 = parts.v1;
-  if (!t || !v1) return false;
+  if (!t || !v1) return { ok: false, reason: 'malformed_header' };
+
+  const ts = Number(t);
+  if (!Number.isFinite(ts) || Math.abs(nowSec - ts) > SIGNATURE_MAX_AGE_SEC) {
+    return { ok: false, reason: 'stale' };
+  }
 
   const expected = createHmac('sha256', secret).update(`${t}.${rawBody}`).digest('hex');
-  const a = Buffer.from(expected, 'utf8');
-  const b = Buffer.from(v1, 'utf8');
-  return a.length === b.length && timingSafeEqual(a, b);
+  let a: Buffer;
+  let b: Buffer;
+  try {
+    a = Buffer.from(expected, 'hex');
+    b = Buffer.from(v1, 'hex');
+  } catch {
+    return { ok: false, reason: 'malformed_header' };
+  }
+  if (a.length === 0 || b.length === 0 || a.length !== b.length) {
+    return { ok: false, reason: 'malformed_header' };
+  }
+  if (!timingSafeEqual(a, b)) return { ok: false, reason: 'mismatch' };
+  return { ok: true };
+}
+
+/** Boolean wrapper around checkSignature (tests and simple callers). */
+export function verifySignature(
+  rawBody: string,
+  signatureHeader: string | undefined,
+  secret: string = config.wassist.webhookSecret,
+): boolean {
+  return checkSignature(rawBody, signatureHeader, secret).ok;
+}
+
+export function signatureFailureMessage(reason: SignatureFailure): string {
+  switch (reason) {
+    case 'missing_header':
+      return (
+        'missing X-Wassist-Signature (BYOA deliveries are unsigned — ' +
+        'unset WASSIST_WEBHOOK_SECRET)'
+      );
+    case 'malformed_header':
+      return 'malformed X-Wassist-Signature header';
+    case 'mismatch':
+      return 'signature mismatch (wrong WASSIST_WEBHOOK_SECRET or body altered)';
+    case 'stale':
+      return 'stale X-Wassist-Signature timestamp (>5m)';
+  }
 }
 
 /** Stable idempotency key when Wassist does not send a delivery id. */

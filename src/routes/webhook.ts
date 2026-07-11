@@ -1,21 +1,25 @@
 import { Hono } from 'hono';
 import { markDelivery } from '../db/index.js';
 import { processInbound } from '../handler.js';
-import { deliveryKey, parseInbound, verifySignature, webhookMessageReply } from '../wassist.js';
+import { checkSignature, deliveryKey, parseInbound, signatureFailureMessage } from '../wassist.js';
 
 export const webhookRoutes = new Hono();
 
 /**
  * Wassist BYOA webhook.
- * Respond quickly with an interim WhatsApp message, then finish Abhi in the
+ * Acknowledge without an interim WhatsApp message, then finish Abhi in the
  * background and POST the final answer to `reply_callback`.
  */
 webhookRoutes.post('/webhook', async (c) => {
   const raw = await c.req.text();
 
   // Optional signature (only enforced when WASSIST_WEBHOOK_SECRET is set).
-  if (!verifySignature(raw, c.req.header('X-Wassist-Signature'))) {
-    return c.text('invalid signature', 401);
+  // BYOA is unsigned — leave the secret empty. Platform webhooks are signed.
+  const sig = checkSignature(raw, c.req.header('X-Wassist-Signature'));
+  if (!sig.ok) {
+    const detail = signatureFailureMessage(sig.reason);
+    console.warn(`webhook signature rejected: ${detail}`);
+    return c.text(`invalid signature: ${detail}`, 401);
   }
 
   let payload: unknown;
@@ -38,6 +42,6 @@ webhookRoutes.post('/webhook', async (c) => {
 
   void processInbound(inbound).catch((e) => console.error('processInbound error:', e));
 
-  // Fast interim while Abhi/LLM runs (docs: aim to answer webhook within ~5s).
-  return c.json(webhookMessageReply("Got it — Abhi's on it. Hang tight."));
+  // Suppress interim WhatsApp message; Abhi replies once via reply_callback.
+  return c.json({ content: 'No CUSTOMER message reply' }, 200);
 });
