@@ -1,9 +1,10 @@
 import { StringEnum } from '@earendil-works/pi-ai';
 import { type AgentToolResult, defineTool } from '@earendil-works/pi-coding-agent';
 import { Type } from 'typebox';
-import { escalationNote, insideContract } from '../../contract.js';
-import { saveDeal, saveNegotiation } from '../../db/index.js';
+import { escalationNote, insideContract, termsMatchSupplier } from '../../contract.js';
+import { saveDeal, saveNegotiation, setMandateStatus } from '../../db/index.js';
 import { id } from '../../ids.js';
+import { log } from '../../log.js';
 import type { NegotiationRuntime } from '../../negotiation.js';
 import type { DealTerms, Grade } from '../../types.js';
 
@@ -17,8 +18,8 @@ export function acceptDealTool(state: NegotiationRuntime) {
     name: 'accept_deal',
     label: 'Accept Deal',
     description:
-      'Accept the supplier current terms and close the deal. The tool checks the terms against the contract in code: it closes only when price <= ceiling, grade >= floor, and quantity >= needed. If the terms are outside the contract it refuses and tells you the gap — do not accept outside terms; escalate or keep negotiating instead.',
-    promptSnippet: 'Closes the deal if the terms are inside the mandate; refuses otherwise.',
+      "Accept the supplier's current terms and close the deal. Pass the exact supplier terms from the latest counter. The tool checks the terms against the contract and against the latest supplier structured counter. It closes only when price <= ceiling, grade >= floor, quantity >= needed, and terms match the supplier. If refused, escalate or keep negotiating.",
+    promptSnippet: 'Closes the deal if terms match supplier and sit inside the mandate.',
     parameters: Type.Object({
       message: Type.String({ description: 'Your closing confirmation line to the supplier.' }),
       pricePerUnit: Type.Number({ description: 'The price per unit in USD you are accepting.' }),
@@ -39,11 +40,38 @@ export function acceptDealTool(state: NegotiationRuntime) {
         grade: params.grade,
         quantity: params.quantity,
       };
-      state.neg.transcript.push({ speaker: 'sanket', message: params.message, offer: terms });
-      state.neg.currentOffer = terms;
+
+      if (!state.lastSupplierTerms) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: 'Refused — no structured supplier counter on the table yet. Call make_offer first and wait for their terms.',
+            },
+          ],
+          details: { refused: true, reason: 'no_supplier_terms', terms },
+        };
+      }
+
+      if (!termsMatchSupplier(terms, state.lastSupplierTerms)) {
+        const s = state.lastSupplierTerms;
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Refused — those terms do not match the supplier's latest counter ($${s.pricePerUnit}/unit, grade ${s.grade}, ${s.quantity} units). Accept the supplier's numbers, or keep negotiating.`,
+            },
+          ],
+          details: {
+            refused: true,
+            reason: 'mismatch_supplier',
+            terms,
+            supplierTerms: state.lastSupplierTerms,
+          },
+        };
+      }
 
       if (!insideContract(terms, state.contract)) {
-        // Refuse — do not mark done. Sanket must keep negotiating or escalate.
         const note = escalationNote(terms, state.contract);
         return {
           content: [
@@ -52,15 +80,19 @@ export function acceptDealTool(state: NegotiationRuntime) {
               text: `Refused — those terms are outside the contract: ${note}. Do not accept outside terms. Keep negotiating, or call escalate if this is the supplier's best-and-final.`,
             },
           ],
-          details: { refused: true, terms, gap: note },
+          details: { refused: true, reason: 'outside_contract', terms, gap: note },
         };
       }
 
+      state.neg.transcript.push({ speaker: 'sanket', message: params.message, offer: terms });
+      state.neg.currentOffer = terms;
       state.neg.state = 'CLOSED';
       state.neg.outcome = `Closed at $${terms.pricePerUnit}/unit, grade ${terms.grade}, ${terms.quantity} units.`;
       state.done = true;
       await saveNegotiation(state.neg);
       await saveDeal({ id: id('deal'), negotiationId: state.neg.id, terms, status: 'closed' });
+      await setMandateStatus(state.neg.mandateId, 'closed');
+      log.info('sanket.done', { baleId: state.bale.id, state: 'CLOSED', terms });
 
       return {
         content: [

@@ -1,5 +1,6 @@
 import { allBales, allSuppliers, saveMatches } from './db/index.js';
 import { generateJSON, type JSONSchema } from './llm.js';
+import { log } from './log.js';
 import type { Bale, Mandate, Match } from './types.js';
 
 /** A match enriched with its bale + supplier, for presentation & negotiation. */
@@ -26,7 +27,7 @@ const SCHEMA: JSONSchema = {
         type: 'object',
         properties: {
           baleId: { type: 'string' },
-          score: { type: 'integer', description: 'Overall fit, 0-100.' },
+          score: { type: 'number', description: 'Overall fit, 0-100.' },
           rationale: {
             type: 'string',
             description:
@@ -61,6 +62,11 @@ function candidateBlock(bales: Bale[], supplierName: (id: string) => string): st
     .join('\n');
 }
 
+function clampScore(raw: number): number {
+  if (!Number.isFinite(raw)) return 0;
+  return Math.max(0, Math.min(100, Math.round(raw)));
+}
+
 export interface Matcher {
   rank(mandate: Mandate): Promise<RankedMatch[]>;
 }
@@ -82,31 +88,47 @@ price ceiling: $${mandate.priceCeiling}/unit
 CANDIDATE BALES
 ${candidateBlock(bales, bySupplier)}`;
 
-    const { matches } = await generateJSON<{ matches: RawMatch[] }>({
+    const raw = await generateJSON<{ matches: RawMatch[] }>({
       system: SYSTEM,
       messages: [{ role: 'user', content: prompt }],
       schema: SCHEMA,
       toolName: 'emit_matches',
       toolDescription: 'Emit the ranked matches.',
     });
+    const matches = Array.isArray(raw.matches) ? raw.matches : [];
 
     const baleById = new Map(bales.map((b) => [b.id, b]));
     const ranked: RankedMatch[] = [];
+    let dropped = 0;
     let rank = 1;
     for (const m of matches) {
       const bale = baleById.get(m.baleId);
-      if (!bale) continue; // guard against hallucinated ids
+      if (!bale) {
+        dropped += 1;
+        log.warn('matches.drop_id', { mandateId: mandate.id, baleId: m.baleId });
+        continue;
+      }
+      const score = clampScore(m.score);
+      if (score < 30) continue;
       const supplier = suppliers.get(bale.supplierId);
       ranked.push({
         mandateId: mandate.id,
         baleId: bale.id,
         supplierId: bale.supplierId,
-        score: m.score,
-        rationale: m.rationale,
+        score,
+        rationale: typeof m.rationale === 'string' ? m.rationale : '',
         rank: rank++,
         bale,
         supplierName: supplier?.name ?? bale.supplierId,
         supplierStock: supplier?.profile.stockCharacter ?? '',
+      });
+    }
+
+    if (matches.length > 0 && ranked.length === 0) {
+      log.warn('matches.all_dropped', {
+        mandateId: mandate.id,
+        rawCount: matches.length,
+        dropped,
       });
     }
 

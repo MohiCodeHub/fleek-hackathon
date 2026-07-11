@@ -61,9 +61,12 @@ function fakeListProducts(opts: {
 
 vi.mock('../src/db/index.js', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../src/db/index.js')>();
+  const claim = vi.fn().mockResolvedValue(true);
   return {
     ...actual,
-    markDelivery: vi.fn().mockResolvedValue(true),
+    claimDelivery: claim,
+    markDelivery: claim,
+    releaseDelivery: vi.fn().mockResolvedValue(undefined),
     listProducts: vi.fn((opts: Parameters<typeof fakeListProducts>[0]) =>
       Promise.resolve(fakeListProducts(opts)),
     ),
@@ -83,6 +86,7 @@ import * as wassist from '../src/wassist.js';
 describe('createApp', () => {
   afterEach(() => {
     vi.clearAllMocks();
+    vi.mocked(db.claimDelivery).mockResolvedValue(true);
     vi.mocked(db.markDelivery).mockResolvedValue(true);
     processInbound.mockResolvedValue('final');
   });
@@ -249,7 +253,7 @@ describe('createApp', () => {
 
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ content: 'No CUSTOMER message reply' });
-    expect(db.markDelivery).toHaveBeenCalled();
+    expect(db.claimDelivery).toHaveBeenCalled();
     await vi.waitFor(() => {
       expect(processInbound).toHaveBeenCalled();
     });
@@ -300,6 +304,6 @@ describe('createApp', () => {
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ content: 'No CUSTOMER message reply' });
     expect(processInbound).not.toHaveBeenCalled();
-    expect(db.markDelivery).not.toHaveBeenCalled();
+    expect(db.claimDelivery).not.toHaveBeenCalled();
   });
 });

@@ -1,6 +1,7 @@
 import { listProducts } from './db/index.js';
 import type { Mandate, Product } from './types.js';
 
+/** Function words only — keep mandate vocabulary like vintage / mixed / wholesale. */
 const STOP = new Set([
   'a',
   'an',
@@ -13,10 +14,6 @@ const STOP = new Set([
   'pc',
   'lot',
   'lots',
-  'mix',
-  'mixed',
-  'vintage',
-  'wholesale',
   'bundle',
 ]);
 
@@ -35,7 +32,7 @@ export function mandateTokens(mandate: Mandate): string[] {
 
 function scoreProduct(product: Product, tokens: string[]): number {
   if (tokens.length === 0) return 0;
-  const hay = product.name.toLowerCase();
+  const hay = `${product.name} ${product.collection}`.toLowerCase();
   let hits = 0;
   for (const t of tokens) {
     if (hay.includes(t)) hits += 1;
@@ -46,7 +43,7 @@ function scoreProduct(product: Product, tokens: string[]): number {
 }
 
 /**
- * Rank Fleek catalog lots against a mandate (keyword fit on name).
+ * Rank Fleek catalog lots against a mandate (keyword fit on name + collection).
  * Returns top matches with their joinfleek.com URLs for Abhi to share.
  */
 export async function searchCatalogProducts(
