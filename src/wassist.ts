@@ -223,6 +223,26 @@ export function webhookSilentAck(): Record<string, never> {
   return {};
 }
 
+/**
+ * Keep only real http(s) image URLs.
+ * Wassist tool templates often send unsubstituted tokens like `%IMAGE_URL%`
+ * on text-only messages — treat those as no image.
+ */
+export function normalizeInboundImage(raw: unknown): string | null {
+  if (typeof raw !== 'string') return null;
+  const value = raw.trim();
+  if (!value) return null;
+  // Unsubstituted Wassist template tokens, e.g. %IMAGE_URL%
+  if (/^%[A-Z0-9_]+%$/.test(value)) return null;
+  try {
+    const u = new URL(value);
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
+    return value;
+  } catch {
+    return null;
+  }
+}
+
 /** Extract fields from the official BYOA webhook payload. */
 export function parseInbound(payload: unknown): InboundMessage | null {
   if (!payload || typeof payload !== 'object') return null;
@@ -233,9 +253,12 @@ export function parseInbound(payload: unknown): InboundMessage | null {
   const replyCallback = p.reply_callback;
   if (typeof phone === 'string' && typeof replyCallback === 'string' && phone && replyCallback) {
     const body = typeof p.message === 'string' ? p.message : '';
-    const rawImage = typeof p.image === 'string' ? p.image.trim() : '';
-    const image = rawImage || null;
-    return { from: phone, body, replyCallback, image };
+    return {
+      from: phone,
+      body,
+      replyCallback,
+      image: normalizeInboundImage(p.image),
+    };
   }
 
   return null;

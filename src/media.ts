@@ -19,11 +19,25 @@ function mimeFromContentType(header: string | null): string {
   return 'image/jpeg';
 }
 
+function isHttpUrl(url: string): boolean {
+  try {
+    const u = new URL(url);
+    return u.protocol === 'http:' || u.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Download a Wassist-hosted (or other) image URL into a Pi `ImageContent`
  * (base64 + mime). Returns null on fetch/size failure so the turn can continue.
  */
 export async function fetchImageContent(url: string): Promise<ImageContent | null> {
+  if (!isHttpUrl(url)) {
+    log.debug('media.skip', { reason: 'invalid_url', preview: url.slice(0, 40) });
+    return null;
+  }
+
   const host = hostOf(url);
   try {
     const res = await fetch(url);
