@@ -6,6 +6,7 @@ import type {
   Mandate,
   Match,
   Negotiation,
+  Order,
   Product,
   ProductPage,
   Supplier,
@@ -18,6 +19,7 @@ import {
   mandates,
   matches,
   negotiations,
+  orders,
   processedDeliveries,
   products,
   suppliers,
@@ -450,4 +452,50 @@ export async function resetDb(): Promise<void> {
   await db().delete(buyers);
   await db().delete(threads);
   await db().delete(processedDeliveries);
+}
+
+// ---------------------------------------------------------------------------
+// Checkout orders
+// ---------------------------------------------------------------------------
+
+function rowToOrder(r: typeof orders.$inferSelect): Order {
+  return {
+    id: r.id,
+    buyerPhone: r.buyerPhone,
+    collection: r.collection as Order['collection'],
+    productId: r.productId,
+    productName: r.productName,
+    imageUrl: r.imageUrl,
+    productUrl: r.productUrl,
+    quantity: r.quantity,
+    pricePerPiece: asMoney(r.pricePerPiece),
+    currency: r.currency,
+    total: asMoney(r.total),
+    grade: r.grade,
+    status: r.status as Order['status'],
+    createdAt: r.createdAt,
+    confirmedAt: r.confirmedAt,
+  };
+}
+
+export async function createOrder(o: Order): Promise<void> {
+  await db().insert(orders).values(o);
+}
+
+export async function getOrder(id: string): Promise<Order | null> {
+  const rows = await db().select().from(orders).where(eq(orders.id, id)).limit(1);
+  const row = rows[0];
+  return row ? rowToOrder(row) : null;
+}
+
+/**
+ * Mark an order confirmed. Idempotent: confirming an already-confirmed order
+ * keeps the original timestamp, so a double-tap on the button is harmless.
+ */
+export async function confirmOrder(id: string, at: string): Promise<Order | null> {
+  await db()
+    .update(orders)
+    .set({ status: 'confirmed', confirmedAt: at })
+    .where(and(eq(orders.id, id), eq(orders.status, 'pending')));
+  return getOrder(id);
 }

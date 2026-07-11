@@ -153,3 +153,31 @@ export interface MandateContract {
   gradeFloor: Grade;
   quantity: number;
 }
+
+/**
+ * A checkout order: what Abhi agreed with the buyer on WhatsApp, made payable
+ * on the web.
+ *
+ * The terms are *snapshotted*, not joined back to `products` at render time —
+ * Abhi may quote a negotiated price that differs from the catalog list price,
+ * and an order must not silently change if the catalog is re-scraped.
+ */
+export interface Order {
+  id: string;
+  buyerPhone: string;
+  /** Catalog provenance, when the order came from a listed lot. */
+  collection: Product['collection'] | null;
+  productId: number | null;
+  /** Snapshotted at creation — see the note above. */
+  productName: string;
+  imageUrl: string | null;
+  productUrl: string | null;
+  quantity: number;
+  pricePerPiece: number;
+  currency: string;
+  total: number;
+  grade: Grade | null;
+  status: 'pending' | 'confirmed';
+  createdAt: string;
+  confirmedAt: string | null;
+}

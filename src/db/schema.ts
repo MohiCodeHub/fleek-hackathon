@@ -124,3 +124,22 @@ export const threads = pgTable('threads', {
   conversationId: text('conversation_id'),
   historyJson: jsonb('history_json').$type<unknown[]>().notNull().default([]),
 });
+
+/** Checkout orders raised by Abhi on WhatsApp, confirmed on the web. */
+export const orders = pgTable('orders', {
+  id: text('id').primaryKey(),
+  buyerPhone: text('buyer_phone').notNull(),
+  collection: text('collection'),
+  productId: integer('product_id'),
+  productName: text('product_name').notNull(),
+  imageUrl: text('image_url'),
+  productUrl: text('product_url'),
+  quantity: integer('quantity').notNull(),
+  pricePerPiece: money('price_per_piece').notNull(),
+  currency: text('currency').notNull(),
+  total: money('total').notNull(),
+  grade: text('grade').$type<Grade>(),
+  status: text('status').notNull().default('pending'),
+  createdAt: text('created_at').notNull(),
+  confirmedAt: text('confirmed_at'),
+});
