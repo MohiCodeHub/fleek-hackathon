@@ -4,7 +4,7 @@
     "name": "CR10095 Vintage Mix Branded T-Shirts",
     "price": 135,
     "currency": "GBP",
-    "price_per_piece": 9.00,
+    "price_per_piece": 9.0,
     "collection": "mens-unisex"
   },
   {
@@ -20,7 +20,7 @@
     "name": "CR10094 Vintage Polo T-Shirts",
     "price": 135,
     "currency": "GBP",
-    "price_per_piece": 9.00,
+    "price_per_piece": 9.0,
     "collection": "mens-unisex"
   },
   {
@@ -76,7 +76,7 @@
     "name": "Levi's shirt",
     "price": 284,
     "currency": "GBP",
-    "price_per_piece": 23.70,
+    "price_per_piece": 23.7,
     "collection": "mens-unisex"
   },
   {
@@ -92,7 +92,7 @@
     "name": "Upcycled Patchwork Denim Jeans",
     "price": 209,
     "currency": "GBP",
-    "price_per_piece": 17.40,
+    "price_per_piece": 17.4,
     "collection": "mens-unisex"
   },
   {
@@ -276,7 +276,7 @@
     "name": "Adidas shorts",
     "price": 75,
     "currency": "GBP",
-    "price_per_piece": 7.50,
+    "price_per_piece": 7.5,
     "collection": "mens-unisex"
   },
   {
@@ -316,7 +316,7 @@
     "name": "Nike shorts",
     "price": 75,
     "currency": "GBP",
-    "price_per_piece": 7.50,
+    "price_per_piece": 7.5,
     "collection": "mens-unisex"
   },
   {
@@ -404,7 +404,7 @@
     "name": "6665 - Tommy Hilfiger Sweaters",
     "price": 82,
     "currency": "GBP",
-    "price_per_piece": 16.30,
+    "price_per_piece": 16.3,
     "collection": "mens-unisex"
   },
   {
@@ -436,7 +436,7 @@
     "name": "Starter NBA NFL RUSSELL SHORTS",
     "price": 46,
     "currency": "GBP",
-    "price_per_piece": 6.50,
+    "price_per_piece": 6.5,
     "collection": "mens-unisex"
   },
   {
@@ -508,7 +508,7 @@
     "name": "Lululemon mix id 78",
     "price": 192,
     "currency": "GBP",
-    "price_per_piece": 6.20,
+    "price_per_piece": 6.2,
     "collection": "mens-unisex"
   },
   {
@@ -516,7 +516,7 @@
     "name": "CR10080 Vintage Men's Leather Jackets",
     "price": 257,
     "currency": "GBP",
-    "price_per_piece": 17.10,
+    "price_per_piece": 17.1,
     "collection": "mens-unisex"
   },
   {
