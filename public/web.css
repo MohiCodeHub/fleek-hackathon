@@ -740,3 +740,125 @@ a {
     transition: none;
   }
 }
+
+/* --- Checkout ---------------------------------------------------------- */
+
+.checkout-main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--space-8) clamp(var(--space-3), 5vw, var(--space-8)) var(--space-12);
+  display: grid;
+  gap: var(--space-4);
+}
+
+.checkout-head {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.checkout-eyebrow {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.checkout-lede {
+  color: var(--muted);
+  max-width: 52ch;
+}
+
+.checkout-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.checkout-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--surface);
+}
+
+.checkout-image-empty {
+  border: 1px dashed var(--line);
+}
+
+.checkout-body {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.checkout-product {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
+.checkout-lines {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.checkout-line {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: 0.95rem;
+}
+
+.checkout-line dt {
+  color: var(--muted);
+}
+
+.checkout-line dd {
+  font-variant-numeric: tabular-nums;
+}
+
+/* The one number the buyer is actually agreeing to. */
+.checkout-total {
+  border-top: 1px solid var(--line);
+  margin-top: 0.35rem;
+  padding-top: 0.6rem;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.checkout-source {
+  font-size: 0.9rem;
+}
+
+.checkout-actions {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+}
+
+.checkout-fineprint,
+.checkout-confirmed-note {
+  color: var(--muted);
+  font-size: 0.9rem;
+  max-width: 52ch;
+}
+
+.checkout-confirmed-note code {
+  font-size: 0.85em;
+}
+
+@media (max-width: 520px) {
+  .checkout-card {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-image {
+    aspect-ratio: 16 / 10;
+  }
+}

@@ -23,6 +23,7 @@ import { loadPersona } from '../personas.js';
 import type { Buyer } from '../types.js';
 import { acceptDealTool } from './tools/acceptDeal.js';
 import { makeCompleteOnboardingTool } from './tools/completeOnboarding.js';
+import { makeCreateCheckoutTool } from './tools/createCheckout.js';
 import { escalateTool } from './tools/escalate.js';
 import { makeExtractMandateTool } from './tools/extractMandate.js';
 import { makeFindMatchesTool } from './tools/findMatches.js';
@@ -158,6 +159,7 @@ function abhiTools(
     makeExtractMandateTool(buyerPhone),
     makeFindMatchesTool(buyerPhone),
     makeNegotiateTool(buyerPhone),
+    makeCreateCheckoutTool(buyerPhone),
   ];
   // Only offered when the buyer actually attached a photo to this message.
   if (inboundImage) sourcing.push(makeSearchByImageTool(inboundImage));
