@@ -55,16 +55,22 @@ export function LandingPage() {
           <h2 id="steps-heading">How it works</h2>
           <ol class="steps-list">
             <li>
-              <strong>Tell Abhi what you need.</strong> Category, grade, quantity, price — plain
-              WhatsApp messages, no forms.
+              <div>
+                <strong>Tell Abhi what you need.</strong> Category, grade, quantity, price — plain
+                WhatsApp messages, no forms.
+              </div>
             </li>
             <li>
-              <strong>He matches graded bales.</strong> Ranked picks from verified wholesalers, rag
-              houses, and grading hubs, with the fit explained.
+              <div>
+                <strong>He matches graded bales.</strong> Ranked picks from verified wholesalers, rag
+                houses, and grading hubs, with the fit explained.
+              </div>
             </li>
             <li>
-              <strong>Sanket negotiates behind the scenes.</strong> Price, grade, and quantity
-              inside your mandate — you just get the closed deal.
+              <div>
+                <strong>Sanket negotiates behind the scenes.</strong> Price, grade, and quantity
+                inside your mandate — you just get the closed deal.
+              </div>
             </li>
           </ol>
         </section>
