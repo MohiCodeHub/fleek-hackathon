@@ -1,6 +1,6 @@
+import { allBales, allSuppliers, saveMatches } from './db/index.js';
 import { generateJSON, type JSONSchema } from './llm.js';
-import { allBales, allSuppliers, saveMatches, getSupplier } from './db/index.js';
-import type { Mandate, Match, Bale } from './types.js';
+import type { Bale, Mandate, Match } from './types.js';
 
 /** A match enriched with its bale + supplier, for presentation & negotiation. */
 export interface RankedMatch extends Match {
@@ -20,7 +20,8 @@ const SCHEMA: JSONSchema = {
   properties: {
     matches: {
       type: 'array',
-      description: 'Best-fitting bales, best first. Include only genuinely plausible options (score >= 30).',
+      description:
+        'Best-fitting bales, best first. Include only genuinely plausible options (score >= 30).',
       items: {
         type: 'object',
         properties: {

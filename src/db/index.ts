@@ -1,25 +1,17 @@
 import { eq } from 'drizzle-orm';
+import type { Bale, Buyer, Deal, Mandate, Match, Negotiation, Supplier } from '../types.js';
 import { db } from './client.js';
 import {
   buyers,
-  suppliers,
+  deals,
   inventoryBales,
   mandates,
   matches,
   negotiations,
-  deals,
   processedDeliveries,
+  suppliers,
   threads,
 } from './schema.js';
-import type {
-  Buyer,
-  Supplier,
-  Bale,
-  Mandate,
-  Match,
-  Negotiation,
-  Deal,
-} from '../types.js';
 
 export interface Thread {
   phone: string;

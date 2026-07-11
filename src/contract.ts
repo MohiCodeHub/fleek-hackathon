@@ -1,5 +1,5 @@
+import type { DealTerms, Mandate, MandateContract } from './types.js';
 import { gradeRank } from './types.js';
-import type { Mandate, DealTerms, MandateContract } from './types.js';
 
 /** The buyer's contract that bounds autonomous negotiation. */
 export function contractOf(mandate: Mandate): MandateContract {
@@ -29,7 +29,5 @@ export function escalationNote(terms: DealTerms, c: MandateContract): string {
   if (terms.quantity < c.quantity)
     gaps.push(`only ${terms.quantity} units vs ${c.quantity} needed`);
   const best = `best available: $${terms.pricePerUnit}/unit, grade ${terms.grade}, ${terms.quantity} units`;
-  return gaps.length
-    ? `Outside the mandate — ${gaps.join('; ')}. ${best}.`
-    : `Escalated. ${best}.`;
+  return gaps.length ? `Outside the mandate — ${gaps.join('; ')}. ${best}.` : `Escalated. ${best}.`;
 }

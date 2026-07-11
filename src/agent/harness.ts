@@ -1,4 +1,4 @@
-import { runTurn, type Msg, type ToolDef, type ToolCall } from '../llm.js';
+import { type Msg, runTurn, type ToolCall, type ToolDef } from '../llm.js';
 
 /** A tool the harness can execute: its schema plus a handler. */
 export interface Tool {
@@ -59,10 +59,7 @@ export async function runAgent(opts: {
   return { reply: replies.join('\n\n').trim(), history, toolCalls: executed };
 }
 
-async function executeTool(
-  registry: Map<string, Tool>,
-  call: ToolCall,
-): Promise<unknown> {
+async function executeTool(registry: Map<string, Tool>, call: ToolCall): Promise<unknown> {
   const tool = registry.get(call.name);
   if (!tool) return { error: `Unknown tool: ${call.name}` };
   try {

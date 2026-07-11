@@ -1,7 +1,6 @@
-import { resetDb, upsertBuyer, upsertSupplier, insertBale } from '../db/index.js';
 import { closeDb } from '../db/client.js';
+import { insertBale, resetDb, upsertBuyer, upsertSupplier } from '../db/index.js';
 import type { Bale, Buyer, Supplier } from '../types.js';
-
 
 /**
  * Seed fuzzy, messy bulk-bale inventory — the shape of real wholesale
@@ -110,7 +109,8 @@ const bales: Bale[] = [
   {
     id: 'bale_nord_tees',
     supplierId: 'sup_baler_nord',
-    description: '~600 bulk single-stitch and graphic tees, era mixed 80s-00s, Grade B. Cheap per unit.',
+    description:
+      '~600 bulk single-stitch and graphic tees, era mixed 80s-00s, Grade B. Cheap per unit.',
     category: 'tees',
     era: 'mixed',
     brands: ['assorted'],

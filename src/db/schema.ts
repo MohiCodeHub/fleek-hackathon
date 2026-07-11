@@ -1,18 +1,11 @@
-import {
-  pgTable,
-  text,
-  integer,
-  real,
-  jsonb,
-  primaryKey,
-} from 'drizzle-orm/pg-core';
+import { integer, jsonb, pgTable, primaryKey, real, text } from 'drizzle-orm/pg-core';
 import type {
   BuyerProfile,
-  SupplierProfile,
-  Grade,
   DealTerms,
-  NegotiationTurn,
+  Grade,
   NegotiationState,
+  NegotiationTurn,
+  SupplierProfile,
 } from '../types.js';
 
 export const buyers = pgTable('buyers', {

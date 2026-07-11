@@ -1,12 +1,12 @@
-import { runAgent, type Tool } from './harness.js';
+import { getBuyer, getMandate } from '../db/index.js';
 import type { Msg } from '../llm.js';
-import { loadPersona } from '../personas.js';
 import { extractMandate } from '../mandate.js';
 import { llmMatcher } from '../matching.js';
-import { negotiateSelections } from '../negotiation.js';
 import { learnFromInteraction } from '../memory.js';
-import { getBuyer, getMandate } from '../db/index.js';
+import { negotiateSelections } from '../negotiation.js';
+import { loadPersona } from '../personas.js';
 import type { Buyer } from '../types.js';
+import { runAgent, type Tool } from './harness.js';
 
 /** Build Jack's dynamic system prompt: persona + buyer context. */
 function jackSystem(buyer: Buyer | null): string {

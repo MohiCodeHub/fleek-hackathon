@@ -38,7 +38,8 @@ export async function registerByoa(webhookUrl: string): Promise<unknown> {
     body: JSON.stringify({ webhookUrl }),
   });
   const text = await res.text();
-  if (!res.ok) throw new Error(`Wassist BYOA register failed (${res.status}): ${text.slice(0, 300)}`);
+  if (!res.ok)
+    throw new Error(`Wassist BYOA register failed (${res.status}): ${text.slice(0, 300)}`);
   return text ? JSON.parse(text) : {};
 }
 
@@ -62,8 +63,8 @@ export function verifySignature(
       return [kv.slice(0, i).trim(), kv.slice(i + 1).trim()];
     }),
   );
-  const t = parts['t'];
-  const v1 = parts['v1'];
+  const t = parts.t;
+  const v1 = parts.v1;
   if (!t || !v1) return false;
 
   const expected = createHmac('sha256', secret).update(`${t}.${rawBody}`).digest('hex');
@@ -82,11 +83,17 @@ export interface InboundMessage {
 /** Extract the fields we need from a Wassist `message.received` payload. */
 export function parseInbound(payload: unknown): InboundMessage | null {
   if (!payload || typeof payload !== 'object') return null;
-  const p = payload as Record<string, any>;
+  const p = payload as {
+    event?: string;
+    from?: string;
+    conversationId?: string;
+    contact?: { phoneNumber?: string };
+    message?: { body?: string } | string;
+  };
   if (p.event && p.event !== 'message.received') return null;
   const from = p.from ?? p.contact?.phoneNumber;
   const conversationId = p.conversationId;
-  const body = p.message?.body ?? p.message ?? '';
+  const body = typeof p.message === 'string' ? p.message : (p.message?.body ?? '');
   if (!from || !conversationId) return null;
   return { from: String(from), conversationId: String(conversationId), body: String(body) };
 }

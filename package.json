@@ -17,7 +17,9 @@
     "db:studio": "drizzle-kit studio",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write ."
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
@@ -30,6 +32,7 @@
     "typescript": "^5.7.3"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.5.3",
     "@types/node": "^22.10.5",
     "@types/pg": "^8.15.4",
     "drizzle-kit": "^0.31.4",
