@@ -16,5 +16,7 @@ if (!config.wassist.webhookSecret) {
   console.warn('WASSIST_WEBHOOK_SECRET not set — signature verification skipped.');
 }
 if (!config.wassist.publicWebhookUrl) {
-  console.warn('PUBLIC_WEBHOOK_URL not set — run npm run register after deploying/exposing /webhook.');
+  console.warn(
+    'PUBLIC_WEBHOOK_URL not set — run npm run register after deploying/exposing /webhook.',
+  );
 }
