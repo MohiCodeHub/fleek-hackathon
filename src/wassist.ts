@@ -190,6 +190,15 @@ export function webhookMessageReply(content: string): { type: 'message'; content
   return { type: 'message', content };
 }
 
+/**
+ * Webhook ack with no WhatsApp delivery.
+ * Do not put text in `content` — Wassist forwards `content` to the customer.
+ * Final Abhi replies go through `reply_callback` only.
+ */
+export function webhookSilentAck(): Record<string, never> {
+  return {};
+}
+
 /** Extract fields from the official BYOA webhook payload. */
 export function parseInbound(payload: unknown): InboundMessage | null {
   if (!payload || typeof payload !== 'object') return null;

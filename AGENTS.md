@@ -65,7 +65,7 @@ Required env (see `.env.example`):
 - `OPENAI_API_KEY`, `DATABASE_URL`
 - For WhatsApp: `WASSIST_API_KEY`, `PUBLIC_WEBHOOK_URL`
 - Leave `WASSIST_WEBHOOK_SECRET` **empty for BYOA** (BYOA deliveries are unsigned). Only set it to the dashboard signing secret if you switch to signed platform webhooks (different payload shape)
-- Abhi replies via `reply_callback` only (webhook ack uses `No CUSTOMER message reply`) — not the Conversations Send Message API
+- Abhi replies via `reply_callback` only (webhook ack returns `{}` with no customer-facing `content`) — not the Conversations Send Message API
 - Optional model overrides: `MODEL_REASONING`, `MODEL_FAST`
 - Optional `WHATSAPP_NUMBER` for the landing-page `wa.me` CTA (default sandbox `447424845871`)
 - Optional `LOG_LEVEL` (`debug` | `info` | `warn` | `error`, default `info`) — HTTP via `hono/logger`; WhatsApp path emits JSON lines (`webhook.*`, `inbound.*`, `abhi.tool`, `reply_callback.*`)
