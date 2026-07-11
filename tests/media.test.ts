@@ -81,4 +81,11 @@ describe('fetchImageContent', () => {
     expect(await fetchImageContent('https://169.254.169.254/latest/meta-data')).toBeNull();
     expect(fetchMock).not.toHaveBeenCalled();
   });
+
+  it('skips unsubstituted %IMAGE_URL% without calling fetch', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    expect(await fetchImageContent('%IMAGE_URL%')).toBeNull();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
 });

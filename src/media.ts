@@ -33,6 +33,15 @@ function isPrivateIpv4(host: string): boolean {
   return false;
 }
 
+function isHttpUrl(url: string): boolean {
+  try {
+    const u = new URL(url);
+    return u.protocol === 'http:' || u.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Allow only HTTPS image URLs on Wassist (and common CDN) hosts.
  * Rejects private IPs and arbitrary hosts (SSRF guard).
@@ -63,6 +72,11 @@ export function isAllowedImageUrl(url: string): boolean {
  * (base64 + mime). Returns null on fetch/size/SSRF failure so the turn can continue.
  */
 export async function fetchImageContent(url: string): Promise<ImageContent | null> {
+  if (!isHttpUrl(url)) {
+    log.debug('media.skip', { reason: 'invalid_url', preview: url.slice(0, 40) });
+    return null;
+  }
+
   const host = hostOf(url);
   if (!isAllowedImageUrl(url)) {
     log.warn('media.ssrf_blocked', { host });

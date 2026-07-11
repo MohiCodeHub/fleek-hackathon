@@ -588,6 +588,20 @@ a {
   border-color: oklch(0.82 0.01 300);
 }
 
+.product-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: calc(var(--radius) - 2px);
+  background: oklch(0.96 0.005 300);
+}
+
+/* Keeps the grid from jolting when a lot has no photo. */
+.product-image-empty {
+  border: 1px dashed var(--line);
+}
+
 .product-body {
   display: grid;
   gap: 0.65rem;

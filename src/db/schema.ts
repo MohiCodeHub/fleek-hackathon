@@ -111,6 +111,8 @@ export const products = pgTable(
     originalPrice: money('original_price'),
     currency: text('currency').notNull(),
     pricePerPiece: money('price_per_piece').notNull(),
+    units: integer('units'),
+    imageUrl: text('image_url'),
     url: text('url').notNull(),
   },
   (t) => [primaryKey({ columns: [t.collection, t.id] })],

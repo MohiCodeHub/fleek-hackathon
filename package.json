@@ -8,6 +8,9 @@
   },
   "scripts": {
     "seed": "tsx src/scripts/seed.ts",
+    "scrape:catalog": "tsx src/scripts/scrape-catalog.ts",
+    "index:images": "tsx src/scripts/index-images.ts",
+    "search:image": "tsx src/scripts/search-image.ts",
     "demo": "tsx src/scripts/demo.ts",
     "chat": "tsx src/scripts/chat.ts",
     "start": "tsx src/server.ts",

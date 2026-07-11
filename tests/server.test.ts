@@ -17,6 +17,8 @@ const fixtureProducts: Product[] = [
     originalPrice: null,
     currency: 'GBP',
     pricePerPiece: 9,
+    units: 15,
+    imageUrl: 'https://cdn.example.test/mens-1.webp',
     url: 'https://www.joinfleek.com/products/vintage-mix-branded-t-shirts',
   },
   {
@@ -27,6 +29,8 @@ const fixtureProducts: Product[] = [
     originalPrice: null,
     currency: 'GBP',
     pricePerPiece: 8.66,
+    units: 15,
+    imageUrl: null,
     url: 'https://www.joinfleek.com/products/polo-t-shirts',
   },
   {
@@ -37,6 +41,8 @@ const fixtureProducts: Product[] = [
     originalPrice: 193.8,
     currency: 'GBP',
     pricePerPiece: 9.15,
+    units: 12,
+    imageUrl: 'https://cdn.example.test/womens-1.webp',
     url: 'https://www.joinfleek.com/products/upcycled-denim-halter-top',
   },
 ];
@@ -252,7 +258,7 @@ describe('createApp', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ content: 'No CUSTOMER message reply' });
+    expect(await res.json()).toEqual({});
     expect(db.claimDelivery).toHaveBeenCalled();
     await vi.waitFor(() => {
       expect(processInbound).toHaveBeenCalled();
@@ -275,7 +281,7 @@ describe('createApp', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ content: 'No CUSTOMER message reply' });
+    expect(await res.json()).toEqual({});
     await vi.waitFor(() => {
       expect(processInbound).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -302,7 +308,7 @@ describe('createApp', () => {
     });
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ content: 'No CUSTOMER message reply' });
+    expect(await res.json()).toEqual({});
     expect(processInbound).not.toHaveBeenCalled();
     expect(db.claimDelivery).not.toHaveBeenCalled();
   });

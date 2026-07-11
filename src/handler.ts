@@ -169,7 +169,10 @@ async function prepareBuyerPrompt(
     const img = await fetchImageContent(imageUrl);
     if (img) {
       images.push(img);
-      if (!text) text = '(Buyer sent an image.)';
+      // Abhi can see the photo, but seeing it is not the same as knowing we can
+      // match it against stock — point him at the visual index explicitly.
+      const note = '(Buyer sent an image — use search_by_image to find lots that look like it.)';
+      text = text ? `${text}\n\n${note}` : note;
     } else if (text) {
       text = `${text}\n\n(Buyer also sent an image that could not be loaded.)`;
     } else {
@@ -193,6 +196,9 @@ async function runAbhiTurn(
     persona: 'abhi',
     buyerPhone,
     history,
+    // Abhi *sees* the photo via the vision attachment below; this additionally
+    // gives him search_by_image over it, to match it against the catalog index.
+    inboundImage: imageUrl,
     onToolResult: (exec) => {
       toolExecs.push(exec);
       log.info('abhi.tool', {

@@ -10,6 +10,7 @@ import {
   toReplyPayload,
   verifySignature,
   webhookMessageReply,
+  webhookSilentAck,
 } from '../src/wassist.js';
 
 const SECRET = 'whsec_test_secret';
@@ -147,6 +148,28 @@ describe('parseInbound (official BYOA)', () => {
     ).toBeNull();
   });
 
+  it('treats unsubstituted %IMAGE_URL% as null', () => {
+    expect(
+      parseInbound({
+        message: 'need 300 tees',
+        image: '%IMAGE_URL%',
+        phone_number: '+1',
+        reply_callback: 'https://wassist.app/api/callback/1',
+      })?.image,
+    ).toBeNull();
+  });
+
+  it('rejects non-http image values', () => {
+    expect(
+      parseInbound({
+        message: 'hi',
+        image: 'ftp://media.wassist.app/x.png',
+        phone_number: '+1',
+        reply_callback: 'https://wassist.app/api/callback/1',
+      })?.image,
+    ).toBeNull();
+  });
+
   it('returns null when required fields are missing', () => {
     expect(parseInbound({ message: 'x' })).toBeNull();
     expect(parseInbound({ phone_number: '+1' })).toBeNull();
@@ -195,6 +218,13 @@ describe('deliveryKey', () => {
 describe('webhookMessageReply', () => {
   it('builds the interim WhatsApp JSON shape', () => {
     expect(webhookMessageReply('hello')).toEqual({ type: 'message', content: 'hello' });
+  });
+});
+
+describe('webhookSilentAck', () => {
+  it('returns an empty object with no customer-facing content', () => {
+    expect(webhookSilentAck()).toEqual({});
+    expect(webhookSilentAck()).not.toHaveProperty('content');
   });
 });
 

@@ -175,10 +175,12 @@ interface ProductFixture {
   id: number;
   name: string;
   price: number;
-  original_price?: number;
+  original_price?: number | null;
   currency: string;
   price_per_piece: number;
   collection: string;
+  units?: number | null;
+  image_url?: string | null;
   url: string;
 }
 
@@ -195,6 +197,8 @@ const catalogProducts: Product[] = productFixtures.map((p) => ({
   originalPrice: p.original_price ?? null,
   currency: p.currency,
   pricePerPiece: p.price_per_piece,
+  units: p.units ?? null,
+  imageUrl: p.image_url ?? null,
   url: p.url,
 }));
 
