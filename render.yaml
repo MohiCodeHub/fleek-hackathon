@@ -1,0 +1,13 @@
+# Render Blueprint for the seller chat platform (chat-app/).
+# Deploy: Render Dashboard → New → Blueprint → pick this repo. Render reads this
+# file and builds only the seller-chat service from the chat-app/ subdirectory.
+services:
+  - type: web
+    name: seller-chat
+    runtime: node
+    rootDir: chat-app
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true

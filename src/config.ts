@@ -28,6 +28,12 @@ export const config = {
      */
     publicWebhookUrl: process.env.PUBLIC_WEBHOOK_URL ?? '',
   },
+  /**
+   * Seller chat platform (chat-app/) base URL. When set, Sanket relays offers to
+   * a real human seller there instead of the LLM sim. Unset → sim (offline demo).
+   * Example: https://seller-chat.onrender.com
+   */
+  sellerPlatformUrl: (process.env.SELLER_PLATFORM_URL ?? '').replace(/\/$/, ''),
   /** WhatsApp number for the buyer-facing Abhi thread (digits only, for wa.me links). */
   whatsappNumber: (process.env.WHATSAPP_NUMBER ?? '447424845871').replace(/[^0-9]/g, ''),
   port: Number(process.env.PORT ?? 8787),

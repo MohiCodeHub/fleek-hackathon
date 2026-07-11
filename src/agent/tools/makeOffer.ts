@@ -3,8 +3,26 @@ import { type AgentToolResult, defineTool } from '@earendil-works/pi-coding-agen
 import { Type } from 'typebox';
 import { saveNegotiation } from '../../db/index.js';
 import type { NegotiationRuntime } from '../../negotiation.js';
+import { relayToSellerAndAwait, sellerPlatformEnabled } from '../../seller-channel.js';
 import { supplierReply } from '../../supplier-sim.js';
 import type { DealTerms, Grade } from '../../types.js';
+
+/** Sentinel returned when a real human seller doesn't reply in time. */
+const NO_SELLER_REPLY = '__NO_SELLER_REPLY__';
+
+/**
+ * Get the supplier's counter to Sanket's message. Routes to the real human
+ * seller via the chat platform when configured; otherwise the LLM sim. Returns
+ * NO_SELLER_REPLY if a human seller stays silent past the timeout.
+ */
+async function getSupplierReply(state: NegotiationRuntime, message: string): Promise<string> {
+  if (sellerPlatformEnabled()) {
+    const label = `${state.supplier.name} — ${state.bale.description}`;
+    const reply = await relayToSellerAndAwait(state.neg.id, label, message);
+    return reply ?? NO_SELLER_REPLY;
+  }
+  return supplierReply(state.supplier, state.bale, state.neg.transcript);
+}
 
 const MAX_ROUNDS = 7;
 
@@ -63,7 +81,20 @@ export function makeOfferTool(state: NegotiationRuntime) {
       state.neg.state = 'COUNTERING';
       await saveNegotiation(state.neg);
 
-      const reply = await supplierReply(state.supplier, state.bale, state.neg.transcript);
+      const reply = await getSupplierReply(state, params.message);
+
+      if (reply === NO_SELLER_REPLY) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: "The seller hasn't replied. If their last terms are inside the contract, call accept_deal; otherwise call escalate — do not keep waiting.",
+            },
+          ],
+          details: { noSellerReply: true, yourTerms: terms, round: state.rounds },
+        };
+      }
+
       state.neg.transcript.push({ speaker: 'supplier', message: reply });
       await saveNegotiation(state.neg);
 
