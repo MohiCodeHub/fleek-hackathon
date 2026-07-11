@@ -118,7 +118,6 @@ Before opening or updating a PR, run the same four checks locally. Fix Biome for
 - Agent naming: **Abhi** = buyer, **Sanket** = supplier — do not reintroduce Jack/Jill
 - Negotiation speaker in transcripts: `'sanket' | 'supplier'`
 - Keep webhook responses fast: ack within ~5s with no interim WhatsApp copy; long work via `reply_callback`
-- Interim webhook reply text is asserted in `tests/server.test.ts` — update tests if you change copy
 - Prefer small, focused modules over large refactors; match existing file layout
 
 ## Build and deployment
@@ -147,6 +146,5 @@ Railway env must include at least: `DATABASE_URL`, `OPENAI_API_KEY`, `WASSIST_AP
 
 - `WASSIST_BASE_URL` ≠ public webhook URL
 - BYOA inbound has no `X-Wassist-Signature`. If `WASSIST_WEBHOOK_SECRET` is set, every BYOA POST gets `401 invalid signature` — unset it
-- Interim webhook reply text is asserted in `tests/server.test.ts` — update tests if you change copy
 - Renaming agents/personas requires updating `PersonaName`, file names under `personas/`, and negotiation speaker unions
 - Unit tests for Hono do not need Postgres; agent `demo`/`chat`/`seed` do
