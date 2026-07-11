@@ -28,6 +28,8 @@ export const config = {
   whatsappNumber: (process.env.WHATSAPP_NUMBER ?? '447424845871').replace(/[^0-9]/g, ''),
   port: Number(process.env.PORT ?? 8787),
   databaseUrl: process.env.DATABASE_URL ?? '',
+  /** `debug` | `info` | `warn` | `error` — gates structured app + HTTP logs. */
+  logLevel: process.env.LOG_LEVEL ?? 'info',
 } as const;
 
 export function requireDatabaseUrl(): string {

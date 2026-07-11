@@ -1,5 +1,6 @@
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
 import { config } from './config.js';
+import { log } from './log.js';
 
 /**
  * Thin Wassist BYOA client.
@@ -38,15 +39,31 @@ export async function registerByoa(webhookUrl: string): Promise<unknown> {
  * (valid ~24h). Prefer this when Abhi needs longer than ~5s.
  */
 export async function replyViaCallback(replyCallbackUrl: string, content: string): Promise<void> {
+  let host = '';
+  try {
+    host = new URL(replyCallbackUrl).host;
+  } catch {
+    host = 'invalid';
+  }
+  const start = Date.now();
   const res = await fetch(replyCallbackUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ content }),
   });
+  const ms = Date.now() - start;
   if (!res.ok) {
     const detail = await res.text().catch(() => '');
+    log.warn('reply_callback.fail', {
+      host,
+      status: res.status,
+      ms,
+      detail: detail.slice(0, 200),
+      contentLen: content.length,
+    });
     throw new Error(`Wassist reply_callback failed (${res.status}): ${detail.slice(0, 200)}`);
   }
+  log.info('reply_callback.ok', { host, status: res.status, ms, contentLen: content.length });
 }
 
 /**

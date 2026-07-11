@@ -68,6 +68,7 @@ Required env (see `.env.example`):
 - Abhi replies via `reply_callback` only (webhook ack uses `No CUSTOMER message reply`) — not the Conversations Send Message API
 - Optional model overrides: `MODEL_REASONING`, `MODEL_FAST`
 - Optional `WHATSAPP_NUMBER` for the landing-page `wa.me` CTA (default sandbox `447424845871`)
+- Optional `LOG_LEVEL` (`debug` | `info` | `warn` | `error`, default `info`) — HTTP via `hono/logger`; WhatsApp path emits JSON lines (`webhook.*`, `inbound.*`, `abhi.tool`, `reply_callback.*`)
 
 Never commit `.env`. Config loads with `dotenv` override (`src/config.ts`).
 

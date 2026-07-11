@@ -1,9 +1,18 @@
-import type { MiddlewareHandler } from 'hono';
+import { logger } from 'hono/logger';
+import { log } from '../log.js';
 
-/** Lightweight request logger for Railway / local logs. */
-export const requestLogger: MiddlewareHandler = async (c, next) => {
-  const start = Date.now();
-  await next();
-  const ms = Date.now() - start;
-  console.log(`${c.req.method} ${c.req.path} → ${c.res.status} ${ms}ms`);
-};
+/**
+ * Hono built-in request logger, routed through our level-gated helper.
+ * Skips GET /health at info so probes don’t drown real traffic.
+ */
+function print(message: string, ...rest: string[]): void {
+  const line = rest.length ? `${message} ${rest.join(' ')}` : message;
+  // Hono lines look like: `<-- GET /health` or `--> GET /health 200 1ms`
+  if (/\bGET\s+\/health(?:\?|\s|$)/.test(line)) {
+    log.debug('http', { line });
+    return;
+  }
+  log.info('http', { line });
+}
+
+export const requestLogger = logger(print);

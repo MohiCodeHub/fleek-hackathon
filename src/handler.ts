@@ -1,6 +1,7 @@
 import type { AgentSession } from '@earendil-works/pi-coding-agent';
 import { buildAgent, lastAssistantText, type ToolExec } from './agent/factory.js';
 import { getBuyer, getSupplierByPhone, getThread, saveThread, upsertBuyer } from './db/index.js';
+import { log, maskPhone } from './log.js';
 import { learnFromInteraction } from './memory.js';
 import { type InboundMessage, isWassistReplyCallback, replyViaCallback } from './wassist.js';
 
@@ -10,6 +11,7 @@ import { type InboundMessage, isWassistReplyCallback, replyViaCallback } from '.
  */
 export async function processInbound(inbound: InboundMessage): Promise<string> {
   const { from, body, replyCallback } = inbound;
+  const start = Date.now();
 
   const supplier = await getSupplierByPhone(from);
   const isSupplier = !!supplier;
@@ -24,6 +26,8 @@ export async function processInbound(inbound: InboundMessage): Promise<string> {
   }
 
   const role: 'buyer' | 'supplier' = isSupplier ? 'supplier' : 'buyer';
+  log.info('inbound.start', { phone: maskPhone(from), role, bodyLen: body.length });
+
   const thread = (await getThread(from)) ?? {
     phone: from,
     role,
@@ -49,7 +53,20 @@ export async function processInbound(inbound: InboundMessage): Promise<string> {
   }
 
   await deliver(replyCallback, reply);
+  log.info('inbound.done', {
+    phone: maskPhone(from),
+    role,
+    ms: Date.now() - start,
+    replyLen: reply.length,
+  });
   return reply;
+}
+
+function toolOk(output: unknown): boolean {
+  if (output == null) return true;
+  if (typeof output === 'object' && output !== null && 'error' in output) return false;
+  if (typeof output === 'string' && /error/i.test(output.slice(0, 40))) return false;
+  return true;
 }
 
 /** Run one Abhi turn: build the session, prompt, capture tool execs for memory. */
@@ -63,7 +80,10 @@ async function runAbhiTurn(
     persona: 'abhi',
     buyerPhone,
     history,
-    onToolResult: (exec) => toolExecs.push(exec),
+    onToolResult: (exec) => {
+      toolExecs.push(exec);
+      log.info('abhi.tool', { tool: exec.name, ok: toolOk(exec.output) });
+    },
   });
   try {
     await session.prompt(userMessage);
@@ -80,13 +100,17 @@ async function runAbhiTurn(
 async function deliver(replyCallback: string, reply: string): Promise<void> {
   if (!reply) return;
   if (!replyCallback.startsWith('http')) {
-    console.log(`\n[no reply_callback URL — would send]\n${reply}\n`);
+    log.info('deliver.skip', { reason: 'non_http', replyLen: reply.length });
     return;
   }
   if (!isWassistReplyCallback(replyCallback)) {
-    console.warn(
-      `skipping deliver: non-Wassist reply_callback host: ${replyCallback.slice(0, 120)}`,
-    );
+    let host = '';
+    try {
+      host = new URL(replyCallback).host;
+    } catch {
+      host = 'invalid';
+    }
+    log.warn('deliver.skip', { reason: 'non_wassist_host', host });
     return;
   }
   await replyViaCallback(replyCallback, reply);

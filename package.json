@@ -15,8 +15,8 @@
     "register": "tsx src/scripts/register.ts",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "LOG_LEVEL=error vitest run",
+    "test:watch": "LOG_LEVEL=error vitest",
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "lint:fix": "biome check --write ."
