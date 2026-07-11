@@ -11,6 +11,7 @@
     "demo": "tsx src/scripts/demo.ts",
     "chat": "tsx src/scripts/chat.ts",
     "serve": "tsx src/server.ts",
+    "start": "tsx src/server.ts",
     "register": "tsx src/scripts/register.ts",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -21,13 +22,13 @@
     "better-sqlite3": "^11.8.1",
     "dotenv": "^16.4.7",
     "hono": "^4.6.20",
-    "@hono/node-server": "^1.13.7"
+    "@hono/node-server": "^1.13.7",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.12",
     "@types/node": "^22.10.5",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.3",
     "vitest": "^3.0.2"
   }
 }
