@@ -1,8 +1,8 @@
 import { closeDb } from '../db/client.js';
 import { insertBale, insertProduct, resetDb, upsertBuyer, upsertSupplier } from '../db/index.js';
 import type { Bale, Buyer, Product, Supplier } from '../types.js';
-import mensProductsJson from './data/mens-unisex.json';
-import womensProductsJson from './data/womens.json';
+import mensProductsJson from './fixtures/mens-unisex.json';
+import womensProductsJson from './fixtures/womens.json';
 
 /**
  * Seed fuzzy, messy bulk-bale inventory — the shape of real wholesale
