@@ -62,8 +62,8 @@ export function LandingPage() {
             </li>
             <li>
               <div>
-                <strong>He matches graded bales.</strong> Ranked picks from verified wholesalers, rag
-                houses, and grading hubs, with the fit explained.
+                <strong>He matches graded bales.</strong> Ranked picks from verified wholesalers,
+                rag houses, and grading hubs, with the fit explained.
               </div>
             </li>
             <li>
