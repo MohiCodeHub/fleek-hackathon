@@ -4,7 +4,7 @@ import { html } from 'hono/html';
 import { listProducts, productCounts } from '../db/index.js';
 import { CollectionPage, CollectionsIndexPage } from '../web/pages/collections.js';
 import { LandingPage } from '../web/pages/landing.js';
-import { isCollectionSlug } from '../web/products.js';
+import { isCollectionSlug, isSortValue } from '../web/products.js';
 
 // Read once at startup — the stylesheet is a static asset shipped with the repo.
 const webCss = readFileSync(new URL('../../public/web.css', import.meta.url), 'utf-8');
@@ -21,8 +21,20 @@ webRoutes.get('/collections', async (c) => {
 webRoutes.get('/collections/:slug', async (c) => {
   const slug = c.req.param('slug');
   if (!isCollectionSlug(slug)) return c.notFound();
-  const page = await listProducts({ collection: slug });
-  return c.html(html`<!doctype html>${CollectionPage({ slug, products: page.data })}`);
+  const sortParam = c.req.query('sort');
+  const sort = isSortValue(sortParam) ? sortParam : 'name';
+  const [page, counts] = await Promise.all([
+    listProducts({ collection: slug, sort }),
+    productCounts(),
+  ]);
+  return c.html(
+    html`<!doctype html>${CollectionPage({
+      slug,
+      products: page.data,
+      counts,
+      sort,
+    })}`,
+  );
 });
 
 webRoutes.get('/web.css', (c) => {

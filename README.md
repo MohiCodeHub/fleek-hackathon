@@ -41,8 +41,8 @@ The same Hono app serves a small server-rendered web funnel (no Vite/React build
 | Route | Purpose |
 |-------|---------|
 | `GET /` | Landing page — one CTA: **Message Abhi on WhatsApp** (`wa.me`) |
-| `GET /collections`, `GET /collections/:slug` | Slim demo catalog with per-bale WhatsApp links |
-| `GET /api/products…` | Demo product JSON (Postgres `products` table, seeded by `npm run seed`) |
+| `GET /collections`, `GET /collections/:slug` | Catalog with per-lot WhatsApp sourcing links |
+| `GET /api/products…` | Catalog product JSON (Postgres `products` table, seeded by `npm run seed`) |
 
 Set `WHATSAPP_NUMBER` to override the sandbox number (`447424845871`). Pages are Hono JSX in
 `src/web/`; styles in `public/web.css`; design tokens in `src/web/DESIGN.md`.

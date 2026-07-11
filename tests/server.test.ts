@@ -112,9 +112,23 @@ describe('createApp', () => {
     expect(res.status).toBe(200);
     const html = await res.text();
     expect(html).toContain('https://wa.me/447424845871');
+    expect(html).toContain('Source with Abhi');
+    expect(html).toContain('Catalog');
+    expect(html).not.toContain('Demo catalog');
 
     const missing = await app.request('/collections/nope');
     expect(missing.status).toBe(404);
+  });
+
+  it('GET /collections index lists collections without demo framing', async () => {
+    const app = createApp();
+    const res = await app.request('/collections');
+    expect(res.status).toBe(200);
+    const html = await res.text();
+    expect(html).toContain('<h1>Catalog</h1>');
+    expect(html).toContain('Men&#39;s &amp; Unisex');
+    expect(html).toContain('Women&#39;s');
+    expect(html).not.toContain('Demo catalog');
   });
 
   it('GET /web.css serves the stylesheet', async () => {

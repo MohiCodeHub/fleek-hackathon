@@ -71,10 +71,15 @@ export function LandingPage() {
 
         <section class="closing">
           <p class="closing-lede">
-            Want a feel for the stock first? Browse the <a href="/collections">demo catalog</a> —
-            then start the conversation.
+            Prefer to browse first? Open the <a href="/collections">catalog</a>, pick a lot, and
+            source it with Abhi.
           </p>
-          <WhatsAppCta prefill={HERO_PREFILL} />
+          <div class="cta-group">
+            <WhatsAppCta prefill={HERO_PREFILL} />
+            <a class="cta-secondary" href="/collections">
+              Browse catalog
+            </a>
+          </div>
         </section>
       </main>
       <SiteFooter />

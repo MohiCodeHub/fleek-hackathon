@@ -16,8 +16,8 @@ Resellers, vintage shops, and multi-channel retailers who source bulk secondhand
 Convert a visitor into a WhatsApp conversation with Abhi. The landing page is a funnel, not a
 product UI. Primary CTA everywhere: **Message Abhi on WhatsApp** → `https://wa.me/447424845871`.
 
-Secondary surface: a slim demo catalog (`/collections/*`) that shows the kind of inventory Abhi
-sources — every catalog page routes back to WhatsApp.
+Secondary surface: the catalog (`/collections/*`) — browse graded lots and source any one
+with Abhi on WhatsApp.
 
 ## Register
 

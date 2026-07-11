@@ -15,7 +15,7 @@ export function Layout(props: { title: string; description: string; children: Ch
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
         <link rel="stylesheet" href={FONTS_HREF} />
-        <link rel="stylesheet" href="/web.css" />
+        <link rel="stylesheet" href="/web.css?v=catalog-2" />
       </head>
       <body>{props.children}</body>
     </html>
@@ -30,8 +30,8 @@ export function SiteHeader() {
         <span class="wordmark-for">for Fleek</span>
       </a>
       <nav aria-label="Site">
-        <a class="quiet-link" href="/collections">
-          Browse the catalog
+        <a class="nav-link" href="/collections">
+          Catalog
         </a>
       </nav>
     </header>

@@ -15,7 +15,7 @@ Stack: **Node ≥22**, **TypeScript (ESM)**, **Hono** + `@hono/node-server`, **D
 
 Package manager: **npm**. Root package name: `abhi-and-sanket`.
 
-The web surface (landing + demo catalog) is served by the same Hono app via Hono JSX under `src/web/` — there is no separate frontend build. The old standalone `website/` Vite React app has been removed. Biome/CI cover root `src/` and `tests/` only.
+The web surface (landing + catalog) is served by the same Hono app via Hono JSX under `src/web/` — there is no separate frontend build. The old standalone `website/` Vite React app has been removed. Biome/CI cover root `src/` and `tests/` only.
 
 ## Architecture (backend)
 
@@ -36,7 +36,7 @@ Key paths:
 | `src/routes/webhook.ts` | BYOA webhook: interim reply + background `processInbound` |
 | `src/routes/health.ts` | `GET /health` |
 | `src/routes/web.ts` | `GET /` landing, `/collections/*`, `/web.css` (Hono JSX) |
-| `src/routes/products.ts` | `GET /api/products…` demo product JSON |
+| `src/routes/products.ts` | `GET /api/products…` catalog product JSON |
 | `src/web/` | JSX pages, `wa.me` helper, collection metadata, `DESIGN.md` tokens |
 | `src/handler.ts` | Buyer WhatsApp → Abhi; supplier numbers → stub (Sanket is off-stage) |
 | `src/agent/abhi.ts` | Buyer agent + tools |
