@@ -1,6 +1,7 @@
 import type { ImageContent } from '@earendil-works/pi-ai';
 import type { AgentSession } from '@earendil-works/pi-coding-agent';
 import { buildAgent, lastAssistantText, type ToolExec } from './agent/factory.js';
+import { buildCatalogPayloads, extractCatalogMatches } from './catalogReplies.js';
 import {
   getBuyer,
   getSupplierByPhone,
@@ -59,6 +60,9 @@ function compactToolFields(name: string, output: unknown): Record<string, unknow
     fields.baleIds = (o.matches as Array<{ baleId?: string }>).map((m) => m.baleId).filter(Boolean);
     fields.matchCount = (o.matches as unknown[]).length;
   }
+  if (name === 'find_matches' && Array.isArray(o.catalogMatches)) {
+    fields.catalogCount = (o.catalogMatches as unknown[]).length;
+  }
   if (name === 'negotiate') {
     if (Array.isArray(o.outcomes)) {
       fields.outcomes = (o.outcomes as Array<{ state?: string; baleId?: string }>).map((x) => ({
@@ -113,9 +117,11 @@ async function processInboundLocked(inbound: InboundMessage): Promise<string> {
     const history = (thread.history ?? []) as AgentSession['messages'];
 
     let reply: string;
+    let catalogPayloads: ReplyPayload[] = [];
     if (role === 'buyer') {
       const result = await runAbhiTurn(from, history, body, image);
       reply = result.reply || EMPTY_REPLY_FALLBACK;
+      catalogPayloads = buildCatalogPayloads(extractCatalogMatches(result.toolExecs));
       await saveThread({
         phone: from,
         role,
@@ -133,12 +139,13 @@ async function processInboundLocked(inbound: InboundMessage): Promise<string> {
       });
     }
 
-    await deliver(replyCallback, reply);
+    await deliverAll(replyCallback, [reply, ...catalogPayloads]);
     log.info('inbound.done', {
       phone: maskPhone(from),
       role,
       ms: Date.now() - start,
       replyLen: reply.length,
+      catalogCards: catalogPayloads.length,
     });
     return reply;
   } catch (e) {
@@ -193,7 +200,7 @@ async function runAbhiTurn(
   history: AgentSession['messages'],
   userMessage: string,
   imageUrl: string | null,
-): Promise<{ reply: string; history: AgentSession['messages'] }> {
+): Promise<{ reply: string; history: AgentSession['messages']; toolExecs: ToolExec[] }> {
   const toolExecs: ToolExec[] = [];
   const session = await buildAgent({
     persona: 'abhi',
@@ -216,9 +223,31 @@ async function runAbhiTurn(
     await session.prompt(text, images.length > 0 ? { images } : undefined);
     const reply = lastAssistantText(session);
     await learnFromInteraction(buyerPhone, toolExecs);
-    return { reply, history: session.messages };
+    return { reply, history: session.messages, toolExecs };
   } finally {
     session.dispose();
+  }
+}
+
+/**
+ * POST one or more replies to Wassist reply_callback.
+ * First payload failure throws; later (catalog card) failures are logged and skipped.
+ */
+async function deliverAll(
+  replyCallback: string,
+  replies: Array<string | ReplyPayload>,
+): Promise<void> {
+  let first = true;
+  for (const reply of replies) {
+    try {
+      await deliver(replyCallback, reply);
+      first = false;
+    } catch (err) {
+      if (first) throw err;
+      log.warn('deliver.catalog_card_failed', {
+        err: err instanceof Error ? err.message : String(err),
+      });
+    }
   }
 }
 
