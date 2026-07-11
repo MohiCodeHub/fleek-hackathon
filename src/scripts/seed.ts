@@ -1,5 +1,7 @@
-import { resetDb, upsertBuyer, upsertSupplier, insertBale } from '../db.js';
+import { resetDb, upsertBuyer, upsertSupplier, insertBale } from '../db/index.js';
+import { closeDb } from '../db/client.js';
 import type { Bale, Buyer, Supplier } from '../types.js';
+
 
 /**
  * Seed fuzzy, messy bulk-bale inventory — the shape of real wholesale
@@ -164,14 +166,18 @@ const bales: Bale[] = [
   },
 ];
 
-function seed(): void {
-  resetDb();
-  buyers.forEach(upsertBuyer);
-  suppliers.forEach(upsertSupplier);
-  bales.forEach(insertBale);
+async function seed(): Promise<void> {
+  await resetDb();
+  for (const b of buyers) await upsertBuyer(b);
+  for (const s of suppliers) await upsertSupplier(s);
+  for (const b of bales) await insertBale(b);
   console.log(
     `Seeded ${buyers.length} buyer(s), ${suppliers.length} suppliers, ${bales.length} bales.`,
   );
+  await closeDb();
 }
 
-seed();
+seed().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

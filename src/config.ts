@@ -19,8 +19,15 @@ export const config = {
     publicWebhookUrl: process.env.PUBLIC_WEBHOOK_URL ?? '',
   },
   port: Number(process.env.PORT ?? 8787),
-  dbPath: process.env.DB_PATH ?? 'data/jackjill.db',
+  databaseUrl: process.env.DATABASE_URL ?? '',
 } as const;
+
+export function requireDatabaseUrl(): string {
+  if (!config.databaseUrl) {
+    throw new Error('DATABASE_URL is not set. Copy .env.example to .env and fill it in.');
+  }
+  return config.databaseUrl;
+}
 
 export function requireOpenAIKey(): string {
   if (!config.openaiApiKey) {

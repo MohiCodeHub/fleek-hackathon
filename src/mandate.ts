@@ -1,5 +1,5 @@
 import { generateJSON, type JSONSchema } from './llm.js';
-import { insertMandate } from './db.js';
+import { insertMandate } from './db/index.js';
 import { id } from './ids.js';
 import type { Mandate, Grade } from './types.js';
 
@@ -77,6 +77,6 @@ export async function extractMandate(buyerPhone: string, demand: string): Promis
     rawText: demand,
     status: 'open',
   };
-  insertMandate(mandate);
+  await   await insertMandate(mandate);
   return { mandate, missing: ex.missing ?? [] };
 }

@@ -1,5 +1,6 @@
 import { runJack } from '../agent/jack.js';
-import { getBuyer } from '../db.js';
+import { getBuyer } from '../db/index.js';
+import { closeDb } from '../db/client.js';
 import type { Msg } from '../llm.js';
 
 /**
@@ -15,7 +16,7 @@ const SCRIPT = [
 ];
 
 async function main(): Promise<void> {
-  const buyer = getBuyer(BUYER_PHONE);
+  const buyer = await getBuyer(BUYER_PHONE);
   if (!buyer) {
     console.error(`No buyer ${BUYER_PHONE}. Run: npm run seed`);
     process.exit(1);
@@ -32,6 +33,7 @@ async function main(): Promise<void> {
     console.log('─'.repeat(72));
   }
   console.log('\n=== demo complete ===\n');
+  await closeDb();
 }
 
 main().catch((e) => {
