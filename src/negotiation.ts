@@ -1,8 +1,10 @@
 import { buildAgent } from './agent/factory.js';
+import { config } from './config.js';
 import { contractOf, escalationNote } from './contract.js';
 import { getBale, getMandate, getSupplier, saveNegotiation, setMandateStatus } from './db/index.js';
 import { id } from './ids.js';
 import { log } from './log.js';
+import { postSellerOutcome, runSellerHandoff } from './seller/handoff.js';
 import type { Bale, DealTerms, Mandate, MandateContract, Negotiation, Supplier } from './types.js';
 
 /**
@@ -21,6 +23,13 @@ export interface NegotiationRuntime {
   done: boolean;
   /** Latest structured counter from the supplier sim. */
   lastSupplierTerms: DealTerms | null;
+  /**
+   * Seller-mode only: the per-unit counter the human seller approved in the
+   * `/seller` handoff. The supplier sim holds around it so the closed price
+   * matches what the seller agreed to. Also flips make_offer into "mirror to
+   * the seller console" mode.
+   */
+  anchor?: number;
 }
 
 /** Negotiate a single bale for a mandate. Autonomous within the contract. */
@@ -54,6 +63,13 @@ export async function negotiateBale(
 
   await setMandateStatus(mandate.id, 'negotiating');
 
+  // Seller-POV: proactively hand off to the human seller and wait for them to
+  // approve the counteroffer before the buyer's agent starts working the deal.
+  if (config.seller.enabled) {
+    const handoff = await runSellerHandoff({ mandate, bale, supplier, contract });
+    runtime.anchor = handoff.anchorPrice;
+  }
+
   const session = await buildAgent({ persona: 'sanket', sanketRuntime: runtime });
   try {
     await session.prompt(
@@ -78,6 +94,22 @@ export async function negotiateBale(
     } (Sanket did not explicitly conclude.)`;
     await saveNegotiation(neg);
     log.info('sanket.done', { baleId: bale.id, state: 'ESCALATED', reason: 'force' });
+  }
+
+  // Seller-POV: report the outcome back to the human seller's console.
+  if (config.seller.enabled) {
+    if (neg.state === 'CLOSED' && neg.currentOffer) {
+      const t = neg.currentOffer;
+      postSellerOutcome(
+        true,
+        `Done — deal closed with the buyer at *$${t.pricePerUnit}/unit*, grade ${t.grade}, ${t.quantity} units. Nice one — I'll get the PO moving and keep you posted on dispatch.`,
+      );
+    } else {
+      postSellerOutcome(
+        false,
+        `Heads up — I couldn't close this one inside the buyer's terms, so I've bumped it back to them for a decision. ${neg.outcome ?? ''}`.trim(),
+      );
+    }
   }
 
   return neg;

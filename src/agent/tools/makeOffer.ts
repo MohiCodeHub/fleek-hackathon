@@ -1,9 +1,11 @@
 import { StringEnum } from '@earendil-works/pi-ai';
 import { type AgentToolResult, defineTool } from '@earendil-works/pi-coding-agent';
 import { Type } from 'typebox';
+import { config } from '../../config.js';
 import { saveNegotiation } from '../../db/index.js';
 import { log } from '../../log.js';
 import type { NegotiationRuntime } from '../../negotiation.js';
+import { sellerChannel } from '../../seller/channel.js';
 import { supplierReply } from '../../supplier-sim.js';
 import type { DealTerms, Grade } from '../../types.js';
 
@@ -94,7 +96,12 @@ export function makeOfferTool(state: NegotiationRuntime) {
       state.neg.state = 'COUNTERING';
       await saveNegotiation(state.neg);
 
-      const reply = await supplierReply(state.supplier, state.bale, state.neg.transcript);
+      const reply = await supplierReply(
+        state.supplier,
+        state.bale,
+        state.neg.transcript,
+        state.anchor,
+      );
       state.neg.transcript.push({
         speaker: 'supplier',
         message: reply.message,
@@ -106,6 +113,22 @@ export function makeOfferTool(state: NegotiationRuntime) {
       }
       await saveNegotiation(state.neg);
 
+      // Seller-POV: mirror the live back-and-forth into the seller's console so
+      // they watch the buyer's agent and their own position converge.
+      if (config.seller.enabled) {
+        sellerChannel.post(
+          'agent',
+          `💬 Buyer's agent: “${params.message}” (their offer: $${terms.pricePerUnit}/unit)`,
+          { kind: 'mirror' },
+        );
+        const supplierTerms = reply.terms
+          ? ` (your counter: $${reply.terms.pricePerUnit}/unit)`
+          : '';
+        sellerChannel.post('agent', `↩️ Your side: “${reply.message}”${supplierTerms}`, {
+          kind: 'mirror',
+        });
+      }
+
       log.debug('sanket.round', {
         baleId: state.bale.id,
         round: state.rounds,
@@ -116,6 +139,7 @@ export function makeOfferTool(state: NegotiationRuntime) {
       const termsLine = reply.terms
         ? `\n[supplier terms: $${reply.terms.pricePerUnit}/unit, grade ${reply.terms.grade}, qty ${reply.terms.quantity}]`
         : '';
+
       return {
         content: [
           {

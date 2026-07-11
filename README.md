@@ -79,6 +79,30 @@ ngrok http 8787           # only needed locally — Railway already has HTTPS
 PUBLIC_WEBHOOK_URL=https://<ngrok-host>/webhook npm run register
 ```
 
+## Seller POV — the supply-side agent (local, no Wassist)
+
+The buyer talks to Abhi; the **seller** (supplier) has their own side. With `SELLER_MODE=1`,
+the moment a buyer picks a match, a supply-side agent **proactively** messages the seller on a
+local WhatsApp-style console at **`/seller`**: *"You've been matched with {buyer} — they want X at
+up to $Y."* It then reads the buyer + supplier **AM-Brain profiles** (`am-brain-hackathon/profiles/`,
+the "context layer"), **recommends a counteroffer** grounded in that context, flags that the seller's
+recent counters have varied, and **waits for the seller to approve** before it goes to the buyer.
+Runs entirely on this machine — Wassist can't drive two devices, so the seller side is local by design.
+
+```bash
+# Fully-local two-POV demo in one process (buyer in terminal, seller in browser):
+npm run seller-demo
+#   → open http://localhost:8787/seller   (the supplier's phone)
+#   → in the terminal, ask Abhi to source something, then pick an option to pursue
+```
+
+To attach the seller console to the real-WhatsApp buyer path instead, run `SELLER_MODE=1 npm run serve`
+and open `/seller` while the buyer texts the Wassist number. The seller channel
+(`src/seller/channel.ts`) is an in-memory bridge — swap it for a Baileys/WhatsApp adapter later without
+touching the negotiation. Key files: `src/seller/handoff.ts` (proactive intro → profile-grounded
+recommendation → approval), `src/seller/profiles.ts` (AM-Brain context loader), `src/routes/seller.ts`
++ `src/seller/page.ts` (the console).
+
 ## Test
 
 ```bash

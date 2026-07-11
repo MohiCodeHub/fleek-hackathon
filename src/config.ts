@@ -32,6 +32,17 @@ export const config = {
   whatsappNumber: (process.env.WHATSAPP_NUMBER ?? '447424845871').replace(/[^0-9]/g, ''),
   port: Number(process.env.PORT ?? 8787),
   databaseUrl: process.env.DATABASE_URL ?? '',
+  seller: {
+    /**
+     * Seller-POV console mode. When on, a negotiation opens with a proactive
+     * "you've been matched" handoff to the seller's `/seller` console and waits
+     * for the seller to approve the recommended counteroffer. Off by default so
+     * the buyer-only demo/tests are unchanged.
+     */
+    enabled: process.env.SELLER_MODE === '1' || process.env.SELLER_MODE === 'true',
+    /** How long to wait for the seller's approval before auto-sending (ms). */
+    approvalTimeoutMs: Number(process.env.SELLER_APPROVAL_TIMEOUT_MS ?? 120_000),
+  },
   /** `debug` | `info` | `warn` | `error` — gates structured app + HTTP logs. */
   logLevel: process.env.LOG_LEVEL ?? 'info',
 } as const;

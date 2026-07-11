@@ -13,6 +13,7 @@
     "search:image": "tsx src/scripts/search-image.ts",
     "demo": "tsx src/scripts/demo.ts",
     "chat": "tsx src/scripts/chat.ts",
+    "seller-demo": "SELLER_MODE=1 tsx src/scripts/seller-demo.ts",
     "start": "tsx src/server.ts",
     "serve": "tsx src/server.ts",
     "register": "tsx src/scripts/register.ts",

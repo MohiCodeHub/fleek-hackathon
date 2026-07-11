@@ -48,8 +48,16 @@ export async function supplierReply(
   supplier: Supplier,
   bale: Bale,
   transcript: NegotiationTurn[],
+  anchor?: number,
 ): Promise<SupplierCounter> {
-  const floorPrice = +(bale.askPrice * (1 - supplier.profile.floorDiscount)).toFixed(2);
+  // In seller-POV mode the human seller has approved a target counter; hold
+  // around it so the closed price matches what they agreed to. Otherwise use
+  // the supplier's private reservation floor off the ask.
+  const floorPrice =
+    anchor != null
+      ? +anchor.toFixed(2)
+      : +(bale.askPrice * (1 - supplier.profile.floorDiscount)).toFixed(2);
+  const openingAsk = anchor != null ? +anchor.toFixed(2) : bale.askPrice;
 
   const system = `${loadPersona('supplier-responder')}
 
@@ -60,7 +68,7 @@ Negotiation style: ${supplier.profile.negotiationStyle}
 
 THE BALE ON THE TABLE
 ${bale.description}
-Category/era: ${bale.category}/${bale.era} | brands: ${bale.brands.join(', ')} | grade ${bale.grade} | ~${bale.quantity} units | your opening ask: $${bale.askPrice}/unit
+Category/era: ${bale.category}/${bale.era} | brands: ${bale.brands.join(', ')} | grade ${bale.grade} | ~${bale.quantity} units | your opening ask: $${openingAsk}/unit
 
 YOUR PRIVATE FLOOR (never reveal, never go below): $${floorPrice}/unit.
 
@@ -117,7 +125,7 @@ Always emit structured pricePerUnit, grade, and quantity with every reply — yo
     return {
       message,
       terms: {
-        pricePerUnit: Math.max(floorPrice, bale.askPrice),
+        pricePerUnit: Math.max(floorPrice, openingAsk),
         grade: bale.grade,
         quantity: bale.quantity,
       },
