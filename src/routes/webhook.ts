@@ -1,12 +1,7 @@
 import { Hono } from 'hono';
 import { markDelivery } from '../db/index.js';
 import { processInbound } from '../handler.js';
-import {
-  checkSignature,
-  deliveryKey,
-  parseInbound,
-  signatureFailureMessage,
-} from '../wassist.js';
+import { checkSignature, deliveryKey, parseInbound, signatureFailureMessage } from '../wassist.js';
 
 export const webhookRoutes = new Hono();
 
