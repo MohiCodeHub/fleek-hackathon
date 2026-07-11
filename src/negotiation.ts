@@ -17,10 +17,10 @@ import type {
 
 const MAX_ROUNDS = 7;
 
-type JillAction = 'offer' | 'accept' | 'escalate';
+type SanketAction = 'offer' | 'accept' | 'escalate';
 
-interface JillDecision {
-  action: JillAction;
+interface SanketDecision {
+  action: SanketAction;
   message: string;
   terms: { pricePerUnit: number; grade: Grade; quantity: number };
   reasoning: string;
@@ -61,17 +61,17 @@ const DECISION_SCHEMA: JSONSchema = {
 function renderTranscript(transcript: NegotiationTurn[]): string {
   if (transcript.length === 0) return '(no messages yet — make your opening offer)';
   return transcript
-    .map((t) => `${t.speaker === 'jill' ? 'YOU (Jill)' : 'SUPPLIER'}: ${t.message}`)
+    .map((t) => `${t.speaker === 'sanket' ? 'YOU (Sanket)' : 'SUPPLIER'}: ${t.message}`)
     .join('\n');
 }
 
-async function jillDecide(
+async function sanketDecide(
   contract: MandateContract,
   bale: Bale,
   supplier: Supplier,
   transcript: NegotiationTurn[],
-): Promise<JillDecision> {
-  const system = `${loadPersona('jill')}
+): Promise<SanketDecision> {
+  const system = `${loadPersona('sanket')}
 
 ---
 YOUR CONTRACT (hard limits — never break)
@@ -89,7 +89,7 @@ ${renderTranscript(transcript)}
 
 Decide your next action against the contract.`;
 
-  return generateJSON<JillDecision>({
+  return generateJSON<SanketDecision>({
     system,
     messages: [{ role: 'user', content: prompt }],
     schema: DECISION_SCHEMA,
@@ -118,7 +118,7 @@ export async function negotiateBale(
   };
 
   for (let round = 0; round < MAX_ROUNDS; round++) {
-    const decision = await jillDecide(contract, bale, supplier, neg.transcript);
+    const decision = await sanketDecide(contract, bale, supplier, neg.transcript);
     const terms: DealTerms = {
       pricePerUnit: decision.terms.pricePerUnit,
       grade: decision.terms.grade,
@@ -126,11 +126,11 @@ export async function negotiateBale(
     };
 
     // Round 0 must be an opening offer — there's nothing to accept yet.
-    const action: JillAction =
+    const action: SanketAction =
       round === 0 && decision.action !== 'offer' ? 'offer' : decision.action;
 
     if (action === 'accept') {
-      neg.transcript.push({ speaker: 'jill', message: decision.message, offer: terms });
+      neg.transcript.push({ speaker: 'sanket', message: decision.message, offer: terms });
       if (insideContract(terms, contract)) {
         neg.state = 'CLOSED';
         neg.currentOffer = terms;
@@ -139,7 +139,7 @@ export async function negotiateBale(
         await saveDeal({ id: id('deal'), negotiationId: neg.id, terms, status: 'closed' });
         return neg;
       }
-      // Guardrail: Jill tried to accept terms outside the contract — escalate instead.
+      // Guardrail: Sanket tried to accept terms outside the contract — escalate instead.
       neg.state = 'ESCALATED';
       neg.currentOffer = terms;
       neg.outcome = escalationNote(terms, contract);
@@ -150,14 +150,14 @@ export async function negotiateBale(
     if (action === 'escalate') {
       neg.state = 'ESCALATED';
       neg.currentOffer = terms;
-      neg.transcript.push({ speaker: 'jill', message: decision.message, offer: terms });
+      neg.transcript.push({ speaker: 'sanket', message: decision.message, offer: terms });
       neg.outcome = escalationNote(terms, contract);
       await saveNegotiation(neg);
       return neg;
     }
 
     // action === 'offer': send to supplier, get their reply, continue.
-    neg.transcript.push({ speaker: 'jill', message: decision.message, offer: terms });
+    neg.transcript.push({ speaker: 'sanket', message: decision.message, offer: terms });
     neg.currentOffer = terms;
     neg.state = 'COUNTERING';
     const reply = await supplierReply(supplier, bale, neg.transcript);
@@ -181,7 +181,7 @@ export interface NegotiationOutcome {
   outcome: string | null;
 }
 
-/** Negotiate one or more selected bales for a mandate (used by Jack). */
+/** Negotiate one or more selected bales for a mandate (used by Abhi). */
 export async function negotiateSelections(
   mandateId: string,
   baleIds: string[],

@@ -7,7 +7,7 @@ const personaDir = join(here, '..', 'personas');
 
 const cache = new Map<string, string>();
 
-export type PersonaName = 'jack' | 'jill' | 'supplier-responder';
+export type PersonaName = 'abhi' | 'sanket' | 'supplier-responder';
 
 /** Load a persona system prompt from personas/<name>.md (cached). */
 export function loadPersona(name: PersonaName): string {

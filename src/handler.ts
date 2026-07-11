@@ -1,12 +1,13 @@
-import { runJack } from './agent/jack.js';
+import { runAbhi } from './agent/abhi.js';
 import { getBuyer, getSupplierByPhone, getThread, saveThread, upsertBuyer } from './db/index.js';
 import type { Msg } from './llm.js';
 import { type InboundMessage, replyViaCallback } from './wassist.js';
 
 /**
- * Resolve persona by counterparty and process one inbound WhatsApp message.
- * Buyer -> Jack. Supplier -> Jill (real-supplier relay; the demo uses in-process
- * Jill, so this path is the optional hybrid). Unknown -> new buyer (Jack).
+ * Process one inbound WhatsApp message on the buyer-facing thread.
+ * MVP: humans talk only to Abhi. Sanket runs behind the scenes when Abhi
+ * dispatches negotiate (in-process vs supplier sim). Unknown phones onboard
+ * as buyers. Supplier-number inbound is a polite stub (not Sanket's stage).
  *
  * Final text is delivered via Wassist `reply_callback` (async BYOA path).
  */
@@ -34,7 +35,7 @@ export async function processInbound(inbound: InboundMessage): Promise<string> {
 
   let reply: string;
   if (role === 'buyer') {
-    const res = await runJack(from, history, body);
+    const res = await runAbhi(from, history, body);
     reply = res.reply;
     await saveThread({
       phone: from,

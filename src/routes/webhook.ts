@@ -7,7 +7,7 @@ export const webhookRoutes = new Hono();
 
 /**
  * Wassist BYOA webhook.
- * Respond quickly with an interim WhatsApp message, then finish Jack in the
+ * Respond quickly with an interim WhatsApp message, then finish Abhi in the
  * background and POST the final answer to `reply_callback`.
  */
 webhookRoutes.post('/webhook', async (c) => {
@@ -38,6 +38,6 @@ webhookRoutes.post('/webhook', async (c) => {
 
   void processInbound(inbound).catch((e) => console.error('processInbound error:', e));
 
-  // Fast interim while Jack/LLM runs (docs: aim to answer webhook within ~5s).
-  return c.json(webhookMessageReply("Got it — Jack's on it. Hang tight."));
+  // Fast interim while Abhi/LLM runs (docs: aim to answer webhook within ~5s).
+  return c.json(webhookMessageReply("Got it — Abhi's on it. Hang tight."));
 });

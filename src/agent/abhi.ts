@@ -8,9 +8,9 @@ import { loadPersona } from '../personas.js';
 import type { Buyer } from '../types.js';
 import { runAgent, type Tool } from './harness.js';
 
-/** Build Jack's dynamic system prompt: persona + buyer context. */
-function jackSystem(buyer: Buyer | null): string {
-  const persona = loadPersona('jack');
+/** Build Abhi's dynamic system prompt: persona + buyer context. */
+function abhiSystem(buyer: Buyer | null): string {
+  const persona = loadPersona('abhi');
   const ctx = buyer
     ? `\n\n---\nBUYER CONTEXT\nName: ${buyer.name}\nKnown preferences: ${
         buyer.profile.brandsPursued.length
@@ -95,12 +95,12 @@ const findMatchesTool: Tool = {
   },
 };
 
-/** negotiate tool: dispatch Jill to negotiate the buyer's chosen bale(s). */
+/** negotiate tool: dispatch Sanket to negotiate the buyer's chosen bale(s). */
 const negotiateTool: Tool = {
   def: {
     name: 'negotiate',
     description:
-      "Dispatch Jill to negotiate the buyer's chosen option(s) with the supplier, autonomously within the mandate (<= price ceiling, >= grade floor, >= quantity). Call this once the buyer picks which match(es) to pursue. Returns, per option, whether it CLOSED (with final terms) or ESCALATED (terms fell outside the mandate — needs the buyer's call).",
+      "Dispatch Sanket behind the scenes to negotiate the buyer's chosen option(s) with the supplier, autonomously within the mandate (<= price ceiling, >= grade floor, >= quantity). The buyer stays in this WhatsApp thread with you — Sanket does not message them. Call once the buyer picks which match(es) to pursue. Returns, per option, CLOSED (final terms) or ESCALATED (outside mandate — needs the buyer's call).",
     parameters: {
       type: 'object',
       properties: {
@@ -125,16 +125,16 @@ const negotiateTool: Tool = {
   },
 };
 
-/** Jack's full tool set for a given buyer. */
-export function jackTools(buyerPhone: string): Tool[] {
+/** Abhi's full tool set for a given buyer. */
+export function abhiTools(buyerPhone: string): Tool[] {
   return [extractMandateTool(buyerPhone), findMatchesTool, negotiateTool];
 }
 
 /**
- * Run Jack for one inbound buyer message. Returns his reply and the updated
- * history to persist for the next turn.
+ * Run Abhi for one inbound buyer WhatsApp message. Returns his reply and the
+ * updated history to persist for the next turn.
  */
-export async function runJack(
+export async function runAbhi(
   buyerPhone: string,
   history: Msg[],
   userMessage: string,
@@ -142,9 +142,9 @@ export async function runJack(
   const buyer = await getBuyer(buyerPhone);
   const withUser: Msg[] = [...history, { role: 'user', content: userMessage }];
   const result = await runAgent({
-    system: jackSystem(buyer),
+    system: abhiSystem(buyer),
     history: withUser,
-    tools: jackTools(buyerPhone),
+    tools: abhiTools(buyerPhone),
   });
   // Memory brain: distil revealed preferences into the buyer's profile.
   await learnFromInteraction(buyerPhone, result.toolCalls);

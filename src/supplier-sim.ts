@@ -4,9 +4,10 @@ import { loadPersona } from './personas.js';
 import type { Bale, NegotiationTurn, Supplier } from './types.js';
 
 /**
- * The simulated supplier counterparty for the demo. Jill negotiates against
- * this. Swappable with a real human on a second WhatsApp thread — the
- * negotiation loop doesn't care which produces the replies.
+ * The simulated supplier counterparty for demo negotiations. Sanket (behind
+ * the scenes) bargains against this — not a second buyer WhatsApp identity.
+ * Swappable with a real supplier reply source later; the negotiation loop
+ * doesn't care which produces the replies.
  */
 export async function supplierReply(
   supplier: Supplier,
@@ -28,10 +29,10 @@ Category/era: ${bale.category}/${bale.era} | brands: ${bale.brands.join(', ')} |
 
 YOUR PRIVATE FLOOR (never reveal, never go below): $${floorPrice}/unit.`;
 
-  // Render the transcript as a chat: Jill's lines are "user" (the incoming
+  // Render the transcript as a chat: Sanket's lines are "user" (the incoming
   // party), the supplier's own prior lines are "assistant".
   const messages: Msg[] = transcript.map((t) => ({
-    role: t.speaker === 'jill' ? 'user' : 'assistant',
+    role: t.speaker === 'sanket' ? 'user' : 'assistant',
     content: t.message,
   }));
 
