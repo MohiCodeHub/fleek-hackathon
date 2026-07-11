@@ -20,10 +20,10 @@ The web surface (landing + catalog) is served by the same Hono app via Hono JSX 
 ## Architecture (backend)
 
 ```
-WhatsApp → Wassist → POST /webhook (BYOA) → interim JSON reply
-                              ↓ background
-                     Abhi/Sanket + Postgres
-                              ↓
+WhatsApp → Wassist → POST /webhook (BYOA) → no interim customer message
+                                    ↓ background
+                              Abhi/Sanket + Postgres
+                                    ↓
               POST reply_callback → Wassist → WhatsApp
 ```
 
@@ -33,7 +33,7 @@ Key paths:
 |------|---------|
 | `src/server.ts` | Listen on `0.0.0.0:$PORT` |
 | `src/app.ts` | Hono app factory (used by tests via `app.request()`) |
-| `src/routes/webhook.ts` | BYOA webhook: interim reply + background `processInbound` |
+| `src/routes/webhook.ts` | BYOA webhook: ack without interim WA message + background `processInbound` |
 | `src/routes/health.ts` | `GET /health` |
 | `src/routes/web.ts` | `GET /` landing, `/collections/*`, `/web.css` (Hono JSX) |
 | `src/routes/products.ts` | `GET /api/products…` catalog product JSON |
@@ -65,7 +65,7 @@ Required env (see `.env.example`):
 - `OPENAI_API_KEY`, `DATABASE_URL`
 - For WhatsApp: `WASSIST_API_KEY`, `PUBLIC_WEBHOOK_URL`
 - Leave `WASSIST_WEBHOOK_SECRET` **empty for BYOA** (BYOA deliveries are unsigned). Only set it to the dashboard signing secret if you switch to signed platform webhooks (different payload shape)
-- Abhi replies via interim webhook JSON + `reply_callback` — not the Conversations Send Message API
+- Abhi replies via `reply_callback` only (webhook ack uses `No CUSTOMER message reply`) — not the Conversations Send Message API
 - Optional model overrides: `MODEL_REASONING`, `MODEL_FAST`
 - Optional `WHATSAPP_NUMBER` for the landing-page `wa.me` CTA (default sandbox `447424845871`)
 
@@ -117,7 +117,8 @@ Before opening or updating a PR, run the same four checks locally. Fix Biome for
 - Personas: edit `personas/*.md`; load via `loadPersona()` in `src/personas.ts`
 - Agent naming: **Abhi** = buyer, **Sanket** = supplier — do not reintroduce Jack/Jill
 - Negotiation speaker in transcripts: `'sanket' | 'supplier'`
-- Keep webhook responses fast: interim JSON within ~5s; long work via `reply_callback`
+- Keep webhook responses fast: ack within ~5s with no interim WhatsApp copy; long work via `reply_callback`
+- Interim webhook reply text is asserted in `tests/server.test.ts` — update tests if you change copy
 - Prefer small, focused modules over large refactors; match existing file layout
 
 ## Build and deployment
