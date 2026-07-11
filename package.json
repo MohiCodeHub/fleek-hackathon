@@ -1,7 +1,7 @@
 {
-  "name": "jack-and-jill",
+  "name": "abhi-and-sanket",
   "version": "0.1.0",
-  "description": "WhatsApp-native agent for B2B secondhand-fashion sourcing (a16z x Fleek hackathon)",
+  "description": "WhatsApp-native Fleek buyer (Abhi) and supplier (Sanket) agents (a16z x Fleek hackathon)",
   "type": "module",
   "engines": {
     "node": ">=22"

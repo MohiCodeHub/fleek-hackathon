@@ -1,7 +1,7 @@
 import { getBale, getBuyer, upsertBuyer } from './db/index.js';
 
 /**
- * The memory brain (deterministic v1). After each Jack interaction, distil
+ * The memory brain (deterministic v1). After each Abhi interaction, distil
  * revealed preferences into the buyer's profile — brands actually pursued,
  * mandates raised, deals closed — so future matching and conversation sharpen
  * over time. Mirrors Fleek's data-flywheel thesis.

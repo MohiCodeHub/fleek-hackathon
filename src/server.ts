@@ -11,7 +11,7 @@ serve({
   hostname: '0.0.0.0',
 });
 
-console.log(`Jack & Jill listening on http://0.0.0.0:${port} (POST /webhook, GET /health)`);
+console.log(`Abhi & Sanket listening on http://0.0.0.0:${port} (POST /webhook, GET /health)`);
 if (!config.wassist.webhookSecret) {
   console.warn('WASSIST_WEBHOOK_SECRET not set — signature verification skipped.');
 }

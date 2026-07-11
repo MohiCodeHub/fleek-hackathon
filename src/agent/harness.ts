@@ -17,9 +17,9 @@ export interface AgentResult {
 }
 
 /**
- * The generic agent harness. Persona-agnostic: Jack and Jill are the same
- * function — only `system`, `history`, and `tools` differ. Runs the tool-use
- * loop to completion and returns the assistant's text plus updated history.
+ * The generic agent harness. Abhi (buyer WhatsApp face) uses this tool-use
+ * loop. Sanket (behind-the-scenes negotiator) currently runs via structured
+ * decisions in negotiation.ts — same product, two agents, one buyer thread.
  */
 export async function runAgent(opts: {
   system: string;

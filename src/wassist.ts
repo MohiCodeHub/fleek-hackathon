@@ -35,7 +35,7 @@ export async function registerByoa(webhookUrl: string): Promise<unknown> {
 
 /**
  * Async reply via the one-time callback URL from the inbound webhook
- * (valid ~24h). Prefer this when Jack needs longer than ~5s.
+ * (valid ~24h). Prefer this when Abhi needs longer than ~5s.
  */
 export async function replyViaCallback(replyCallbackUrl: string, content: string): Promise<void> {
   const res = await fetch(replyCallbackUrl, {

@@ -1,25 +1,29 @@
-# Jack & Jill
+# Abhi & Sanket
 
-A WhatsApp-native agent system for **B2B secondhand-fashion sourcing**, built on [Fleek](https://fleek.co) + [Wassist](https://wassist.app) for the a16z × Fleek hackathon (Agents & LLMs track).
+WhatsApp-native sourcing agents for **[Fleek](https://joinfleek.com)** — the B2B vintage wholesale marketplace connecting resellers and shops to 1,000+ verified suppliers worldwide. Built with [Wassist](https://wassist.app) for the a16z × Fleek hackathon (Agents & LLMs track).
 
-A buyer states demand in natural language → **Jack** extracts a structured mandate and returns ranked supplier matches with fit rationale → the buyer picks → **Jill** autonomously negotiates within the buyer's mandate → returns a closed deal, all in one WhatsApp thread.
+A buyer texts demand on WhatsApp → **Abhi** (buyer agent) extracts a structured mandate and returns ranked supplier matches with fit rationale → the buyer picks → Abhi dispatches **Sanket** (supplier agent) **behind the scenes** to negotiate within the mandate → Abhi reports the closed deal or escalation — all in **one WhatsApp thread**.
 
 ## The idea
 
-The unsolved, agent-shaped problem downstream of Fleek Sort ("what is this item") is buyer↔supplier **matching + negotiation** — hard because it's async (parties never online together), multi-party, and judgement-under-a-mandate. We build on Sort's output, not the vision layer.
+Fleek already surfaces bulk bales, grading, Demand Hub–style sourcing, and Virtual Handpick. The unsolved, agent-shaped problem is buyer↔supplier **matching + negotiation** — hard because it's async, multi-party, and judgement-under-a-mandate. Pattern inspired by dual-agent marketplaces (Jack & Jill–style): two agents, each loyal to one side; humans only talk to one face.
 
-- **Jack** faces the buyer. **Jill** faces the supplier. They're the *same agent harness* — only the system prompt and scoped memory differ. Persona is chosen by who's on the other end of the WhatsApp thread.
-- Negotiation is **autonomous within a contract**: `≤ price ceiling, ≥ grade floor, ≥ quantity`. Jill auto-closes inside the mandate and escalates to the buyer only when terms fall outside it.
+- **Abhi** is the only WhatsApp face — fiduciary to the buyer. **Sanket** negotiates the supplier side **off-stage** (in-process vs inventory / supplier sim). Same product, two agents; one thread.
+- Negotiation is **autonomous within a contract**: `≤ price ceiling, ≥ grade floor, ≥ quantity`. Sanket auto-closes inside the mandate and escalates to Abhi (who tells the buyer) only when terms fall outside it.
 - A **memory brain** accretes per-buyer revealed preferences so matching sharpens over time — Fleek's data-flywheel thesis.
 
 ## Architecture
 
 ```
-WhatsApp ─▶ Wassist ─▶ POST /webhook (BYOA payload) ─▶ interim JSON reply
-                                              │
-                                     background: Jack/Jill + Postgres
-                                              │
-                          POST reply_callback ─▶ Wassist ─▶ WhatsApp
+Buyer WhatsApp ─▶ Wassist ─▶ POST /webhook ─▶ interim JSON reply
+                                    │
+                         background: Abhi (tools)
+                                    │
+              Abhi ──dispatch──▶ Sanket (behind the scenes) + Postgres
+                                    │
+                         Abhi final reply
+                                    │
+              POST reply_callback ─▶ Wassist ─▶ same WhatsApp thread
 ```
 
 | Env var | Meaning |
@@ -27,7 +31,7 @@ WhatsApp ─▶ Wassist ─▶ POST /webhook (BYOA payload) ─▶ interim JSON 
 | `WASSIST_BASE_URL` | Wassist **platform API** (default `https://wassist.app`) — not your tunnel |
 | `PUBLIC_WEBHOOK_URL` | **Your** public `…/webhook` that Wassist calls (Railway HTTPS or local ngrok) |
 
-Key files: `src/agent/harness.ts`, `src/agent/jack.ts`, `src/mandate.ts`, `src/matching.ts`,
+Key files: `src/agent/harness.ts`, `src/agent/abhi.ts`, `src/mandate.ts`, `src/matching.ts`,
 `src/negotiation.ts`, `src/wassist.ts`, `src/routes/webhook.ts`, `personas/*.md`.
 
 ## Setup

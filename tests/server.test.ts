@@ -29,7 +29,7 @@ describe('createApp', () => {
     const app = createApp();
     const res = await app.request('/health');
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ ok: true, service: 'jack-and-jill' });
+    expect(await res.json()).toEqual({ ok: true, service: 'abhi-and-sanket' });
   });
 
   it('GET / returns service info', async () => {
@@ -83,7 +83,7 @@ describe('createApp', () => {
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({
       type: 'message',
-      content: "Got it — Jack's on it. Hang tight.",
+      content: "Got it — Abhi's on it. Hang tight.",
     });
     expect(db.markDelivery).toHaveBeenCalled();
     await vi.waitFor(() => {
