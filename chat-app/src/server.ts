@@ -1,5 +1,6 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 import { chatPage, inboxPage } from './pages.js';
 import {
   appendMessage,
@@ -9,6 +10,9 @@ import {
 } from './store.js';
 
 const app = new Hono();
+
+// Allow the standalone frontend (e.g. Vercel) to call the API cross-origin.
+app.use('/api/*', cors());
 
 // --- Web UI ---------------------------------------------------------------
 

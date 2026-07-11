@@ -1,0 +1,291 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap');
+
+:root {
+  --bg: #0e0f13;
+  --panel: #16181f;
+  --panel-2: #1b1e27;
+  --border: #262a35;
+  --text: #e8eaf0;
+  --muted: #8a8f9e;
+  --accent: #ffb454;
+  --accent-ink: #2a1c05;
+  --agent: #20242e;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  height: 100%;
+}
+
+/* --- Sidebar / inbox --- */
+.sidebar {
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--panel);
+}
+.side-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 18px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.brand {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+}
+.brand-mark {
+  color: var(--accent);
+  font-size: 1.15rem;
+}
+.brand-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.brand-sub {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.dot.on {
+  background: #3ddc84;
+  box-shadow: 0 0 0 3px rgba(61, 220, 132, 0.15);
+}
+.dot.off {
+  background: #f0616d;
+}
+
+.inbox {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+.convo {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 13px 18px;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  transition: background 0.12s;
+}
+.convo:hover {
+  background: var(--panel-2);
+}
+.convo.active {
+  background: var(--panel-2);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.convo-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: baseline;
+}
+.convo-label {
+  font-weight: 600;
+  font-size: 0.92rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.convo-time {
+  color: var(--muted);
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+.convo-last {
+  color: var(--muted);
+  font-size: 0.83rem;
+  margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --- Chat pane --- */
+.chat {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: radial-gradient(1200px 500px at 70% -10%, #191c24, var(--bg));
+}
+.chat-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(22, 24, 31, 0.7);
+  backdrop-filter: blur(6px);
+}
+.chat-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+}
+.chat-sub {
+  color: var(--muted);
+  font-size: 0.76rem;
+  margin-top: 1px;
+}
+.back {
+  display: none;
+  background: none;
+  border: 0;
+  color: var(--text);
+  font-size: 1.7rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.thread {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 22px 20px;
+}
+.thread-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.bubble {
+  max-width: 74%;
+  padding: 9px 13px;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.bubble-text {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.bubble.agent {
+  align-self: flex-start;
+  background: var(--agent);
+  border-bottom-left-radius: 4px;
+}
+.bubble.seller {
+  align-self: flex-end;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-bottom-right-radius: 4px;
+}
+.bubble-meta {
+  font-size: 0.68rem;
+  margin-top: 4px;
+  opacity: 0.65;
+}
+.bubble.seller .bubble-meta {
+  text-align: right;
+}
+
+/* --- Composer --- */
+.composer {
+  display: flex;
+  gap: 10px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--panel);
+}
+.composer textarea {
+  flex: 1;
+  resize: none;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 11px 13px;
+  font: inherit;
+  max-height: 140px;
+}
+.composer textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.composer button {
+  border: 0;
+  border-radius: 12px;
+  padding: 0 22px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+  cursor: pointer;
+}
+.composer button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* --- Empty states --- */
+.empty {
+  color: var(--muted);
+}
+.empty.small {
+  font-size: 0.86rem;
+  padding: 22px 18px;
+  line-height: 1.5;
+}
+.empty.center {
+  text-align: center;
+}
+.chat-empty {
+  margin: auto;
+  text-align: center;
+  color: var(--muted);
+}
+.chat-empty-mark {
+  font-size: 2.2rem;
+  color: var(--accent);
+  opacity: 0.6;
+  margin-bottom: 10px;
+}
+
+/* --- Responsive: single pane on mobile --- */
+@media (max-width: 720px) {
+  .app {
+    grid-template-columns: 1fr;
+  }
+  .app[data-view='chat'] .sidebar {
+    display: none;
+  }
+  .app[data-view='inbox'] .chat {
+    display: none;
+  }
+  .back {
+    display: block;
+  }
+}
