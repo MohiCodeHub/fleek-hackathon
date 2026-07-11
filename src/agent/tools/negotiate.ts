@@ -17,7 +17,8 @@ export const negotiateTool = defineTool({
   parameters: Type.Object({
     mandateId: Type.String({ description: 'The mandate id.' }),
     baleIds: Type.Array(Type.String(), {
-      description: 'The bale id(s) of the option(s) the buyer chose to pursue.',
+      description:
+        'The exact bale id(s) of the option(s) the buyer chose, copied verbatim from the "bale id:" field in find_matches (e.g. bale_atlas_sport90). Do not invent or use rank numbers.',
     }),
   }),
   execute: async (_toolCallId, params): Promise<AgentToolResult<Record<string, unknown>>> => {

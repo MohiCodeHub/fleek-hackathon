@@ -11,7 +11,7 @@ export const findMatchesTool = defineTool({
   name: 'find_matches',
   label: 'Find Matches',
   description:
-    'Score and rank supplier inventory (messy bulk bales) against a mandate. Call after extract_mandate returns a complete mandate. Returns ranked options across suppliers, each with a fit rationale.',
+    'Score and rank supplier inventory (messy bulk bales) against a mandate. Call after extract_mandate returns a complete mandate. Returns ranked options across suppliers, each labelled with its exact bale id (e.g. bale_atlas_sport90) plus a fit rationale. When the buyer picks an option, pass that exact bale id to negotiate.',
   promptSnippet: 'Ranks supplier bales against a mandate with fit rationale.',
   parameters: Type.Object({
     mandateId: Type.String({ description: 'The mandate id from extract_mandate.' }),
@@ -44,7 +44,7 @@ export const findMatchesTool = defineTool({
     const text = ranked
       .map(
         (m) =>
-          `${m.rank}. ${m.supplierName} — ${m.bale.description}\n   ${m.bale.category}/${m.bale.era} | brands: ${m.bale.brands.join(', ')} | grade ${m.bale.grade} | ~${m.bale.quantity} units | ask $${m.bale.askPrice}/unit | fit ${m.score}/100\n   ${m.rationale}`,
+          `${m.rank}. ${m.supplierName} — ${m.bale.description}\n   bale id: ${m.baleId} | ${m.bale.category}/${m.bale.era} | brands: ${m.bale.brands.join(', ')} | grade ${m.bale.grade} | ~${m.bale.quantity} units | ask $${m.bale.askPrice}/unit | fit ${m.score}/100\n   ${m.rationale}`,
       )
       .join('\n\n');
     return {
