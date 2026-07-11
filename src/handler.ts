@@ -42,7 +42,10 @@ function enqueueForPhone<T>(phone: string, work: () => Promise<T>): Promise<T> {
 function toolOk(output: unknown): boolean {
   if (output == null) return true;
   if (typeof output === 'object' && output !== null && 'error' in output) return false;
-  if (typeof output === 'string' && /error/i.test(output.slice(0, 40))) return false;
+  if (typeof output === 'string') {
+    const head = output.slice(0, 40);
+    if (/error/i.test(head) || /failed query/i.test(head)) return false;
+  }
   return true;
 }
 

@@ -63,18 +63,35 @@ export function makeFindMatchesTool(buyerPhone: string) {
         rationale: m.rationale,
       }));
 
-      const catalog = await searchCatalogProducts(mandate);
-      const catalogMatches = catalog.map((p, i) => ({
-        rank: i + 1,
-        collection: p.collection,
-        productId: p.id,
-        name: p.name,
-        price: p.price,
-        currency: p.currency,
-        pricePerPiece: p.pricePerPiece,
-        url: p.url,
-        fitScore: p.fitScore,
-      }));
+      type CatalogMatch = {
+        rank: number;
+        collection: string;
+        productId: number;
+        name: string;
+        price: number;
+        currency: string;
+        pricePerPiece: number;
+        url: string;
+        fitScore: number;
+      };
+      let catalogMatches: CatalogMatch[] = [];
+      let catalogError: string | undefined;
+      try {
+        const catalog = await searchCatalogProducts(mandate);
+        catalogMatches = catalog.map((p, i) => ({
+          rank: i + 1,
+          collection: p.collection,
+          productId: p.id,
+          name: p.name,
+          price: p.price,
+          currency: p.currency,
+          pricePerPiece: p.pricePerPiece,
+          url: p.url,
+          fitScore: p.fitScore,
+        }));
+      } catch (err) {
+        catalogError = err instanceof Error ? err.message : String(err);
+      }
 
       const baleText = ranked
         .map(
@@ -100,6 +117,10 @@ export function makeFindMatchesTool(buyerPhone: string) {
         sections.push(
           `Fleek catalog lots (browse-only — share product links with the buyer; NOT valid negotiate baleIds):\n\n${catalogText}`,
         );
+      } else if (catalogError) {
+        sections.push(
+          'Fleek catalog lots unavailable (database error). Supplier bale matches above are still valid.',
+        );
       }
 
       log.info('matches.rank', {
@@ -107,11 +128,17 @@ export function makeFindMatchesTool(buyerPhone: string) {
         baleCount: matches.length,
         baleIds: matches.map((m) => m.baleId),
         catalogCount: catalogMatches.length,
+        ...(catalogError ? { catalogError } : {}),
       });
 
       return {
         content: [{ type: 'text' as const, text: sections.join('\n\n') }],
-        details: { mandateId: mandate.id, matches, catalogMatches },
+        details: {
+          mandateId: mandate.id,
+          matches,
+          catalogMatches,
+          ...(catalogError ? { error: catalogError } : {}),
+        },
       };
     },
   });
