@@ -14,8 +14,14 @@ export const config = {
   },
   wassist: {
     apiKey: process.env.WASSIST_API_KEY ?? '',
-    baseUrl: process.env.WASSIST_BASE_URL ?? 'https://alpha-plagiocephalic-darrell.ngrok-free.dev',
+    /** Wassist platform API host (not your tunnel). */
+    baseUrl: process.env.WASSIST_BASE_URL ?? 'https://wassist.app',
+    /** Optional. If set, require X-Wassist-Signature when present. */
     webhookSecret: process.env.WASSIST_WEBHOOK_SECRET ?? '',
+    /**
+     * YOUR public webhook URL that Wassist calls (Railway HTTPS or local ngrok).
+     * Example: https://<service>.up.railway.app/webhook
+     */
     publicWebhookUrl: process.env.PUBLIC_WEBHOOK_URL ?? '',
   },
   port: Number(process.env.PORT ?? 8787),

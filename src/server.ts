@@ -13,5 +13,10 @@ serve({
 
 console.log(`Jack & Jill listening on http://0.0.0.0:${port} (POST /webhook, GET /health)`);
 if (!config.wassist.webhookSecret) {
-  console.warn('⚠  WASSIST_WEBHOOK_SECRET not set — signature verification is skipped (dev mode).');
+  console.warn('WASSIST_WEBHOOK_SECRET not set — signature verification skipped.');
+}
+if (!config.wassist.publicWebhookUrl) {
+  console.warn(
+    'PUBLIC_WEBHOOK_URL not set — run npm run register after deploying/exposing /webhook.',
+  );
 }

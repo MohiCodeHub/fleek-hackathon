@@ -1,21 +1,21 @@
 import { runJack } from './agent/jack.js';
-import { config } from './config.js';
 import { getBuyer, getSupplierByPhone, getThread, saveThread, upsertBuyer } from './db/index.js';
 import type { Msg } from './llm.js';
-import { type InboundMessage, sendMessage } from './wassist.js';
+import { type InboundMessage, replyViaCallback } from './wassist.js';
 
 /**
  * Resolve persona by counterparty and process one inbound WhatsApp message.
  * Buyer -> Jack. Supplier -> Jill (real-supplier relay; the demo uses in-process
  * Jill, so this path is the optional hybrid). Unknown -> new buyer (Jack).
+ *
+ * Final text is delivered via Wassist `reply_callback` (async BYOA path).
  */
 export async function processInbound(inbound: InboundMessage): Promise<string> {
-  const { from, conversationId, body } = inbound;
+  const { from, body, replyCallback } = inbound;
 
   const supplier = await getSupplierByPhone(from);
   const isSupplier = !!supplier;
   if (!isSupplier && !(await getBuyer(from))) {
-    // First contact — onboard as a buyer.
     await upsertBuyer({
       phone: from,
       name: 'WhatsApp buyer',
@@ -24,32 +24,45 @@ export async function processInbound(inbound: InboundMessage): Promise<string> {
   }
 
   const role: 'buyer' | 'supplier' = isSupplier ? 'supplier' : 'buyer';
-  const thread = (await getThread(from)) ?? { phone: from, role, conversationId, history: [] };
+  const thread = (await getThread(from)) ?? {
+    phone: from,
+    role,
+    conversationId: null,
+    history: [],
+  };
   const history = thread.history as Msg[];
 
   let reply: string;
   if (role === 'buyer') {
     const res = await runJack(from, history, body);
     reply = res.reply;
-    await saveThread({ phone: from, role, conversationId, history: res.history });
+    await saveThread({
+      phone: from,
+      role,
+      conversationId: thread.conversationId,
+      history: res.history,
+    });
   } else {
-    // Real-supplier inbound (optional hybrid mode). In the core demo, Jill runs
-    // in-process during Jack's negotiate tool, so suppliers never text in.
     reply =
       "Thanks — this line is handled by Fleek's sourcing agent. A live negotiation will reach you here when a buyer's mandate matches your stock.";
-    await saveThread({ phone: from, role, conversationId, history });
+    await saveThread({
+      phone: from,
+      role,
+      conversationId: thread.conversationId,
+      history,
+    });
   }
 
-  await deliver(conversationId, reply);
+  await deliver(replyCallback, reply);
   return reply;
 }
 
-/** Send the reply over WhatsApp, or log it if Wassist isn't configured (local dev). */
-async function deliver(conversationId: string, reply: string): Promise<void> {
+/** POST the final reply to Wassist reply_callback (or log in local/dev). */
+async function deliver(replyCallback: string, reply: string): Promise<void> {
   if (!reply) return;
-  if (!config.wassist.apiKey) {
-    console.log(`\n[no WASSIST_API_KEY — would send to ${conversationId}]\n${reply}\n`);
+  if (!replyCallback.startsWith('http')) {
+    console.log(`\n[no reply_callback URL — would send]\n${reply}\n`);
     return;
   }
-  await sendMessage(conversationId, reply);
+  await replyViaCallback(replyCallback, reply);
 }

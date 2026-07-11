@@ -1,10 +1,28 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+const processInbound = vi.fn().mockResolvedValue('final');
+
+vi.mock('../src/handler.js', () => ({
+  processInbound: (...args: unknown[]) => processInbound(...args),
+}));
+
+vi.mock('../src/db/index.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../src/db/index.js')>();
+  return {
+    ...actual,
+    markDelivery: vi.fn().mockResolvedValue(true),
+  };
+});
+
 import { createApp } from '../src/app.js';
+import * as db from '../src/db/index.js';
 import * as wassist from '../src/wassist.js';
 
 describe('createApp', () => {
   afterEach(() => {
-    vi.restoreAllMocks();
+    vi.clearAllMocks();
+    vi.mocked(db.markDelivery).mockResolvedValue(true);
+    processInbound.mockResolvedValue('final');
   });
 
   it('GET /health returns ok JSON', async () => {
@@ -45,5 +63,31 @@ describe('createApp', () => {
     });
     expect(res.status).toBe(400);
     expect(await res.text()).toBe('bad json');
+  });
+
+  it('POST /webhook returns interim BYOA JSON and schedules processing', async () => {
+    vi.spyOn(wassist, 'verifySignature').mockReturnValue(true);
+    const app = createApp();
+    const payload = {
+      message: 'need 300 tees',
+      phone_number: '+14155550101',
+      reply_callback: 'https://wassist.app/api/callback/test',
+      image: null,
+    };
+    const res = await app.request('/webhook', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({
+      type: 'message',
+      content: "Got it — Jack's on it. Hang tight.",
+    });
+    expect(db.markDelivery).toHaveBeenCalled();
+    await vi.waitFor(() => {
+      expect(processInbound).toHaveBeenCalled();
+    });
   });
 });

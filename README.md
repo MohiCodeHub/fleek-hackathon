@@ -15,54 +15,60 @@ The unsolved, agent-shaped problem downstream of Fleek Sort ("what is this item"
 ## Architecture
 
 ```
-WhatsApp ─▶ Wassist ─▶ POST /webhook ─▶ verify sig + dedupe ─▶ ACK 200
+WhatsApp ─▶ Wassist ─▶ POST /webhook (BYOA payload) ─▶ interim JSON reply
                                               │
-                                     router (buyer→Jack / supplier→Jill)
+                                     background: Jack/Jill + Postgres
                                               │
-              ┌───────────────────────────────┼───────────────────────────┐
-        extract_mandate                 find_matches                    negotiate
-        (structured LLM)          (LLM semantic ranking)      (Jill ↔ supplier loop, in-process)
-                                              │
-                          reply pushed via Wassist send API ─▶ WhatsApp
-     Postgres memory brain: buyers · suppliers · inventory_bales · mandates · matches · negotiations · deals
+                          POST reply_callback ─▶ Wassist ─▶ WhatsApp
 ```
 
-Key files: `src/agent/harness.ts` (generic tool-use loop), `src/agent/jack.ts` (Jack + tools),
-`src/mandate.ts`, `src/matching.ts`, `src/negotiation.ts` (Jill), `src/supplier-sim.ts`,
-`src/contract.ts` (mandate enforcement), `src/memory.ts`, `src/wassist.ts` + `src/server.ts` (transport),
-`personas/*.md` (Jack / Jill / supplier).
+| Env var | Meaning |
+|---------|---------|
+| `WASSIST_BASE_URL` | Wassist **platform API** (default `https://wassist.app`) — not your tunnel |
+| `PUBLIC_WEBHOOK_URL` | **Your** public `…/webhook` that Wassist calls (Railway HTTPS or local ngrok) |
+
+Key files: `src/agent/harness.ts`, `src/agent/jack.ts`, `src/mandate.ts`, `src/matching.ts`,
+`src/negotiation.ts`, `src/wassist.ts`, `src/routes/webhook.ts`, `personas/*.md`.
 
 ## Setup
 
 ```bash
 npm install
-cp .env.example .env      # add ANTHROPIC_API_KEY (Wassist vars only needed for real WhatsApp)
+cp .env.example .env      # add OPENAI_API_KEY (+ DATABASE_URL)
+npm run db:push           # apply Drizzle schema
 npm run seed              # seed fuzzy bulk-bale inventory + a buyer
 ```
 
 ## Run
 
-**Offline demo (the money-shot without WhatsApp — for rehearsal):**
+**Offline demo (without WhatsApp):**
 ```bash
-npm run demo      # scripted: buyer → ranked matches → pick → negotiate → closed deal
-npm run chat      # interactive: talk to Jack as the buyer in your terminal
+npm run demo
+npm run chat
 ```
 
-**Over real WhatsApp (Wassist):**
+**WhatsApp via Wassist (Railway):**
 ```bash
-# 1. fill WASSIST_API_KEY (+ WASSIST_WEBHOOK_SECRET) in .env
-npm run serve                                   # starts the webhook on :8787
-# 2. expose it, e.g.  ngrok http 8787
-PUBLIC_WEBHOOK_URL=https://<ngrok>/webhook npm run register
-# 3. in the Wassist dashboard, set the returned agent as your number's default
-# 4. text the number from WhatsApp
+# 1. Deploy this service; set WASSIST_API_KEY, DATABASE_URL, OPENAI_API_KEY on Railway
+# 2. Point Wassist at your public webhook:
+PUBLIC_WEBHOOK_URL=https://<service>.up.railway.app/webhook npm run register
+# 3. In the Wassist dashboard, deploy the agent to your WhatsApp number
+# 4. Text the number from WhatsApp
+```
+
+**WhatsApp via Wassist (local):**
+```bash
+npm run serve             # :8787
+ngrok http 8787           # only needed locally — Railway already has HTTPS
+PUBLIC_WEBHOOK_URL=https://<ngrok-host>/webhook npm run register
 ```
 
 ## Test
 
 ```bash
-npm test          # unit tests: contract enforcement + webhook signature/parse
+npm test
 npm run typecheck
+npm run lint              # if Biome is installed
 ```
 
 ## Deliberately unresolved (pending Fleek conversations)
