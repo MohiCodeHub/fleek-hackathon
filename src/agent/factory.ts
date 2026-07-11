@@ -16,7 +16,7 @@ import {
   type Skill,
   type ToolDefinition,
 } from '@earendil-works/pi-coding-agent';
-import { config, requireOpenAIKey } from '../config.js';
+import { config, requireLlmKey } from '../config.js';
 import { getBuyer } from '../db/index.js';
 import type { NegotiationRuntime } from '../negotiation.js';
 import { loadPersona } from '../personas.js';
@@ -60,18 +60,27 @@ export interface BuildAgentOptions {
 // ---------------------------------------------------------------------------
 
 const authStorage = AuthStorage.create();
-if (config.openaiApiKey) authStorage.setRuntimeApiKey('openai', config.openaiApiKey);
+authStorage.setRuntimeApiKey(config.llm.provider, requireLlmKey());
 const modelRegistry = ModelRegistry.create(authStorage);
 
 function resolveModel(): Model<Api> {
-  const id = config.models.reasoning;
-  const found = modelRegistry.find('openai', id);
-  if (!found) {
-    throw new Error(
-      `Could not resolve model openai/${id}. Set OPENAI_API_KEY and MODEL_REASONING in .env.`,
-    );
+  if (config.llm.provider === 'openai') {
+    const found = modelRegistry.find('openai', config.models.reasoning);
+    if (found) return found;
   }
-  return found;
+
+  return {
+    id: config.models.reasoning,
+    name: config.models.reasoning,
+    provider: config.llm.provider,
+    api: 'openai-completions',
+    baseUrl: config.llm.baseUrl,
+    reasoning: true,
+    input: ['text'],
+    cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+    contextWindow: 65_536,
+    maxTokens: 32_768,
+  } as Model<Api>;
 }
 
 let _model: Model<Api> | undefined;
@@ -174,7 +183,7 @@ export async function buildAgent(opts: BuildAgentOptions): Promise<AgentSession>
 
   // Surface a clear error if no key is configured (deferred to first build so
   // importing the module — e.g. in tests without a key — doesn't throw).
-  requireOpenAIKey();
+  requireLlmKey();
 
   let systemPrompt: string;
   let tools: ToolDefinition[];

@@ -179,6 +179,7 @@ interface ProductFixture {
   currency: string;
   price_per_piece: number;
   collection: string;
+  url: string;
 }
 
 const productFixtures = [
@@ -194,6 +195,7 @@ const catalogProducts: Product[] = productFixtures.map((p) => ({
   originalPrice: p.original_price ?? null,
   currency: p.currency,
   pricePerPiece: p.price_per_piece,
+  url: p.url,
 }));
 
 async function seed(): Promise<void> {

@@ -7,6 +7,7 @@ import {
   parseInbound,
   replyViaCallback,
   signatureFailureMessage,
+  toReplyPayload,
   verifySignature,
   webhookMessageReply,
   webhookSilentAck,
@@ -121,13 +122,39 @@ describe('parseInbound (official BYOA)', () => {
     expect(parseInbound(p)?.image).toBe('https://media.wassist.app/img.png');
   });
 
+  it('parses image-only messages (empty caption)', () => {
+    const p = {
+      message: '',
+      image: 'https://media.wassist.app/only.png',
+      phone_number: '+447700900200',
+      reply_callback: 'https://wassist.app/api/callback/img',
+    };
+    expect(parseInbound(p)).toEqual({
+      from: '+447700900200',
+      body: '',
+      replyCallback: 'https://wassist.app/api/callback/img',
+      image: 'https://media.wassist.app/only.png',
+    });
+  });
+
+  it('treats empty or whitespace image as null', () => {
+    expect(
+      parseInbound({
+        message: 'hi',
+        image: '  ',
+        phone_number: '+1',
+        reply_callback: 'https://wassist.app/api/callback/1',
+      })?.image,
+    ).toBeNull();
+  });
+
   it('returns null when required fields are missing', () => {
     expect(parseInbound({ message: 'x' })).toBeNull();
     expect(parseInbound({ phone_number: '+1' })).toBeNull();
     expect(parseInbound(null)).toBeNull();
   });
 
-  it('ignores legacy event payloads without BYOA fields', () => {
+  it('rejects non-BYOA payloads', () => {
     expect(
       parseInbound({
         event: 'message.received',
@@ -144,14 +171,25 @@ describe('deliveryKey', () => {
     const inbound = {
       from: '+1',
       body: 'hi',
+      image: null as string | null,
       replyCallback: 'https://wassist.app/api/callback/a',
     };
     expect(deliveryKey(inbound)).toBe(deliveryKey(inbound));
   });
+
   it('changes when the message changes', () => {
-    const a = deliveryKey({ from: '+1', body: 'a', replyCallback: 'https://cb' });
-    const b = deliveryKey({ from: '+1', body: 'b', replyCallback: 'https://cb' });
+    const a = deliveryKey({ from: '+1', body: 'a', image: null, replyCallback: 'https://cb' });
+    const b = deliveryKey({ from: '+1', body: 'b', image: null, replyCallback: 'https://cb' });
     expect(a).not.toBe(b);
+  });
+
+  it('changes when the image URL changes (including image-only)', () => {
+    const base = { from: '+1', body: '', replyCallback: 'https://cb' };
+    const a = deliveryKey({ ...base, image: 'https://media.wassist.app/a.png' });
+    const b = deliveryKey({ ...base, image: 'https://media.wassist.app/b.png' });
+    const none = deliveryKey({ ...base, image: null });
+    expect(a).not.toBe(b);
+    expect(a).not.toBe(none);
   });
 });
 
@@ -165,6 +203,17 @@ describe('webhookSilentAck', () => {
   it('returns an empty object with no customer-facing content', () => {
     expect(webhookSilentAck()).toEqual({});
     expect(webhookSilentAck()).not.toHaveProperty('content');
+  });
+});
+
+describe('toReplyPayload', () => {
+  it('wraps plain strings as { content }', () => {
+    expect(toReplyPayload('hi')).toEqual({ content: 'hi' });
+  });
+
+  it('passes through rich payloads', () => {
+    const rich = { content: 'cap', image: 'https://media.wassist.app/x.png' };
+    expect(toReplyPayload(rich)).toBe(rich);
   });
 });
 
@@ -185,5 +234,43 @@ describe('replyViaCallback', () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content: 'deal closed' }),
     });
+  });
+
+  it('POSTs image / video / audio / document rich payloads', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => '' });
+    vi.stubGlobal('fetch', fetchMock);
+    const url = 'https://wassist.app/api/callback/rich';
+
+    await replyViaCallback(url, { content: 'look', image: 'https://cdn.example/a.png' });
+    await replyViaCallback(url, { video: 'https://cdn.example/a.mp4' });
+    await replyViaCallback(url, { audio: 'https://cdn.example/a.ogg' });
+    await replyViaCallback(url, { document: 'https://cdn.example/a.pdf' });
+
+    const bodies = fetchMock.mock.calls.map((c) => JSON.parse(c[1].body as string));
+    expect(bodies).toEqual([
+      { content: 'look', image: 'https://cdn.example/a.png' },
+      { video: 'https://cdn.example/a.mp4' },
+      { audio: 'https://cdn.example/a.ogg' },
+      { document: 'https://cdn.example/a.pdf' },
+    ]);
+  });
+
+  it('POSTs contact and location payloads', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => '' });
+    vi.stubGlobal('fetch', fetchMock);
+    const url = 'https://wassist.app/api/callback/rich';
+
+    await replyViaCallback(url, {
+      contact: { name: 'Fleek Ops', phone_number: '+447700900100' },
+    });
+    await replyViaCallback(url, {
+      location: { latitude: 51.5, longitude: -0.12 },
+    });
+
+    const bodies = fetchMock.mock.calls.map((c) => JSON.parse(c[1].body as string));
+    expect(bodies).toEqual([
+      { contact: { name: 'Fleek Ops', phone_number: '+447700900100' } },
+      { location: { latitude: 51.5, longitude: -0.12 } },
+    ]);
   });
 });

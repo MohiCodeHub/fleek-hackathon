@@ -19,11 +19,15 @@ function lotLabel(count: number): string {
 
 function ProductCard(props: { product: Product }) {
   const { product } = props;
-  const prefill = `Hi Abhi — I'm interested in "${product.name}" (${formatPrice(product.price)}). Can you source it?`;
+  const prefill = `Hi Abhi — I'm interested in "${product.name}" (${formatPrice(product.price)}). Can you source it?\n${product.url}`;
   return (
     <li class="product-card">
       <div class="product-body">
-        <h3 class="product-name">{product.name}</h3>
+        <h3 class="product-name">
+          <a class="product-name-link" href={product.url} target="_blank" rel="noopener noreferrer">
+            {product.name}
+          </a>
+        </h3>
         <p class="product-price">
           <span class="product-price-main">{formatPrice(product.price)}</span>
           {product.originalPrice != null && product.originalPrice > product.price ? (

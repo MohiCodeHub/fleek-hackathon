@@ -67,6 +67,8 @@ export interface Product {
   originalPrice: number | null;
   currency: string;
   pricePerPiece: number;
+  /** Canonical joinfleek.com product page. */
+  url: string;
 }
 
 /** One page of demo catalog products. */

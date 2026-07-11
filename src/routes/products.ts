@@ -18,6 +18,7 @@ function toWire(p: Product) {
     currency: p.currency,
     price_per_piece: p.pricePerPiece,
     collection: p.collection,
+    url: p.url,
   };
 }
 

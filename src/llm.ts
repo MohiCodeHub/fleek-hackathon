@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { config, requireOpenAIKey } from './config.js';
+import { config, requireLlmKey } from './config.js';
 
 /**
  * Thin single-shot LLM helpers for the extraction modules (mandate, matching,
@@ -11,7 +11,9 @@ import { config, requireOpenAIKey } from './config.js';
 let _client: OpenAI | null = null;
 
 function client(): OpenAI {
-  if (!_client) _client = new OpenAI({ apiKey: requireOpenAIKey() });
+  if (!_client) {
+    _client = new OpenAI({ apiKey: requireLlmKey(), baseURL: config.llm.baseUrl });
+  }
   return _client;
 }
 

@@ -64,11 +64,22 @@ webhookRoutes.post('/webhook', async (c) => {
     return c.json(webhookSilentAck(), 200);
   }
 
+  let imageHost = '';
+  if (inbound.image) {
+    try {
+      imageHost = new URL(inbound.image).host;
+    } catch {
+      imageHost = 'invalid';
+    }
+  }
+
   log.info('webhook.received', {
     deliveryId: id.slice(0, 16),
     phone: maskPhone(inbound.from),
     bodyLen: inbound.body.length,
     bodyPreview: preview(inbound.body),
+    hasImage: Boolean(inbound.image),
+    ...(imageHost ? { imageHost } : {}),
     callbackHost,
   });
 

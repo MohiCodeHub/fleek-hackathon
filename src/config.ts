@@ -5,7 +5,11 @@ loadEnv({ override: true });
 
 /** Central config, read once from the environment. */
 export const config = {
-  openaiApiKey: process.env.OPENAI_API_KEY ?? '',
+  llm: {
+    provider: process.env.LLM_PROVIDER ?? 'openai',
+    apiKey: process.env.LLM_API_KEY ?? process.env.OPENAI_API_KEY ?? '',
+    baseUrl: process.env.LLM_BASE_URL ?? 'https://api.openai.com/v1',
+  },
   models: {
     /** Reasoning-heavy work: mandate extraction, matching, negotiation. */
     reasoning: process.env.MODEL_REASONING ?? 'gpt-4o',
@@ -39,9 +43,9 @@ export function requireDatabaseUrl(): string {
   return config.databaseUrl;
 }
 
-export function requireOpenAIKey(): string {
-  if (!config.openaiApiKey) {
-    throw new Error('OPENAI_API_KEY is not set. Copy .env.example to .env and fill it in.');
+export function requireLlmKey(): string {
+  if (!config.llm.apiKey) {
+    throw new Error('LLM_API_KEY is not set. Copy .env.example to .env and fill it in.');
   }
-  return config.openaiApiKey;
+  return config.llm.apiKey;
 }

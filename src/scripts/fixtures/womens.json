@@ -6,25 +6,26 @@
     "original_price": 193.8,
     "currency": "GBP",
     "price_per_piece": 9.15,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/upcycled-denim-lace-up-halter-top"
   },
   {
     "id": 2,
     "name": "Y2K Black Gothic Girl Cami Tops (AA-1180)",
     "price": 65,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.23,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-black-gothic-girl-cami-tops-aa-1180"
   },
   {
     "id": 3,
     "name": "Y2K Black Rave Full Sleeve Tops (AA-1179)",
     "price": 68,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.78,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-black-rave-full-sleeve-tops-aa-1179"
   },
   {
     "id": 4,
@@ -33,7 +34,8 @@
     "original_price": 189.9,
     "currency": "GBP",
     "price_per_piece": 2.67,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/under-armour-and-adidas-sexy-shorts-%F0%9F%94%A5"
   },
   {
     "id": 5,
@@ -42,7 +44,8 @@
     "original_price": 110,
     "currency": "GBP",
     "price_per_piece": 3.5,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/nike-dri-fit-shorts-%F0%9F%94%A5"
   },
   {
     "id": 6,
@@ -51,25 +54,26 @@
     "original_price": 110,
     "currency": "GBP",
     "price_per_piece": 3.5,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/nike-dri-fit-shorts-%F0%9F%94%A5"
   },
   {
     "id": 7,
     "name": "Y2K Dark Rose Mix Tops (AA-1176)",
     "price": 68,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.78,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-dark-rose-mix-tops-aa-1176"
   },
   {
     "id": 8,
     "name": "100726-8 Denim mini skirts 10 pcs",
     "price": 85,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 8.54,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/100726-8-denim-mini-skirts-10-pcs"
   },
   {
     "id": 9,
@@ -78,7 +82,8 @@
     "original_price": 110,
     "currency": "GBP",
     "price_per_piece": 3.5,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/nike-dri-fit-shorts-%F0%9F%94%A5"
   },
   {
     "id": 10,
@@ -87,7 +92,8 @@
     "original_price": 110,
     "currency": "GBP",
     "price_per_piece": 3.5,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/nike-dri-fit-shorts-%F0%9F%94%A5"
   },
   {
     "id": 11,
@@ -96,79 +102,80 @@
     "original_price": 118.75,
     "currency": "GBP",
     "price_per_piece": 3.0,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/nike-adidas-under-armour-sexy-shorts-%F0%9F%94%A5"
   },
   {
     "id": 12,
     "name": "100727-9 cami tops 10 pcs",
     "price": 77,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 7.73,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/100727-9-cami-tops-10-pcs"
   },
   {
     "id": 13,
     "name": "Y2K Vintage Blue Mix Tops (AA-1178)",
     "price": 69,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.84,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-vintage-blue-mix-tops-aa-1178"
   },
   {
     "id": 14,
     "name": "Pink by Victoria secret leggings",
     "price": 98,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.84,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/pink-by-victoria-secret-leggings"
   },
   {
     "id": 15,
     "name": "100726-10 denim mini shorts 10 pcs",
     "price": 96,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.57,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/100726-10-denim-mini-shorts-10-pcs"
   },
   {
     "id": 16,
     "name": "Nike Sexy Shorts - #110726",
     "price": 98,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 3.25,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/nike-sexy-shorts-110726"
   },
   {
     "id": 17,
     "name": "32 PCS EXACT Upcycled Printed Lounge Shorts",
     "price": 208,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 6.5,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/32-pcs-exact-upcycled-printed-lounge-shorts"
   },
   {
     "id": 18,
     "name": "25 pcs EXACT Upcycled White Boxer Shorts",
     "price": 178,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 7.12,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/25-pcs-exact-upcycled-white-boxer-shorts"
   },
   {
     "id": 19,
     "name": "26 pcs EXACT Upcycled White Boxer Shorts",
     "price": 185,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 7.12,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/26-pcs-exact-upcycled-white-boxer-shorts"
   },
   {
     "id": 20,
@@ -177,34 +184,35 @@
     "original_price": 278.52,
     "currency": "GBP",
     "price_per_piece": 14.21,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/upcycled-levi-s-crop-jacket-10"
   },
   {
     "id": 21,
     "name": "100726-7 babytees t-shirts 10 pcs",
     "price": 80,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 8.03,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/100726-7-babytees-t-shirts-10-pcs"
   },
   {
     "id": 22,
     "name": "100726-6 Denim mini shorts 10 pcs",
     "price": 96,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.57,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/100726-6-denim-mini-shorts-10-pcs"
   },
   {
     "id": 23,
     "name": "Y2K Unique Girl Printed Full Sleeve Tops RW-2227",
     "price": 71,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 8.84,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-unique-girl-printed-full-sleeve-tops-rw-2227"
   },
   {
     "id": 24,
@@ -213,16 +221,17 @@
     "original_price": 248.4,
     "currency": "GBP",
     "price_per_piece": 9.56,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/upcycled-y2k-denim-sexy-shorts-1"
   },
   {
     "id": 25,
     "name": "Upcycle Ralph Lauren Crop Tops with zipper (DV-07)",
     "price": 114,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 11.39,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/upcycle-ralph-lauren-crop-tops-with-zipper-dv-07"
   },
   {
     "id": 26,
@@ -231,7 +240,8 @@
     "original_price": 328.6,
     "currency": "GBP",
     "price_per_piece": 9.43,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/upcycled-y2k-denim-sexy-shorts-1"
   },
   {
     "id": 27,
@@ -240,25 +250,26 @@
     "original_price": 328.6,
     "currency": "GBP",
     "price_per_piece": 9.43,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/upcycled-y2k-denim-sexy-shorts-3"
   },
   {
     "id": 28,
     "name": "Y2K Nature Vibe Girl Full Sleeve Top RE-4496",
     "price": 67,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.54,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-nature-vibe-girl-full-sleeve-top-re-4496"
   },
   {
     "id": 29,
     "name": "Y2K Nature Vibe Mix Tops (AA-1185)",
     "price": 69,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.84,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-nature-vibe-mix-tops-aa-1185"
   },
   {
     "id": 30,
@@ -267,7 +278,8 @@
     "original_price": 158.76,
     "currency": "GBP",
     "price_per_piece": 7.23,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/upcycled-silver-sparkle-halter-top"
   },
   {
     "id": 31,
@@ -276,466 +288,467 @@
     "original_price": 158.76,
     "currency": "GBP",
     "price_per_piece": 7.23,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/upcycled-sequin-ruffle-top"
   },
   {
     "id": 32,
     "name": "100726-2 cami tops 10 pcs",
     "price": 77,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 7.73,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/100726-2-cami-tops-10-pcs"
   },
   {
     "id": 33,
     "name": "100726-1 Cami tops 10 pcs",
     "price": 77,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 7.73,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/100726-1-cami-tops-10-pcs"
   },
   {
     "id": 34,
     "name": "Y2K NYC IT Girl Denim Mini Skirt RE-2224",
     "price": 63,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.04,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-nyc-it-girl-denim-mini-skirt-re-2224"
   },
   {
     "id": 35,
     "name": "Ladies bootcut jeans (VJ-03)",
     "price": 108,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 8.31,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/ladies-bootcut-jeans-vj-03"
   },
   {
     "id": 36,
     "name": "RV4123 Levi's Mini Shorts",
     "price": 115,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 5.21,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/rv4123-levis-mini-shorts"
   },
   {
     "id": 37,
     "name": "Mix Branded T-Shirts for Women (Ck, The N..)",
     "price": 85,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 5.66,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/mix-branded-t-shirts-for-women-brands-ck-the-north-face-pink-columbia-etc-364"
   },
   {
     "id": 38,
     "name": "Y2K Era Cyber Girl Denim Mini Skirt RW-2225",
     "price": 63,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.04,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-era-cyber-girl-denim-mini-skirt-rw-2225"
   },
   {
     "id": 39,
     "name": "100726-3 corset 10 pcs",
     "price": 80,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 8.03,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/100726-3-corset-10-pcs"
   },
   {
     "id": 40,
     "name": "100726-5 office mini skirts 10 pcs",
     "price": 85,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 8.49,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/100726-5-office-mini-skirts-10-pcs"
   },
   {
     "id": 41,
     "name": "VINTAGE Y2K GLAM McBling Rhinestone Denim Shorts",
     "price": 92,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 7.06,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/vintage-y2k-glam-mcbling-rhinestone-denim-shorts-bundles-25"
   },
   {
     "id": 42,
     "name": "Y2K Unique Girl Maxi Dress RW-2226",
     "price": 96,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 13.76,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-unique-girl-maxi-dress-rw-2226"
   },
   {
     "id": 43,
     "name": "100726-4 cami tops 10 pcs",
     "price": 77,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 7.73,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/100726-4-cami-tops-10-pcs"
   },
   {
     "id": 44,
     "name": "RV4128 Women Champion Mix Winter",
     "price": 185,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 7.1,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/%F0%9F%92%A5-rv4128-women-champion-mix-winter"
   },
   {
     "id": 45,
     "name": "22 PCS EXACT Upcycled Lace Panel Vest",
     "price": 207,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.39,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/22-pcs-exact-upcycled-lace-panel-vest"
   },
   {
     "id": 46,
     "name": "Nike Dri-FIT T-Shirts #361",
     "price": 107,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 5.08,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/nike-dri-fit-t-shirtsbrand-nike-361"
   },
   {
     "id": 47,
     "name": "Y2K NYC IT Girl Denim Shorts RW-2223",
     "price": 70,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 10.07,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-n-yc-it-girl-denim-shorts-rw-2223"
   },
   {
     "id": 48,
     "name": "SS26 Upcycled Linen Cami Tops",
     "price": 123,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 8.23,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/ss26-upcycled-linen-cami-tops"
   },
   {
     "id": 49,
     "name": "6668 - Levi's Denim Shorts",
     "price": 96,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 16.07,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/6668-levis-denim-shorts"
   },
   {
     "id": 50,
     "name": "Lululemon leggings",
     "price": 83,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 11.84,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/lululemon-leggings-1032"
   },
   {
     "id": 51,
     "name": "RV4122 Women Adidas Tees",
     "price": 153,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 3.74,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/%F0%9F%92%A5-rv4122-women-adidas-tees"
   },
   {
     "id": 52,
     "name": "SD466- Juicy Couture Ladies Zipper - 43 Pieces",
     "price": 461,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 10.73,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/sd466-juicy-couture-ladies-zipper-43-pieces"
   },
   {
     "id": 53,
     "name": "Y2K Nature Vibe Girl Printed Full Sleeve Top RE-34..",
     "price": 79,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.84,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-nature-vibe-girl-printed-full-sleeve-top-re-3497"
   },
   {
     "id": 54,
     "name": "Vintage Y2K Printed Top Bundle - 10pcs | VR314",
     "price": 45,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 4.53,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/vintage-y2k-printed-top-bundle-10pcs-vr314"
   },
   {
     "id": 55,
     "name": "SD465- Juicy Couture Ladies Zipper Hoodies - 58 Pcs",
     "price": 622,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 10.73,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/sd465-juicy-couture-ladies-zipper-hoodies-58-pieces"
   },
   {
     "id": 56,
     "name": "CR10081 Vintage Ladies' Leather Trench Coats",
     "price": 256,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 17.1,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/cr10081-vintage-ladies-leather-trench-coats"
   },
   {
     "id": 57,
     "name": "Y2k Printed Summery Slip Dresses",
     "price": 61,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 8.72,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-printed-summery-slip-dresses"
   },
   {
     "id": 58,
     "name": "6686 - Vintage Style Woman Sweaters",
     "price": 72,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 14.3,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/6686-vintage-style-woman-sweaters"
   },
   {
     "id": 59,
     "name": "Y2k Corduroy Flared pants Bundle",
     "price": 108,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 11.98,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-corduroy-flared-pants-bundle"
   },
   {
     "id": 60,
     "name": "Y2k Relaxed Cargo Pants",
     "price": 116,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 8.9,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-relaxed-cargo-pants"
   },
   {
     "id": 61,
     "name": "6680 - Y2K Style Blouses",
     "price": 69,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 13.78,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/6680-y2k-style-blouses"
   },
   {
     "id": 62,
     "name": "Y2k print skirt id 100",
     "price": 106,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 7.56,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-print-skirt-id-100"
   },
   {
     "id": 63,
     "name": "Y2K NYC IT GIRL DENIM MINI SKIRTS RE-3495",
     "price": 63,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.04,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-nyc-it-girl-denim-mini-skirts-re-3495"
   },
   {
     "id": 64,
     "name": "Y2K Romantic Grunge Mix Tops (AA-1184)",
     "price": 79,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.84,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-romantic-grunge-mix-tops-aa-1184"
   },
   {
     "id": 65,
     "name": "Y2K Black Gothic Mix and Match (AA-1183)",
     "price": 79,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.9,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-black-gothic-mix-and-match-aa-1183"
   },
   {
     "id": 66,
     "name": "Y2K Paris Hilton Era Girl Denim Mini Skirts RE-349..",
     "price": 63,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.04,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-paris-hilton-era-girl-denim-mini-skirts-re-3494"
   },
   {
     "id": 67,
     "name": "Y2K NYC IT GIRL DENIM MINI SKIRTS RE-3493",
     "price": 63,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.04,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-nyc-it-girl-denim-mini-skirts-re-3493"
   },
   {
     "id": 68,
     "name": "Y2K Smoky Aesthetic Mix Tops (AA-1182)",
     "price": 68,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.78,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-smoky-aesthetic-mix-tops-aa-1182"
   },
   {
     "id": 69,
     "name": "gym shark leggings",
     "price": 69,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 9.84,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/gym-shark-leggings-65"
   },
   {
     "id": 70,
     "name": "Y2K Earthy Mix Skirts (AA-1181)",
     "price": 77,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 11.07,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-earthy-mix-skirts-aa-1181"
   },
   {
     "id": 71,
     "name": "Y2K Cami Tops | V-T561",
     "price": 58,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 4.48,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-cami-tops-v-t561"
   },
   {
     "id": 72,
     "name": "Y2k silk tops",
     "price": 62,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 6.23,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-silk-tops-5"
   },
   {
     "id": 73,
     "name": "Y2k cami tops",
     "price": 62,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 6.23,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-cami-tops-384"
   },
   {
     "id": 74,
     "name": "Y2K Earthy Bloom Mix Tops - EV0628",
     "price": 55,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 5.54,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-earthy-bloom-mix-tops-ev0628-3"
   },
   {
     "id": 75,
     "name": "Y2K Fairy Floss Mix Tops - EV0620",
     "price": 66,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 5.54,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-fairy-floss-mix-tops-ev0620-7"
   },
   {
     "id": 76,
     "name": "Y2K Blossom Layers Mix Tops - EV0622",
     "price": 72,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 5.54,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-blossom-layers-mix-tops-ev0622-6"
   },
   {
     "id": 77,
     "name": "Y2K Magic Tops 10 pcs At 1189",
     "price": 47,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 4.73,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-magic-tops-10-pcs-at-1189"
   },
   {
     "id": 78,
     "name": "Y2K Grunge Tops 10 pcs At 1187",
     "price": 50,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 5.03,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-grunge-tops-10-pcs-at-1187"
   },
   {
     "id": 79,
     "name": "Victoria secret Nighties 15 pcs At 1185",
     "price": 63,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 4.23,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/victoria-secret-nighties-15-pcs-at-1185"
   },
   {
     "id": 80,
     "name": "Y2K Tropical Tops 10 pcs At 1188",
     "price": 42,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 4.23,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-tropical-tops-10-pcs-at-1188"
   },
   {
     "id": 81,
     "name": "Y2K Silk Nighties 10 pcs At 1186",
     "price": 37,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 3.73,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-silk-nighties-10-pcs-at-1186"
   },
   {
     "id": 82,
     "name": "Y2K Desert Petal Midi Skirts - EV0619",
     "price": 71,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 7.07,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-desert-petal-midi-skirts-ev0619-3"
   },
   {
     "id": 83,
@@ -744,70 +757,71 @@
     "original_price": 132.41,
     "currency": "GBP",
     "price_per_piece": 7.72,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/premium-juicy-couture-mix-bundle-2"
   },
   {
     "id": 84,
     "name": "Y2K Cutesy Vibes Girl Cami Tops RW-2217",
     "price": 58,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 8.23,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-cutesy-vibes-girl-cami-tops-rw-2217"
   },
   {
     "id": 85,
     "name": "Lululemon jacket",
     "price": 173,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 17.33,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/lululemon-jacket-102"
   },
   {
     "id": 86,
     "name": "Beaded blouse id 58",
     "price": 76,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 5.04,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/beaded-blouse-id-58"
   },
   {
     "id": 87,
     "name": "Mini denim shorts & skirts 05",
     "price": 109,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 10.85,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/mini-denim-shorts-skirts-%F0%9F%98%8D-05"
   },
   {
     "id": 88,
     "name": "American eagle Sexy Shorts",
     "price": 85,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 6.06,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/american-eagle-sexy-shorts-brand-american-eagle-262"
   },
   {
     "id": 89,
     "name": "Juicy Couture Zip-Up Hoodie",
     "price": 190,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 12.69,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/juicy-couture-zip-up-hoodie-20"
   },
   {
     "id": 90,
     "name": "Juicy Couture Velour Track Bottoms",
     "price": 152,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 10.16,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/juicy-couture-velour-track-bottoms-y2k-women-s-trousers"
   },
   {
     "id": 91,
@@ -816,7 +830,8 @@
     "original_price": 143.03,
     "currency": "GBP",
     "price_per_piece": 5.54,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/fv-1051-y2k-satin-slip-dress-bundle-red-black-purple-nightwear-aesthetic"
   },
   {
     "id": 92,
@@ -825,16 +840,17 @@
     "original_price": 68.06,
     "currency": "GBP",
     "price_per_piece": 9.97,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/upcycled-y2k-eyelet-halter-top-12"
   },
   {
     "id": 93,
     "name": "Upcycled RL Tote Bag",
     "price": 62,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 12.38,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/upcycled-rl-tote-bag-6"
   },
   {
     "id": 94,
@@ -843,7 +859,8 @@
     "original_price": 32.09,
     "currency": "GBP",
     "price_per_piece": 4.73,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/y2k-lingeries"
   },
   {
     "id": 95,
@@ -852,7 +869,8 @@
     "original_price": 127.35,
     "currency": "GBP",
     "price_per_piece": 8.15,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/fv-1085-y2k-velour-shorts-juicy-couture-style-lounge-wear-bundle"
   },
   {
     "id": 96,
@@ -861,16 +879,17 @@
     "original_price": 113.1,
     "currency": "GBP",
     "price_per_piece": 4.54,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/fv-1086-y2k-black-party-tops-bundle-vintage-sequin-camis-lace-clubwear-aesthetic-mix"
   },
   {
     "id": 97,
     "name": "CR10077 Upcycled Mix Branded Mini Denim Skirts",
     "price": 256,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 17.04,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/cr10077-upcycled-mix-branded-mini-denim-skirts"
   },
   {
     "id": 98,
@@ -879,24 +898,25 @@
     "original_price": 116.7,
     "currency": "GBP",
     "price_per_piece": 4.78,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/fv-1089-y2k-pink-red-tops-bundle-floral-sheer-retro-summer-aesthetic-collection"
   },
   {
     "id": 99,
     "name": "Vintage Lululemon Activewear",
     "price": 116,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 11.64,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/vintage-lululemon-activewear"
   },
   {
     "id": 100,
     "name": "Y2K Bootcut Jeans Wholesale Lot - 200 PCS",
     "price": 1366,
-    "original_price": null,
     "currency": "GBP",
     "price_per_piece": 6.83,
-    "collection": "womens"
+    "collection": "womens",
+    "url": "https://www.joinfleek.com/products/200-pieces-of-y2k-jeans"
   }
 ]
