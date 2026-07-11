@@ -1,4 +1,7 @@
-import 'dotenv/config';
+import { config as loadEnv } from 'dotenv';
+
+// `.env` is authoritative for this project — override any stale shell vars.
+loadEnv({ override: true });
 
 /** Central config, read once from the environment. */
 export const config = {
