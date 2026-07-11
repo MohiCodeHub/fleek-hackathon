@@ -1,7 +1,13 @@
 import { Hono } from 'hono';
 import { markDelivery } from '../db/index.js';
 import { processInbound } from '../handler.js';
-import { deliveryKey, parseInbound, verifySignature, webhookMessageReply } from '../wassist.js';
+import {
+  checkSignature,
+  deliveryKey,
+  parseInbound,
+  signatureFailureMessage,
+  webhookMessageReply,
+} from '../wassist.js';
 
 export const webhookRoutes = new Hono();
 
@@ -14,8 +20,12 @@ webhookRoutes.post('/webhook', async (c) => {
   const raw = await c.req.text();
 
   // Optional signature (only enforced when WASSIST_WEBHOOK_SECRET is set).
-  if (!verifySignature(raw, c.req.header('X-Wassist-Signature'))) {
-    return c.text('invalid signature', 401);
+  // BYOA is unsigned — leave the secret empty. Platform webhooks are signed.
+  const sig = checkSignature(raw, c.req.header('X-Wassist-Signature'));
+  if (!sig.ok) {
+    const detail = signatureFailureMessage(sig.reason);
+    console.warn(`webhook signature rejected: ${detail}`);
+    return c.text(`invalid signature: ${detail}`, 401);
   }
 
   let payload: unknown;

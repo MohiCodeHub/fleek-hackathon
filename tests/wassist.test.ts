@@ -1,40 +1,75 @@
 import { createHmac } from 'node:crypto';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
+  checkSignature,
   deliveryKey,
   parseInbound,
   replyViaCallback,
+  signatureFailureMessage,
   verifySignature,
   webhookMessageReply,
 } from '../src/wassist.js';
 
 const SECRET = 'whsec_test_secret';
+const NOW = 1_700_000_000;
 
-function sign(body: string, t = '1700000000'): string {
+function sign(body: string, t = String(NOW)): string {
   const v1 = createHmac('sha256', SECRET).update(`${t}.${body}`).digest('hex');
   return `t=${t},v1=${v1}`;
 }
 
-describe('verifySignature', () => {
+describe('checkSignature / verifySignature', () => {
   const body = JSON.stringify({ phone_number: '+1', message: 'hi' });
 
   it('accepts a correctly signed body', () => {
-    expect(verifySignature(body, sign(body), SECRET)).toBe(true);
+    expect(checkSignature(body, sign(body), SECRET, NOW)).toEqual({ ok: true });
+    const freshT = String(Math.floor(Date.now() / 1000));
+    expect(verifySignature(body, sign(body, freshT), SECRET)).toBe(true);
   });
+
   it('rejects a tampered body', () => {
-    expect(verifySignature(`${body} `, sign(body), SECRET)).toBe(false);
+    expect(checkSignature(`${body} `, sign(body), SECRET, NOW)).toEqual({
+      ok: false,
+      reason: 'mismatch',
+    });
   });
+
   it('rejects a wrong secret', () => {
-    expect(verifySignature(body, sign(body), 'whsec_other')).toBe(false);
+    expect(checkSignature(body, sign(body), 'whsec_other', NOW)).toEqual({
+      ok: false,
+      reason: 'mismatch',
+    });
   });
-  it('rejects a missing header', () => {
-    expect(verifySignature(body, undefined, SECRET)).toBe(false);
+
+  it('rejects a missing header when a secret is set', () => {
+    expect(checkSignature(body, undefined, SECRET, NOW)).toEqual({
+      ok: false,
+      reason: 'missing_header',
+    });
   });
+
   it('rejects a malformed header', () => {
-    expect(verifySignature(body, 'garbage', SECRET)).toBe(false);
+    expect(checkSignature(body, 'garbage', SECRET, NOW)).toEqual({
+      ok: false,
+      reason: 'malformed_header',
+    });
   });
-  it('skips verification when no secret is configured (dev mode)', () => {
+
+  it('rejects a stale timestamp', () => {
+    const old = String(NOW - 400);
+    expect(checkSignature(body, sign(body, old), SECRET, NOW)).toEqual({
+      ok: false,
+      reason: 'stale',
+    });
+  });
+
+  it('skips verification when no secret is configured (BYOA / dev)', () => {
+    expect(checkSignature(body, undefined, '', NOW)).toEqual({ ok: true });
     expect(verifySignature(body, undefined, '')).toBe(true);
+  });
+
+  it('explains missing-header failures for BYOA operators', () => {
+    expect(signatureFailureMessage('missing_header')).toContain('unset WASSIST_WEBHOOK_SECRET');
   });
 });
 

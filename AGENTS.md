@@ -63,7 +63,9 @@ npm run seed           # fuzzy bulk-bale inventory + demo buyer + web catalog pr
 Required env (see `.env.example`):
 
 - `OPENAI_API_KEY`, `DATABASE_URL`
-- For WhatsApp: `WASSIST_API_KEY`, `PUBLIC_WEBHOOK_URL`; optional `WASSIST_WEBHOOK_SECRET`
+- For WhatsApp: `WASSIST_API_KEY`, `PUBLIC_WEBHOOK_URL`
+- Leave `WASSIST_WEBHOOK_SECRET` **empty for BYOA** (BYOA deliveries are unsigned). Only set it to the dashboard signing secret if you switch to signed platform webhooks (different payload shape)
+- Abhi replies via interim webhook JSON + `reply_callback` — not the Conversations Send Message API
 - Optional model overrides: `MODEL_REASONING`, `MODEL_FAST`
 - Optional `WHATSAPP_NUMBER` for the landing-page `wa.me` CTA (default sandbox `447424845871`)
 
@@ -143,6 +145,7 @@ Railway env must include at least: `DATABASE_URL`, `OPENAI_API_KEY`, `WASSIST_AP
 ## Common gotchas
 
 - `WASSIST_BASE_URL` ≠ public webhook URL
+- BYOA inbound has no `X-Wassist-Signature`. If `WASSIST_WEBHOOK_SECRET` is set, every BYOA POST gets `401 invalid signature` — unset it
 - Interim webhook reply text is asserted in `tests/server.test.ts` — update tests if you change copy
 - Renaming agents/personas requires updating `PersonaName`, file names under `personas/`, and negotiation speaker unions
 - Unit tests for Hono do not need Postgres; agent `demo`/`chat`/`seed` do
